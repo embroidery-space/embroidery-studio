@@ -207,10 +207,6 @@ export class CanvasService extends EventTarget {
     this.#stages.fullstitches.addChild(graphics);
   }
 
-  removeFullStitches(fullstitches: FullStitch[]) {
-    for (const fullstitch of fullstitches) this.removeFullStitch(fullstitch);
-  }
-
   removeFullStitch(fullstitch: FullStitch) {
     const key = this.#fullStitchKey(fullstitch);
     const graphics = this.#stages.fullstitches.getChildByName(key);
@@ -233,10 +229,6 @@ export class CanvasService extends EventTarget {
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
     });
     this.#stages.partstitches.addChild(graphics);
-  }
-
-  removePartStitches(partstitches: PartStitch[]) {
-    for (const partstitch of partstitches) this.removePartStitch(partstitch);
   }
 
   removePartStitch(partstitch: PartStitch) {

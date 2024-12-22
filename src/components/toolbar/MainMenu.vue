@@ -17,9 +17,6 @@
   import { useMagicKeys, whenever } from "@vueuse/core";
   import { Button, TieredMenu, useDialog } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
-  import { open, save } from "@tauri-apps/plugin-dialog";
-  import { PathApi, PatternApi } from "#/api";
-  import { useAppStateStore } from "#/stores/state";
   import { usePreferencesStore } from "#/stores/preferences";
   import { usePatternProjectStore } from "#/stores/patproj";
   import { storeToRefs } from "pinia";
@@ -27,7 +24,6 @@
   const dialog = useDialog();
   const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
 
-  const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
   const patternProjectStore = usePatternProjectStore();
   const { patproj } = storeToRefs(patternProjectStore);
@@ -35,10 +31,10 @@
   const menu = useTemplateRef("menu");
 
   const keys = useMagicKeys();
-  whenever(keys.ctrl_o!, loadPattern);
+  whenever(keys.ctrl_o!, patternProjectStore.loadPattern);
   whenever(keys.ctrl_n!, patternProjectStore.createPattern);
-  whenever(keys.ctrl_s!, savePattern);
-  whenever(keys.ctrl_w!, closePattern);
+  whenever(keys.ctrl_s!, patternProjectStore.savePattern);
+  whenever(keys.ctrl_w!, patternProjectStore.closePattern);
 
   const fileOptions: MenuItem = {
     label: "File",
@@ -47,7 +43,7 @@
       {
         label: "Open",
         icon: "pi pi-file",
-        command: loadPattern,
+        command: patternProjectStore.loadPattern,
       },
       {
         label: "Create",
@@ -57,12 +53,12 @@
       {
         label: "Save As",
         icon: "pi pi-copy",
-        command: savePattern,
+        command: patternProjectStore.savePattern,
       },
       {
         label: "Close",
         icon: "pi pi-times",
-        command: closePattern,
+        command: patternProjectStore.closePattern,
       },
     ],
   };
@@ -120,41 +116,4 @@
     ],
   };
   const menuOptions = ref<MenuItem[]>([fileOptions, editOptions, preferencesOptions]);
-
-  async function loadPattern() {
-    const path = await open({
-      defaultPath: await PathApi.getAppDocumentDir(),
-      multiple: false,
-      filters: [
-        {
-          name: "Cross-Stitch Pattern",
-          extensions: ["xsd", "oxs", "xml", "embproj"],
-        },
-      ],
-    });
-    if (path === null || Array.isArray(path)) return;
-    await patternProjectStore.loadPattern(path);
-  }
-
-  async function savePattern() {
-    const currentPattern = appStateStore.state.currentPattern;
-    if (!currentPattern) return;
-    const path = await save({
-      defaultPath: await PatternApi.getPatternFilePath(currentPattern.key),
-      filters: [
-        {
-          name: "Cross-Stitch Pattern",
-          extensions: ["oxs", "embproj"],
-        },
-      ],
-    });
-    if (path === null) return;
-    await patternProjectStore.savePattern(currentPattern.key, path);
-  }
-
-  async function closePattern() {
-    const currentPattern = appStateStore.state.currentPattern;
-    if (!currentPattern) return;
-    await patternProjectStore.closePattern(currentPattern.key);
-  }
 </script>

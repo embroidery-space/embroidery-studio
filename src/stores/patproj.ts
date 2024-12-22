@@ -1,74 +1,197 @@
-import { defineAsyncComponent, ref } from "vue";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { open, save } from "@tauri-apps/plugin-dialog";
+import { defineAsyncComponent, ref, shallowRef, triggerRef } from "vue";
+import { useMagicKeys, whenever } from "@vueuse/core";
+import { useDialog } from "primevue";
 import { defineStore } from "pinia";
-import { useConfirm, useDialog } from "primevue";
+import { dequal } from "dequal/lite";
 import { useAppStateStore } from "./state";
-import { PatternApi } from "#/api";
-import type { PatternKey, PatternProject, PaletteItem } from "#/schemas/pattern";
+import { HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import type { PatternProject, PaletteItem, Symbols, Formats, Stitch } from "#/schemas/pattern";
 
-export const usePatternProjectStore = defineStore("pattern-project", () => {
-  const confirm = useConfirm();
+export const usePatternProjectStore = defineStore("pattern-project", ({ action }) => {
+  const appWindow = getCurrentWindow();
+
   const dialog = useDialog();
   const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
 
   const appStateStore = useAppStateStore();
 
   const loading = ref(false);
-  const patproj = ref<PatternProject>();
+  const patproj = shallowRef<PatternProject>();
 
-  async function addPaletteItem(pi: PaletteItem) {
-    if (!patproj.value || !appStateStore.state.currentPattern) return;
-    await PatternApi.addPaletteItem(appStateStore.state.currentPattern.key, pi);
-    patproj.value.pattern.palette.push(pi);
+  async function loadPattern() {
+    const path = await open({
+      defaultPath: await PathApi.getAppDocumentDir(),
+      multiple: false,
+      filters: [
+        {
+          name: "Cross-Stitch Pattern",
+          extensions: ["xsd", "oxs", "xml", "embproj"],
+        },
+      ],
+    });
+    if (path === null || Array.isArray(path)) return;
+    await openPattern(path);
   }
 
-  async function handleCommand(command: () => Promise<void>) {
+  async function openPattern(pathOrKey: string) {
     try {
       loading.value = true;
-      await command();
-    } catch (err) {
-      confirm.require({
-        header: "Error",
-        message: err as string,
-        icon: "pi pi-info-circle",
-        acceptLabel: "OK",
-        acceptProps: { outlined: true },
-        rejectLabel: "Cancel",
-        rejectProps: { severity: "secondary", outlined: true },
-      });
+      patproj.value = await PatternApi.loadPattern(pathOrKey);
+      appStateStore.addOpenedPattern(patproj.value.pattern.info.title, patproj.value.key);
     } finally {
       loading.value = false;
     }
   }
 
-  const loadPattern = (path: string) =>
-    handleCommand(async () => {
-      patproj.value = await PatternApi.loadPattern(path);
-      appStateStore.addOpenedPattern(patproj.value.pattern.info.title, patproj.value.key);
-    });
-  const createPattern = () => {
+  function createPattern() {
     dialog.open(FabricProperties, {
       props: {
         header: "Fabric Properties",
         modal: true,
       },
-      onClose: (options) => {
+      onClose: async (options) => {
         if (!options?.data) return;
         const { patternProperties, fabric } = options.data;
-        handleCommand(async () => {
+        try {
+          loading.value = true;
           patproj.value = await PatternApi.createPattern(patternProperties, fabric);
           appStateStore.addOpenedPattern(patproj.value.pattern.info.title, patproj.value.key);
-        });
+        } finally {
+          loading.value = false;
+        }
       },
     });
-  };
-  const savePattern = (key: PatternKey, path: string) => handleCommand(() => PatternApi.savePattern(key, path));
-  const closePattern = (key: PatternKey) =>
-    handleCommand(async () => {
-      await PatternApi.closePattern(key);
+  }
+
+  async function savePattern() {
+    if (!patproj.value) return;
+    try {
+      const path = await save({
+        defaultPath: await PatternApi.getPatternFilePath(patproj.value.key),
+        filters: [
+          {
+            name: "Cross-Stitch Pattern",
+            extensions: ["oxs", "embproj"],
+          },
+        ],
+      });
+      if (path === null) return;
+      loading.value = true;
+      await PatternApi.savePattern(patproj.value.key, path);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function closePattern() {
+    if (!patproj.value) return;
+    try {
+      loading.value = true;
+      await PatternApi.closePattern(patproj.value.key);
       appStateStore.removeCurrentPattern();
       if (!appStateStore.state.currentPattern) patproj.value = undefined;
-      else await loadPattern(appStateStore.state.currentPattern.key);
-    });
+      else await openPattern(appStateStore.state.currentPattern.key);
+    } finally {
+      loading.value = false;
+    }
+  }
 
-  return { loading, patproj, addPaletteItem, loadPattern, createPattern, savePattern, closePattern };
+  async function addPaletteItem(palitem: PaletteItem) {
+    if (!patproj.value) return;
+    await PatternApi.addPaletteItem(patproj.value.key, palitem);
+  }
+  appWindow.listen<{
+    paletteItem: PaletteItem;
+    palindex: number;
+    symbols: Symbols;
+    formats: Formats;
+  }>("palette:add_palette_item", ({ payload }) => {
+    if (!patproj.value) return;
+    const { paletteItem, palindex, symbols, formats } = payload;
+    patproj.value.pattern.palette.splice(palindex, 0, paletteItem);
+    patproj.value.displaySettings.symbols.splice(palindex, 0, symbols);
+    patproj.value.displaySettings.formats.splice(palindex, 0, formats);
+    triggerRef(patproj);
+  });
+
+  async function removePaletteItem(palitem: PaletteItem) {
+    if (!patproj.value) return;
+    await PatternApi.removePaletteItem(patproj.value.key, palitem);
+  }
+  appWindow.listen<number>("palette:remove_palette_item", ({ payload }) => {
+    if (!patproj.value) return;
+    const palindex = payload;
+    patproj.value.pattern.palette.splice(palindex, 1);
+    patproj.value.displaySettings.symbols.splice(palindex, 1);
+    patproj.value.displaySettings.formats.splice(palindex, 1);
+    triggerRef(patproj);
+  });
+
+  // These are special actions that are tracked to using `store.$onAction`.
+  // We use the `action`, which is probably the internal feature, to make the call visible to the hook.
+  // If you declare and call these action as normal functions, they will not be tracked if the called inside the store.
+  const addStitch = action(async (stitch: Stitch, local: boolean = false) => {
+    if (!patproj.value) return;
+    if (local) {
+      if ("full" in stitch) patproj.value.pattern.fullstitches.push(stitch.full);
+      if ("part" in stitch) patproj.value.pattern.partstitches.push(stitch.part);
+      if ("line" in stitch) patproj.value.pattern.lines.push(stitch.line);
+      if ("node" in stitch) patproj.value.pattern.nodes.push(stitch.node);
+    } else await StitchesApi.addStitch(patproj.value.key, stitch);
+  });
+  const removeStitch = action(async (stitch: Stitch, local: boolean = false) => {
+    if (!patproj.value) return;
+    if (local) {
+      if ("full" in stitch) {
+        const index = patproj.value.pattern.fullstitches.findIndex((fs) => dequal(fs, stitch.full));
+        patproj.value.pattern.fullstitches.splice(index, 1);
+      }
+      if ("part" in stitch) {
+        const index = patproj.value.pattern.partstitches.findIndex((ps) => dequal(ps, stitch.part));
+        patproj.value.pattern.partstitches.splice(index, 1);
+      }
+      if ("line" in stitch) {
+        const index = patproj.value.pattern.lines.findIndex((line) => dequal(line, stitch.line));
+        patproj.value.pattern.lines.splice(index, 1);
+      }
+      if ("node" in stitch) {
+        const index = patproj.value.pattern.nodes.findIndex((node) => dequal(node, stitch.node));
+        patproj.value.pattern.nodes.splice(index, 1);
+      }
+    } else await StitchesApi.removeStitch(patproj.value.key, stitch);
+  });
+  appWindow.listen<Stitch>("stitches:add_one", ({ payload }) => addStitch(payload, true));
+  appWindow.listen<Stitch[]>("stitches:add_many", ({ payload }) => {
+    for (const stitch of payload) addStitch(stitch, true);
+  });
+  appWindow.listen<Stitch>("stitches:remove_one", ({ payload }) => removeStitch(payload, true));
+  appWindow.listen<Stitch[]>("stitches:remove_many", ({ payload }) => {
+    for (const stitch of payload) removeStitch(stitch, true);
+  });
+
+  const keys = useMagicKeys();
+  whenever(keys.ctrl_z!, async () => {
+    if (!patproj.value) return;
+    await HistoryApi.undo(patproj.value.key);
+  });
+  whenever(keys.ctrl_y!, async () => {
+    if (!patproj.value) return;
+    await HistoryApi.redo(patproj.value.key);
+  });
+
+  return {
+    loading,
+    patproj,
+    loadPattern,
+    openPattern,
+    createPattern,
+    savePattern,
+    closePattern,
+    addPaletteItem,
+    removePaletteItem,
+    addStitch,
+    removeStitch,
+  };
 });
