@@ -33,9 +33,17 @@
   const canvas = useTemplateRef("canvas");
   const canvasService = new CanvasService();
 
+  // Triggers on the entire pattern project change (e.g. opening of the new pattern).
+  watch(patproj, (patproj) => canvasService.drawPattern(patproj!));
+
+  // Triggers on the change of the fabric of the pattern project.
   watch(
-    () => patproj.value,
-    (patproj) => canvasService.drawPattern(patproj!),
+    () => patproj.value?.pattern.fabric,
+    (fabric) => {
+      if (!patproj.value || !fabric) return;
+      canvasService.drawFabric(fabric);
+      canvasService.drawGrid(fabric.width, fabric.height, patproj.value.displaySettings.grid);
+    },
   );
 
   let prevStitchState: Stitch | undefined;

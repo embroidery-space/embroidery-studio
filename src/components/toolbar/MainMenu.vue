@@ -13,16 +13,13 @@
 </template>
 
 <script setup lang="ts">
-  import { defineAsyncComponent, ref, useTemplateRef } from "vue";
+  import { ref, useTemplateRef } from "vue";
   import { useMagicKeys, whenever } from "@vueuse/core";
-  import { Button, TieredMenu, useDialog } from "primevue";
+  import { Button, TieredMenu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { usePreferencesStore } from "#/stores/preferences";
   import { usePatternProjectStore } from "#/stores/patproj";
   import { storeToRefs } from "pinia";
-
-  const dialog = useDialog();
-  const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
 
   const preferencesStore = usePreferencesStore();
   const patternProjectStore = usePatternProjectStore();
@@ -69,19 +66,7 @@
     items: [
       {
         label: "Fabric Properties",
-        command: () =>
-          dialog.open(FabricProperties, {
-            props: {
-              header: "Fabric Properties",
-              modal: true,
-            },
-            data: { fabric: patproj.value!.pattern.fabric },
-            onClose: (options) => {
-              const data = options?.data;
-              if (!data) return;
-              console.log(data);
-            },
-          }),
+        command: patternProjectStore.updateFabric,
       },
     ],
   };

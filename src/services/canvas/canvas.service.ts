@@ -149,11 +149,13 @@ export class CanvasService extends EventTarget {
   }
 
   drawFabric({ width, height, color }: Fabric) {
+    this.#stages.fabric.clear();
     this.#stages.fabric.rect(0, 0, width, height).fill(color);
     this.#stages.fabric.eventMode = "none";
   }
 
   drawGrid(width: number, height: number, grid: Grid) {
+    this.#stages.grid.clear();
     const graphics = this.#stages.grid;
     graphics.eventMode = "none";
     {

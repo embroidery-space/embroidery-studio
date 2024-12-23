@@ -13,7 +13,6 @@ mod tests;
 #[derive(Clone)]
 pub struct AddStitchAction {
   stitch: Stitch,
-  // We need to use the `OnceLock` here because we can't directly mutate the internal state of the action.
   conflicts: OnceLock<Vec<Stitch>>,
 }
 

@@ -1,3 +1,4 @@
+pub mod fabric;
 pub mod history;
 pub mod palette;
 pub mod path;

@@ -296,7 +296,7 @@ impl Default for DefaultStitchStrands {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub struct Fabric {
   pub width: u16,
   pub height: u16,

@@ -6,8 +6,8 @@ import { useDialog } from "primevue";
 import { defineStore } from "pinia";
 import { dequal } from "dequal/lite";
 import { useAppStateStore } from "./state";
-import { HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
-import type { PatternProject, PaletteItem, Symbols, Formats, Stitch } from "#/schemas/pattern";
+import { FabricApi, HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import type { PatternProject, PaletteItem, Symbols, Formats, Stitch, Fabric } from "#/schemas/pattern";
 
 export const usePatternProjectStore = defineStore("pattern-project", ({ action }) => {
   const appWindow = getCurrentWindow();
@@ -97,6 +97,27 @@ export const usePatternProjectStore = defineStore("pattern-project", ({ action }
       loading.value = false;
     }
   }
+
+  function updateFabric() {
+    if (!patproj.value) return;
+    dialog.open(FabricProperties, {
+      props: {
+        header: "Fabric Properties",
+        modal: true,
+      },
+      data: { fabric: patproj.value.pattern.fabric },
+      onClose: async (options) => {
+        if (!options?.data) return;
+        const { fabric } = options.data;
+        await FabricApi.updateFabric(patproj.value!.key, fabric);
+      },
+    });
+  }
+  appWindow.listen<Fabric>("fabric:update", ({ payload }) => {
+    if (!patproj.value) return;
+    patproj.value.pattern.fabric = payload;
+    triggerRef(patproj);
+  });
 
   async function addPaletteItem(palitem: PaletteItem) {
     if (!patproj.value) return;
@@ -189,6 +210,7 @@ export const usePatternProjectStore = defineStore("pattern-project", ({ action }
     createPattern,
     savePattern,
     closePattern,
+    updateFabric,
     addPaletteItem,
     removePaletteItem,
     addStitch,
