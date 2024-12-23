@@ -36,13 +36,21 @@
   // Triggers on the entire pattern project change (e.g. opening of the new pattern).
   watch(patproj, (patproj) => canvasService.drawPattern(patproj!));
 
-  // Triggers on the change of the fabric of the pattern project.
   watch(
     () => patproj.value?.pattern.fabric,
     (fabric) => {
       if (!patproj.value || !fabric) return;
       canvasService.drawFabric(fabric);
       canvasService.drawGrid(fabric.width, fabric.height, patproj.value.displaySettings.grid);
+    },
+  );
+
+  watch(
+    () => patproj.value?.displaySettings.grid,
+    (grid) => {
+      if (!patproj.value || !grid) return;
+      const { width, height } = patproj.value.pattern.fabric;
+      canvasService.drawGrid(width, height, grid);
     },
   );
 

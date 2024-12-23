@@ -1,5 +1,5 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::DefaultStitchStrands;
 
@@ -221,7 +221,8 @@ impl Default for FontFormat {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Grid {
   pub major_line_every_stitches: u16,
   pub minor_screen_lines: GridLineStyle,
@@ -254,7 +255,7 @@ impl Default for Grid {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub struct GridLineStyle {
   pub color: String,
 

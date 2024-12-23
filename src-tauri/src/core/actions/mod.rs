@@ -16,6 +16,9 @@ use super::pattern::PatternProject;
 mod fabric;
 pub use fabric::*;
 
+mod grid;
+pub use grid::*;
+
 mod stitches;
 pub use stitches::*;
 

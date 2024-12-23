@@ -6,14 +6,15 @@ import { useDialog } from "primevue";
 import { defineStore } from "pinia";
 import { dequal } from "dequal/lite";
 import { useAppStateStore } from "./state";
-import { FabricApi, HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
-import type { PatternProject, PaletteItem, Symbols, Formats, Stitch, Fabric } from "#/schemas/pattern";
+import { FabricApi, GridApi, HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import type { PatternProject, PaletteItem, Symbols, Formats, Stitch, Fabric, Grid } from "#/schemas/pattern";
 
 export const usePatternProjectStore = defineStore("pattern-project", ({ action }) => {
   const appWindow = getCurrentWindow();
 
   const dialog = useDialog();
   const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
+  const GridProperties = defineAsyncComponent(() => import("#/components/dialogs/GridProperties.vue"));
 
   const appStateStore = useAppStateStore();
 
@@ -119,6 +120,29 @@ export const usePatternProjectStore = defineStore("pattern-project", ({ action }
     triggerRef(patproj);
   });
 
+  function updateGrid() {
+    if (!patproj.value) return;
+    dialog.open(GridProperties, {
+      props: {
+        header: "Grid Properties",
+        modal: true,
+      },
+      data: { grid: patproj.value.displaySettings.grid },
+      onClose: async (options) => {
+        if (!options?.data) return;
+        const { grid } = options.data;
+        console.log(grid);
+
+        await GridApi.updateGrid(patproj.value!.key, grid);
+      },
+    });
+  }
+  appWindow.listen<Grid>("grid:update", ({ payload }) => {
+    if (!patproj.value) return;
+    patproj.value.displaySettings.grid = payload;
+    triggerRef(patproj);
+  });
+
   async function addPaletteItem(palitem: PaletteItem) {
     if (!patproj.value) return;
     await PatternApi.addPaletteItem(patproj.value.key, palitem);
@@ -211,6 +235,7 @@ export const usePatternProjectStore = defineStore("pattern-project", ({ action }
     savePattern,
     closePattern,
     updateFabric,
+    updateGrid,
     addPaletteItem,
     removePaletteItem,
     addStitch,

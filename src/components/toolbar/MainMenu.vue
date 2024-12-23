@@ -68,6 +68,10 @@
         label: "Fabric Properties",
         command: patternProjectStore.updateFabric,
       },
+      {
+        label: "Grid Properties",
+        command: patternProjectStore.updateGrid,
+      },
     ],
   };
   const preferencesOptions: MenuItem = {
