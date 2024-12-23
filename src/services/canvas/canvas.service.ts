@@ -8,12 +8,12 @@ import type { AddStitchData, RemoveStitchData } from "./events.types";
 import type { PatternProject } from "#/schemas/pattern/project";
 import type { Grid } from "#/schemas/pattern/display";
 import type {
+  Fabric,
   FullStitch,
   LineStitch,
   NodeStitch,
   PaletteItem,
   PartStitch,
-  PatternProperties,
   SpecialStitch,
   SpecialStitchModel,
 } from "#/schemas/pattern/pattern";
@@ -135,9 +135,9 @@ export class CanvasService extends EventTarget {
   drawPattern({ pattern, displaySettings }: PatternProject) {
     this.clearPattern();
 
-    this.#viewport.moveCenter(pattern.properties.width / 2, pattern.properties.height / 2);
-    this.drawFabric(pattern.properties, pattern.fabric.color);
-    this.drawGrid(pattern.properties, displaySettings.grid);
+    this.#viewport.moveCenter(pattern.fabric.width / 2, pattern.fabric.height / 2);
+    this.drawFabric(pattern.fabric);
+    this.drawGrid(pattern.fabric.width, pattern.fabric.height, displaySettings.grid);
 
     for (const full of pattern.fullstitches) this.drawFullStitch(full, pattern.palette[full.palindex]!);
     for (const part of pattern.partstitches) this.drawPartStitch(part, pattern.palette[part.palindex]!);
@@ -148,12 +148,12 @@ export class CanvasService extends EventTarget {
     for (const sps of pattern.specialstitches) this.drawSpecialStitch(sps, pattern.palette[sps.palindex]!.color);
   }
 
-  drawFabric({ width, height }: PatternProperties, color: ColorSource) {
+  drawFabric({ width, height, color }: Fabric) {
     this.#stages.fabric.rect(0, 0, width, height).fill(color);
     this.#stages.fabric.eventMode = "none";
   }
 
-  drawGrid({ width, height }: PatternProperties, grid: Grid) {
+  drawGrid(width: number, height: number, grid: Grid) {
     const graphics = this.#stages.grid;
     graphics.eventMode = "none";
     {

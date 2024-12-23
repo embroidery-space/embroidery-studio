@@ -53,10 +53,10 @@ export const usePatternProjectStore = defineStore("pattern-project", ({ action }
       },
       onClose: async (options) => {
         if (!options?.data) return;
-        const { patternProperties, fabric } = options.data;
+        const { fabric } = options.data;
         try {
           loading.value = true;
-          patproj.value = await PatternApi.createPattern(patternProperties, fabric);
+          patproj.value = await PatternApi.createPattern(fabric);
           appStateStore.addOpenedPattern(patproj.value.pattern.info.title, patproj.value.key);
         } finally {
           loading.value = false;

@@ -1,14 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
 import { deserializePatternProject } from "#/schemas/pattern";
-import type { PatternKey, PaletteItem, PatternProperties, Fabric } from "#/schemas/pattern";
+import type { PatternKey, PaletteItem, Fabric } from "#/schemas/pattern";
 
 export const loadPattern = async (filePath: string) => {
   const bytes = await invoke<number[]>("load_pattern", { filePath });
   return deserializePatternProject(new Uint8Array(bytes));
 };
 
-export const createPattern = async (patternProperties: PatternProperties, fabric: Fabric) => {
-  const bytes = await invoke<number[]>("create_pattern", { patternProperties, fabric });
+export const createPattern = async (fabric: Fabric) => {
+  const bytes = await invoke<number[]>("create_pattern", { fabric });
   return deserializePatternProject(new Uint8Array(bytes));
 };
 

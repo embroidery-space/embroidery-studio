@@ -122,13 +122,10 @@
 
       <p>
         Size (WxH):
-        {{ patternProperties.width }}x{{ patternProperties.height }} stitches,
-        {{ stitches2inches(patternProperties.width, fabric.spi[0]) }}x{{
-          stitches2inches(patternProperties.height, fabric.spi[1])
+        {{ fabric.width }}x{{ fabric.height }} stitches, {{ stitches2inches(fabric.width, fabric.spi[0]) }}x{{
+          stitches2inches(fabric.height, fabric.spi[1])
         }}
-        inches ({{ stitches2mm(patternProperties.width, fabric.spi[0]) }}x{{
-          stitches2mm(patternProperties.height, fabric.spi[1])
-        }}
+        inches ({{ stitches2mm(fabric.width, fabric.spi[0]) }}x{{ stitches2mm(fabric.height, fabric.spi[1]) }}
         mm)
       </p>
     </Fieldset>
@@ -175,7 +172,7 @@
     </Fieldset>
   </div>
 
-  <DialogFooter :save="() => dialogRef.close({ patternProperties, fabric })" class="mt-5" />
+  <DialogFooter :save="() => dialogRef.close({ fabric })" class="mt-5" />
 </template>
 
 <script setup lang="ts">
@@ -188,20 +185,16 @@
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
   import { contrastColor } from "#/utils/color";
-  import type { Fabric, PatternProperties } from "#/schemas/pattern";
+  import type { Fabric } from "#/schemas/pattern";
 
   // Is used to set the background color of the input fields.
   const background = dt("dialog.background");
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
 
-  const DEFAULT_PATTERN_PROPERTIES: PatternProperties = { width: 60, height: 80 };
-  const DEFAULT_FABRIC: Fabric = { name: "White", color: "FFFFFF", kind: "Aida", spi: [14, 14] };
+  const DEFAULT_FABRIC: Fabric = { width: 60, height: 80, name: "White", color: "FFFFFF", kind: "Aida", spi: [14, 14] };
 
-  // Copy the data from the dialog reference to a reactive objects.
-  const patternProperties = reactive<PatternProperties>(
-    Object.assign({}, DEFAULT_PATTERN_PROPERTIES, dialogRef.value.data?.patternProperties),
-  );
+  // Copy the data from the dialog reference to a reactive object.
   const fabric = reactive<Fabric>(Object.assign({}, DEFAULT_FABRIC, dialogRef.value.data?.fabric));
 
   const squareStitches = ref(true);
@@ -209,7 +202,7 @@
   const fabricSizeOption = ref<"final-size" | "stitches">("stitches");
   const fabricSizeMeasurement = ref<"inches" | "mm">("inches");
   const fabricSizeFinal = reactive({ width: 4.29, height: 5.71 }); // 60x80 stitches in inches
-  const fabricSizeStitches = reactive({ width: patternProperties.width, height: patternProperties.height });
+  const fabricSizeStitches = reactive({ width: fabric.width, height: fabric.height });
 
   const fabricSize = computed(() => {
     const width = fabricSizeMeasurement.value === "inches" ? fabricSizeFinal.width : mm2inches(fabricSizeFinal.width);
@@ -233,8 +226,8 @@
   });
 
   watch(patternSize, (size) => {
-    patternProperties.width = size.width;
-    patternProperties.height = size.height;
+    fabric.width = size.width;
+    fabric.height = size.height;
   });
 
   watch(fabricSizeMeasurement, (measurement) => {

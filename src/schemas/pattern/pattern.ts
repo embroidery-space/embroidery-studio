@@ -1,18 +1,5 @@
 import { field, fixedArray, option, vec } from "@dao-xyz/borsh";
 
-export class PatternProperties {
-  @field({ type: "u16" })
-  width: number;
-
-  @field({ type: "u16" })
-  height: number;
-
-  constructor(data: PatternProperties) {
-    this.width = data.width;
-    this.height = data.height;
-  }
-}
-
 export class PatternInfo {
   @field({ type: "string" })
   title: string;
@@ -140,6 +127,12 @@ export class PaletteItem {
 
 export type StitchesPerInch = [number, number];
 export class Fabric {
+  @field({ type: "u16" })
+  width: number;
+
+  @field({ type: "u16" })
+  height: number;
+
   @field({ type: fixedArray("u16", 2) })
   spi: StitchesPerInch;
 
@@ -153,6 +146,8 @@ export class Fabric {
   color: string;
 
   constructor(data: Fabric) {
+    this.width = data.width;
+    this.height = data.height;
     this.spi = data.spi;
     this.kind = data.kind;
     this.name = data.name;
@@ -356,17 +351,14 @@ export class SpecialStitchModel {
 }
 
 export class Pattern {
-  @field({ type: PatternProperties })
-  properties: PatternProperties;
-
   @field({ type: PatternInfo })
   info: PatternInfo;
 
-  @field({ type: vec(PaletteItem) })
-  palette: PaletteItem[];
-
   @field({ type: Fabric })
   fabric: Fabric;
+
+  @field({ type: vec(PaletteItem) })
+  palette: PaletteItem[];
 
   @field({ type: vec(FullStitch) })
   fullstitches: FullStitch[];
@@ -387,10 +379,9 @@ export class Pattern {
   specialStitchModels: SpecialStitchModel[];
 
   constructor(data: Pattern) {
-    this.properties = data.properties;
     this.info = data.info;
-    this.palette = data.palette;
     this.fabric = data.fabric;
+    this.palette = data.palette;
     this.fullstitches = data.fullstitches;
     this.partstitches = data.partstitches;
     this.nodes = data.nodes;

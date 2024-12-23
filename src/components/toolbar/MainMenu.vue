@@ -75,10 +75,7 @@
               header: "Fabric Properties",
               modal: true,
             },
-            data: {
-              patternProperties: patproj.value!.pattern.properties,
-              fabric: patproj.value!.pattern.fabric,
-            },
+            data: { fabric: patproj.value!.pattern.fabric },
             onClose: (options) => {
               const data = options?.data;
               if (!data) return;

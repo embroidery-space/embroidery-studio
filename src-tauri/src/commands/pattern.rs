@@ -1,7 +1,7 @@
 use crate::core::parser::{self, PatternFormat};
 use crate::core::pattern::display::DisplaySettings;
 use crate::core::pattern::print::PrintSettings;
-use crate::core::pattern::{Fabric, Pattern, PatternProject, PatternProperties};
+use crate::core::pattern::{Fabric, Pattern, PatternProject};
 use crate::error::CommandResult;
 use crate::state::{PatternKey, PatternsState};
 use crate::utils::path::app_document_dir;
@@ -37,7 +37,6 @@ pub fn load_pattern(file_path: std::path::PathBuf, patterns: tauri::State<Patter
 
 #[tauri::command]
 pub fn create_pattern<R: tauri::Runtime>(
-  pattern_properties: PatternProperties,
   fabric: Fabric,
   app_handle: tauri::AppHandle<R>,
   patterns: tauri::State<PatternsState>,
@@ -45,7 +44,7 @@ pub fn create_pattern<R: tauri::Runtime>(
   log::trace!("Creating new pattern");
   let mut patterns = patterns.write().unwrap();
 
-  let pattern = Pattern::new(pattern_properties, fabric);
+  let pattern = Pattern::new(fabric);
   let patproj = PatternProject {
     file_path: app_document_dir(&app_handle)?.join(format!("{}.{}", pattern.info.title, PatternFormat::default())),
     pattern,

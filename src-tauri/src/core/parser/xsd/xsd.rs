@@ -65,13 +65,10 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
 
   cursor.seek_relative(739)?; // Skip the unknown data.
 
-  let pattern_properties = PatternProperties {
-    width: cursor.read_u16::<LittleEndian>()?,
-    height: cursor.read_u16::<LittleEndian>()?,
-  };
+  let pattern_width = cursor.read_u16::<LittleEndian>()?;
+  let pattern_height = cursor.read_u16::<LittleEndian>()?;
 
-  let coord_factor = pattern_properties.width as usize;
-  let total_stitches_count = (pattern_properties.width as usize) * (pattern_properties.height as usize);
+  let total_stitches_count = (pattern_width as usize) * (pattern_height as usize);
   let small_stitches_count = cursor.read_u32::<LittleEndian>()? as usize;
   let joints_count = cursor.read_u16::<LittleEndian>()?;
 
@@ -99,8 +96,12 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   cursor.seek_relative(16412)?; // Skip library info.
   cursor.seek_relative(512)?; // Skip machine export info.
 
-  let (fullstitches, partstitches) =
-    read_stitches(&mut cursor, coord_factor, total_stitches_count, small_stitches_count)?;
+  let (fullstitches, partstitches) = read_stitches(
+    &mut cursor,
+    pattern_width as usize,
+    total_stitches_count,
+    small_stitches_count,
+  )?;
 
   let special_stitch_models = read_special_stitch_models(&mut cursor)?;
 
@@ -109,10 +110,11 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   Ok(PatternProject {
     file_path,
     pattern: Pattern {
-      properties: pattern_properties,
       info: pattern_info,
       palette,
       fabric: Fabric {
+        width: pattern_width,
+        height: pattern_height,
         kind: fabric_kind_name,
         name: fabric_color_name,
         color: fabric_color,
