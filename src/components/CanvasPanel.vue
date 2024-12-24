@@ -7,53 +7,57 @@
 </template>
 
 <script lang="ts" setup>
-  import { getCurrentWindow } from "@tauri-apps/api/window";
   import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
-  import { useMagicKeys, whenever, useThrottleFn } from "@vueuse/core";
+  import { useThrottleFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { Point } from "pixi.js";
   import { CanvasService, type CanvasSize } from "#/services/canvas/canvas.service";
   import { AddStitchEventStage, EventType } from "#/services/canvas/events.types";
   import type { AddStitchData, RemoveStitchData } from "#/services/canvas/events.types";
   import { useAppStateStore } from "#/stores/state";
-  import { StitchesApi, HistoryApi } from "#/api";
+  import { usePatternProjectStore } from "#/stores/patproj";
   import {
-    PartStitchDirection,
-    FullStitch,
-    LineStitch,
-    NodeStitch,
-    PartStitch,
     FullStitchKind,
     PartStitchKind,
+    PartStitchDirection,
     LineStitchKind,
     NodeStitchKind,
-    type Stitch,
-    type StitchKind,
-  } from "#/schemas/pattern/pattern";
-  import { PatternProject } from "#/schemas/pattern/project";
-
-  interface CanvasPanelProps {
-    patproj: PatternProject;
-  }
-
-  const props = defineProps<CanvasPanelProps>();
+  } from "#/schemas/pattern";
+  import type { Stitch, StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
+  import { storeToRefs } from "pinia";
 
   const appStateStore = useAppStateStore();
+  const patternProjectStore = usePatternProjectStore();
+  const { patproj } = storeToRefs(patternProjectStore);
 
   const canvas = useTemplateRef("canvas");
   const canvasService = new CanvasService();
 
+  // Triggers on the entire pattern project change (e.g. opening of the new pattern).
+  watch(patproj, (patproj) => canvasService.drawPattern(patproj!));
+
   watch(
-    () => props.patproj,
-    (patproj) => canvasService.drawPattern(patproj),
+    () => patproj.value?.pattern.fabric,
+    (fabric) => {
+      if (!patproj.value || !fabric) return;
+      canvasService.drawFabric(fabric);
+      canvasService.drawGrid(fabric.width, fabric.height, patproj.value.displaySettings.grid);
+    },
+  );
+
+  watch(
+    () => patproj.value?.displaySettings.grid,
+    (grid) => {
+      if (!patproj.value || !grid) return;
+      const { width, height } = patproj.value.pattern.fabric;
+      canvasService.drawGrid(width, height, grid);
+    },
   );
 
   let prevStitchState: Stitch | undefined;
   canvasService.addEventListener(EventType.AddStitch, async (e) => {
     const palindex = appStateStore.state.selectedPaletteItemIndex;
     if (palindex === undefined) return;
-    // The current pattern is always available here.
-    const patternKey = appStateStore.state.currentPattern!.key;
     const tool = appStateStore.state.selectedStitchTool;
 
     // A start point is needed to draw the lines.
@@ -70,7 +74,7 @@
           full.x = Math.trunc(x) + (prevStitchState.full.x - Math.trunc(prevStitchState.full.x));
           full.y = Math.trunc(y) + (prevStitchState.full.y - Math.trunc(prevStitchState.full.y));
         }
-        await StitchesApi.addStitch(patternKey, { full });
+        await patternProjectStore.addStitch({ full });
         break;
       }
 
@@ -90,7 +94,7 @@
             part.y = Math.trunc(y) + (prevStitchState.part.y - Math.trunc(prevStitchState.part.y));
           }
         }
-        await StitchesApi.addStitch(patternKey, { part });
+        await patternProjectStore.addStitch({ part });
         break;
       }
 
@@ -104,7 +108,7 @@
         }
         if (line.x[0] === line.x[1] && line.y[0] === line.y[1]) return;
         prevStitchState = { line };
-        if (stage === AddStitchEventStage.Continue) await StitchesApi.addStitch(patternKey, { line });
+        if (stage === AddStitchEventStage.Continue) await patternProjectStore.addStitch({ line });
         break;
       }
 
@@ -113,8 +117,8 @@
         const { x: x1, y: y1 } = adjustStitchCoordinate(_start, tool);
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line: LineStitch = { x: [x1, x2], y: [y1, y2], palindex, kind: tool };
-        if (stage === AddStitchEventStage.End) await StitchesApi.addStitch(patternKey, { line });
-        else canvasService.drawLine(line, props.patproj.pattern.palette[palindex]!, true);
+        if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ line });
+        else canvasService.drawLine(line, patproj.value!.pattern.palette[palindex]!, true);
         break;
       }
 
@@ -127,8 +131,8 @@
           kind: tool,
           rotated: alt,
         };
-        if (stage === AddStitchEventStage.End) await StitchesApi.addStitch(patternKey, { node });
-        else canvasService.drawNode(node, props.patproj.pattern.palette[palindex]!, true);
+        if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ node });
+        else canvasService.drawNode(node, patproj.value!.pattern.palette[palindex]!, true);
         break;
       }
     }
@@ -137,9 +141,8 @@
   });
 
   canvasService.addEventListener(EventType.RemoveStitch, async (e) => {
-    const data: RemoveStitchData = (e as CustomEvent).detail;
-    const patternKey = appStateStore.state.currentPattern!.key;
-    await StitchesApi.removeStitch(patternKey, data);
+    const stitch: RemoveStitchData = (e as CustomEvent).detail;
+    await patternProjectStore.removeStitch(stitch);
   });
 
   function adjustStitchCoordinate({ x, y }: Point, tool: StitchKind): Point {
@@ -178,58 +181,42 @@
     else return [end, start];
   }
 
-  const appWindow = getCurrentWindow();
-  const unlistenRemoveManyStitches = await appWindow.listen<Stitch[]>("stitches:remove_many", ({ payload }) => {
-    for (const stitch of payload) {
+  patternProjectStore.$onAction(async ({ name, args }) => {
+    if (name === "addStitch") {
+      const [stitch, isLocal] = args;
+      if (!isLocal) return;
+      const palette = patproj.value!.pattern.palette;
+      if ("full" in stitch) canvasService.drawFullStitch(stitch.full, palette[stitch.full.palindex]!);
+      if ("part" in stitch) canvasService.drawPartStitch(stitch.part, palette[stitch.part.palindex]!);
+      if ("line" in stitch) canvasService.drawLine(stitch.line, palette[stitch.line.palindex]!);
+      if ("node" in stitch) canvasService.drawNode(stitch.node, palette[stitch.node.palindex]!);
+    }
+
+    if (name === "removeStitch") {
+      const [stitch, isLocal] = args;
+      if (!isLocal) return;
       if ("full" in stitch) canvasService.removeFullStitch(stitch.full);
       if ("part" in stitch) canvasService.removePartStitch(stitch.part);
       if ("line" in stitch) canvasService.removeLine(stitch.line);
       if ("node" in stitch) canvasService.removeNode(stitch.node);
     }
   });
-  const unlistenAddManyStitches = await appWindow.listen<Stitch[]>("stitches:add_many", ({ payload }) => {
-    const palette = props.patproj.pattern.palette;
-    for (const stitch of payload) {
-      if ("full" in stitch) canvasService.drawFullStitch(stitch.full, palette[stitch.full.palindex]!);
-      if ("part" in stitch) canvasService.drawPartStitch(stitch.part, palette[stitch.part.palindex]!);
-      if ("line" in stitch) canvasService.drawLine(stitch.line, palette[stitch.line.palindex]!);
-      if ("node" in stitch) canvasService.drawNode(stitch.node, palette[stitch.node.palindex]!);
-    }
-  });
-  const unlistenRemoveOneStitch = await appWindow.listen<Stitch>("stitches:remove_one", ({ payload }) => {
-    if ("full" in payload) canvasService.removeFullStitch(payload.full);
-    if ("part" in payload) canvasService.removePartStitch(payload.part);
-    if ("line" in payload) canvasService.removeLine(payload.line);
-    if ("node" in payload) canvasService.removeNode(payload.node);
-  });
-  const unlistenAddOneStitch = await appWindow.listen<Stitch>("stitches:add_one", ({ payload }) => {
-    const palette = props.patproj.pattern.palette;
-    if ("full" in payload) canvasService.drawFullStitch(payload.full, palette[payload.full.palindex]!);
-    if ("part" in payload) canvasService.drawPartStitch(payload.part, palette[payload.part.palindex]!);
-    if ("line" in payload) canvasService.drawLine(payload.line, palette[payload.line.palindex]!);
-    if ("node" in payload) canvasService.drawNode(payload.node, palette[payload.node.palindex]!);
-  });
-
-  const keys = useMagicKeys();
-  whenever(keys.ctrl_z!, async () => await HistoryApi.undo(appStateStore.state.currentPattern!.key));
-  whenever(keys.ctrl_y!, async () => await HistoryApi.redo(appStateStore.state.currentPattern!.key));
 
   onMounted(async () => {
     const { width, height } = canvas.value!.getBoundingClientRect();
     await canvasService.init({ width, height, canvas: canvas.value! });
-    canvasService.drawPattern(props.patproj);
+    canvasService.drawPattern(patproj.value!);
 
     window.addEventListener(
       "resize",
-      useThrottleFn(() => canvasService.resize(canvas.value!.getBoundingClientRect()), 500),
+      useThrottleFn(() => {
+        if (!canvas.value) return;
+        canvasService.resize(canvas.value.getBoundingClientRect());
+      }, 500),
     );
   });
 
   onUnmounted(() => {
     canvasService.clearPattern();
-    unlistenRemoveManyStitches();
-    unlistenAddManyStitches();
-    unlistenRemoveOneStitch();
-    unlistenAddOneStitch();
   });
 </script>

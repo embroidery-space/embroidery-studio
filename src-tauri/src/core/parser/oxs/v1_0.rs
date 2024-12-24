@@ -31,9 +31,10 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
         match e.name().as_ref() {
           b"properties" => {
             let attributes = process_attributes(e.attributes())?;
-            let (properties, info, spi, palsize) = read_pattern_properties(&attributes)?;
-            pattern.properties = properties;
+            let (pattern_width, pattern_height, info, spi, palsize) = read_pattern_properties(&attributes)?;
             pattern.info = info;
+            pattern.fabric.width = pattern_width;
+            pattern.fabric.height = pattern_height;
             pattern.fabric.spi = spi;
             palette_size = Some(palsize)
           }
@@ -41,8 +42,10 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
             if let Some(palette_size) = palette_size {
               let (fabric, palette) = read_palette(&mut reader, software, palette_size)?;
               pattern.fabric = Fabric {
-                spi: pattern.fabric.spi,
-                ..fabric
+                name: fabric.name,
+                color: fabric.color,
+                kind: fabric.kind,
+                ..pattern.fabric
               };
               pattern.palette = palette;
             } else {
@@ -99,7 +102,8 @@ pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
     let pattern = &patproj.pattern;
     write_pattern_properties(
       writer,
-      &pattern.properties,
+      pattern.fabric.width,
+      pattern.fabric.height,
       &pattern.info,
       pattern.fabric.spi,
       pattern.palette.len(),
@@ -116,13 +120,9 @@ pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
   Ok(())
 }
 
-fn read_pattern_properties(
-  attributes: &MapAttributes,
-) -> Result<(PatternProperties, PatternInfo, StitchesPerInch, usize)> {
-  let properties = PatternProperties {
-    width: attributes.get("chartwidth").unwrap().parse()?,
-    height: attributes.get("chartheight").unwrap().parse()?,
-  };
+fn read_pattern_properties(attributes: &MapAttributes) -> Result<(u16, u16, PatternInfo, StitchesPerInch, usize)> {
+  let pattern_width = attributes.get("chartwidth").unwrap().parse()?;
+  let pattern_height = attributes.get("chartheight").unwrap().parse()?;
 
   let info = PatternInfo {
     title: attributes.get("charttitle").unwrap().to_owned(),
@@ -139,12 +139,13 @@ fn read_pattern_properties(
 
   let palette_size: usize = attributes.get("palettecount").unwrap().parse()?;
 
-  Ok((properties, info, spi, palette_size))
+  Ok((pattern_width, pattern_height, info, spi, palette_size))
 }
 
 fn write_pattern_properties<W: io::Write>(
   writer: &mut Writer<W>,
-  properties: &PatternProperties,
+  pattern_width: u16,
+  pattern_height: u16,
   info: &PatternInfo,
   spi: StitchesPerInch,
   palette_size: usize,
@@ -155,8 +156,8 @@ fn write_pattern_properties<W: io::Write>(
       ("oxsversion", "1.0"),
       ("software", "Embroidery Studio"),
       // ("software_version", "0.0.0"),
-      ("chartwidth", properties.width.to_string().as_str()),
-      ("chartheight", properties.height.to_string().as_str()),
+      ("chartwidth", pattern_width.to_string().as_str()),
+      ("chartheight", pattern_height.to_string().as_str()),
       ("charttitle", info.title.as_str()),
       ("author", info.author.as_str()),
       ("company", info.company.as_str()),

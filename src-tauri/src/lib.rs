@@ -45,6 +45,8 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
       commands::pattern::save_pattern,
       commands::pattern::close_pattern,
       commands::pattern::get_pattern_file_path,
+      commands::fabric::update_fabric,
+      commands::grid::update_grid,
       commands::palette::add_palette_item,
       commands::palette::remove_palette_item,
       commands::stitches::add_stitch,

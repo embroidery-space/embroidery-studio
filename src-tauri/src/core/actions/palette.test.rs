@@ -1,10 +1,10 @@
-use display::{Formats, Symbols};
 use tauri::test::{mock_builder, MockRuntime};
 use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindowBuilder};
 
 use super::{Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemAction};
 use crate::core::parser::oxs;
-use crate::core::pattern::*;
+use crate::core::pattern::display::{Formats, Symbols};
+use crate::core::pattern::{PaletteItem, PatternProject, Stitch};
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()

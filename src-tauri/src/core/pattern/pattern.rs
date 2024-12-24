@@ -5,10 +5,9 @@ use super::stitches::*;
 
 #[derive(Debug, Default, Clone, BorshSerialize, BorshDeserialize)]
 pub struct Pattern {
-  pub properties: PatternProperties,
   pub info: PatternInfo,
-  pub palette: Vec<PaletteItem>,
   pub fabric: Fabric,
+  pub palette: Vec<PaletteItem>,
   pub fullstitches: Stitches<FullStitch>,
   pub partstitches: Stitches<PartStitch>,
   pub nodes: Stitches<Node>,
@@ -18,6 +17,10 @@ pub struct Pattern {
 }
 
 impl Pattern {
+  pub fn new(fabric: Fabric) -> Self {
+    Pattern { fabric, ..Pattern::default() }
+  }
+
   /// Check if the pattern contains a stitch.
   pub fn contains_stitch(&self, stitch: &Stitch) -> bool {
     match stitch {
@@ -207,18 +210,6 @@ impl Pattern {
 }
 
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
-pub struct PatternProperties {
-  pub width: u16,
-  pub height: u16,
-}
-
-impl Default for PatternProperties {
-  fn default() -> Self {
-    Self { width: 100, height: 100 }
-  }
-}
-
-#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct PatternInfo {
   pub title: String,
   pub author: String,
@@ -305,8 +296,10 @@ impl Default for DefaultStitchStrands {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub struct Fabric {
+  pub width: u16,
+  pub height: u16,
   pub spi: StitchesPerInch,
   pub kind: String,
   pub name: String,
@@ -316,6 +309,8 @@ pub struct Fabric {
 impl Default for Fabric {
   fn default() -> Self {
     Self {
+      width: 60,
+      height: 80,
       spi: (14, 14),
       kind: String::from("Aida"),
       name: String::from("White"),

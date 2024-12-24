@@ -2,17 +2,18 @@ import { Application, Container, Graphics, GraphicsContext, Point } from "pixi.j
 import type { FederatedMouseEvent, ColorSource, ApplicationOptions, StrokeInput } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { SpatialHash as Culler } from "pixi-cull";
+import { mm2px } from "#/utils/measurement";
 import { AddStitchEventStage, EventType } from "./events.types";
 import type { AddStitchData, RemoveStitchData } from "./events.types";
 import type { PatternProject } from "#/schemas/pattern/project";
 import type { Grid } from "#/schemas/pattern/display";
 import type {
+  Fabric,
   FullStitch,
   LineStitch,
   NodeStitch,
   PaletteItem,
   PartStitch,
-  PatternProperties,
   SpecialStitch,
   SpecialStitchModel,
 } from "#/schemas/pattern/pattern";
@@ -134,9 +135,9 @@ export class CanvasService extends EventTarget {
   drawPattern({ pattern, displaySettings }: PatternProject) {
     this.clearPattern();
 
-    this.#viewport.moveCenter(pattern.properties.width / 2, pattern.properties.height / 2);
-    this.drawFabric(pattern.properties, pattern.fabric.color);
-    this.drawGrid(pattern.properties, displaySettings.grid);
+    this.#viewport.moveCenter(pattern.fabric.width / 2, pattern.fabric.height / 2);
+    this.drawFabric(pattern.fabric);
+    this.drawGrid(pattern.fabric.width, pattern.fabric.height, displaySettings.grid);
 
     for (const full of pattern.fullstitches) this.drawFullStitch(full, pattern.palette[full.palindex]!);
     for (const part of pattern.partstitches) this.drawPartStitch(part, pattern.palette[part.palindex]!);
@@ -147,12 +148,14 @@ export class CanvasService extends EventTarget {
     for (const sps of pattern.specialstitches) this.drawSpecialStitch(sps, pattern.palette[sps.palindex]!.color);
   }
 
-  drawFabric({ width, height }: PatternProperties, color: ColorSource) {
+  drawFabric({ width, height, color }: Fabric) {
+    this.#stages.fabric.clear();
     this.#stages.fabric.rect(0, 0, width, height).fill(color);
     this.#stages.fabric.eventMode = "none";
   }
 
-  drawGrid({ width, height }: PatternProperties, grid: Grid) {
+  drawGrid(width: number, height: number, grid: Grid) {
+    this.#stages.grid.clear();
     const graphics = this.#stages.grid;
     graphics.eventMode = "none";
     {
@@ -206,10 +209,6 @@ export class CanvasService extends EventTarget {
     this.#stages.fullstitches.addChild(graphics);
   }
 
-  removeFullStitches(fullstitches: FullStitch[]) {
-    for (const fullstitch of fullstitches) this.removeFullStitch(fullstitch);
-  }
-
   removeFullStitch(fullstitch: FullStitch) {
     const key = this.#fullStitchKey(fullstitch);
     const graphics = this.#stages.fullstitches.getChildByName(key);
@@ -232,10 +231,6 @@ export class CanvasService extends EventTarget {
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
     });
     this.#stages.partstitches.addChild(graphics);
-  }
-
-  removePartStitches(partstitches: PartStitch[]) {
-    for (const partstitch of partstitches) this.removePartStitch(partstitch);
   }
 
   removePartStitch(partstitch: PartStitch) {
@@ -426,10 +421,6 @@ export class CanvasService extends EventTarget {
     const { width, height } = this.#stages.fabric.getLocalBounds();
     return x <= 0 || y <= 0 || x >= width || y >= height;
   }
-}
-
-function mm2px(mm: number) {
-  return mm * 3.7795275591;
 }
 
 export interface CanvasSize {
