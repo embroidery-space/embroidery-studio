@@ -7,9 +7,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
+  import { computed, onMounted, onUnmounted, useTemplateRef, watch } from "vue";
   import { useThrottleFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
+  import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
   import { CanvasService, type CanvasSize } from "#/services/canvas/canvas.service";
   import { AddStitchEventStage, EventType } from "#/services/canvas/events.types";
@@ -23,8 +24,8 @@
     LineStitchKind,
     NodeStitchKind,
   } from "#/schemas/pattern";
-  import type { Stitch, StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
-  import { storeToRefs } from "pinia";
+  import { type Stitch, type StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
+  import { PatternView } from "#/services/pattern-view";
 
   const appStateStore = useAppStateStore();
   const patternProjectStore = usePatternProjectStore();
@@ -33,15 +34,15 @@
   const canvas = useTemplateRef("canvas");
   const canvasService = new CanvasService();
 
-  // Triggers on the entire pattern project change (e.g. opening of the new pattern).
-  watch(patproj, (patproj) => canvasService.drawPattern(patproj!));
+  const patternView = computed(() => new PatternView(patproj.value!));
+  watch(patternView, (view) => canvasService.setPatternView(view));
 
   watch(
     () => patproj.value?.pattern.fabric,
     (fabric) => {
       if (!patproj.value || !fabric) return;
-      canvasService.drawFabric(fabric);
-      canvasService.drawGrid(fabric.width, fabric.height, patproj.value.displaySettings.grid);
+      patternView.value.fabric = fabric;
+      patternView.value.grid = patproj.value.displaySettings.grid;
     },
   );
 
@@ -49,8 +50,7 @@
     () => patproj.value?.displaySettings.grid,
     (grid) => {
       if (!patproj.value || !grid) return;
-      const { width, height } = patproj.value.pattern.fabric;
-      canvasService.drawGrid(width, height, grid);
+      patternView.value.grid = grid;
     },
   );
 
@@ -118,7 +118,7 @@
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line: LineStitch = { x: [x1, x2], y: [y1, y2], palindex, kind: tool };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ line });
-        else canvasService.drawLine(line, patproj.value!.pattern.palette[palindex]!, true);
+        // else canvasService.drawLine(line, patproj.value!.pattern.palette[palindex]!, true);
         break;
       }
 
@@ -132,7 +132,7 @@
           rotated: alt,
         };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ node });
-        else canvasService.drawNode(node, patproj.value!.pattern.palette[palindex]!, true);
+        // else canvasService.drawNode(node, patproj.value!.pattern.palette[palindex]!, true);
         break;
       }
     }
@@ -185,38 +185,29 @@
     if (name === "addStitch") {
       const [stitch, isLocal] = args;
       if (!isLocal) return;
-      const palette = patproj.value!.pattern.palette;
-      if ("full" in stitch) canvasService.drawFullStitch(stitch.full, palette[stitch.full.palindex]!);
-      if ("part" in stitch) canvasService.drawPartStitch(stitch.part, palette[stitch.part.palindex]!);
-      if ("line" in stitch) canvasService.drawLine(stitch.line, palette[stitch.line.palindex]!);
-      if ("node" in stitch) canvasService.drawNode(stitch.node, palette[stitch.node.palindex]!);
+      if ("full" in stitch) patternView.value.addFullStitch(stitch.full);
+      if ("part" in stitch) patternView.value.addPartStitch(stitch.part);
+      if ("line" in stitch) patternView.value.addLineStitch(stitch.line);
+      if ("node" in stitch) patternView.value.addNodeStitch(stitch.node);
     }
 
     if (name === "removeStitch") {
       const [stitch, isLocal] = args;
       if (!isLocal) return;
-      if ("full" in stitch) canvasService.removeFullStitch(stitch.full);
-      if ("part" in stitch) canvasService.removePartStitch(stitch.part);
-      if ("line" in stitch) canvasService.removeLine(stitch.line);
-      if ("node" in stitch) canvasService.removeNode(stitch.node);
+      if ("full" in stitch) patternView.value.removeFullStitch(stitch.full);
+      if ("part" in stitch) patternView.value.removePartStitch(stitch.part);
+      if ("line" in stitch) patternView.value.removeLineStitch(stitch.line);
+      if ("node" in stitch) patternView.value.removeNodeStitch(stitch.node);
     }
   });
 
   onMounted(async () => {
     const { width, height } = canvas.value!.getBoundingClientRect();
     await canvasService.init({ width, height, canvas: canvas.value! });
-    canvasService.drawPattern(patproj.value!);
-
-    window.addEventListener(
-      "resize",
-      useThrottleFn(() => {
-        if (!canvas.value) return;
-        canvasService.resize(canvas.value.getBoundingClientRect());
-      }, 500),
-    );
+    canvasService.setPatternView(patternView.value);
   });
 
   onUnmounted(() => {
-    canvasService.clearPattern();
+    canvasService.clear();
   });
 </script>
