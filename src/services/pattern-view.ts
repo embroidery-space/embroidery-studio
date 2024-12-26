@@ -12,7 +12,10 @@ import type {
   NodeStitch,
   PaletteItem,
   PartStitch,
+  PatternInfo,
+  PatternKey,
   PatternProject,
+  Stitch,
   Symbols,
 } from "#/schemas/pattern";
 
@@ -50,6 +53,8 @@ const PART_STITCH_CONTEXT = {
  * It contains all the pattern data along with the graphics objects to display them.
  */
 export class PatternView {
+  #key: PatternKey;
+  #info: PatternInfo;
   #palette: (PaletteItem & { symbols: Symbols; formats: Formats })[];
 
   #fabric!: Fabric;
@@ -72,9 +77,9 @@ export class PatternView {
     // highest
   };
 
-  constructor({ pattern, displaySettings }: PatternProject) {
-    // Disable events for the fabric and grid stages.
-    this.#stages.fabric.eventMode = this.#stages.grid.eventMode = "none";
+  constructor({ key, pattern, displaySettings }: PatternProject) {
+    this.#key = key;
+    this.#info = pattern.info;
 
     // Create a palette with symbols and formats.
     this.#palette = pattern.palette.map((palitem, idx) => {
@@ -83,15 +88,26 @@ export class PatternView {
       return Object.assign(palitem, { symbols, formats });
     });
 
+    // Disable events for the fabric and grid stages.
+    this.#stages.fabric.eventMode = this.#stages.grid.eventMode = "none";
+
     // Set the fabric and grid.
-    this.fabric = pattern.fabric;
-    this.grid = displaySettings.grid;
+    this.setFabric(pattern.fabric);
+    this.setGrid(displaySettings.grid);
 
     // Add stitches to the view.
     for (const fullstitch of pattern.fullstitches) this.addFullStitch(fullstitch);
     for (const partstitch of pattern.partstitches) this.addPartStitch(partstitch);
     for (const line of pattern.lines) this.addLineStitch(line);
     for (const node of pattern.nodes) this.addNodeStitch(node);
+  }
+
+  get key() {
+    return this.#key;
+  }
+
+  get info() {
+    return this.#info;
   }
 
   get stages() {
@@ -102,7 +118,7 @@ export class PatternView {
     return this.#fabric;
   }
 
-  set fabric(fabric: Fabric) {
+  setFabric(fabric: Fabric) {
     this.#fabric = fabric;
     this.#stages.fabric.clear();
     this.#stages.fabric.rect(0, 0, this.fabric.width, this.fabric.height).fill(this.fabric.color);
@@ -112,7 +128,7 @@ export class PatternView {
     return this.#grid;
   }
 
-  set grid(grid: Grid) {
+  setGrid(grid: Grid) {
     this.#grid = grid;
     const { width, height } = this.fabric;
     this.#stages.grid.clear();
@@ -152,6 +168,33 @@ export class PatternView {
       const { thickness, color } = this.grid.majorScreenLines;
       this.#stages.grid.stroke({ width: thickness, color: color });
     }
+  }
+
+  get palette() {
+    return this.#palette;
+  }
+
+  addPaletteItem(data: PaletteItemData) {
+    const { paletteItem, palindex, symbols, formats } = data;
+    this.#palette.splice(palindex, 0, Object.assign(paletteItem, { symbols, formats }));
+  }
+
+  removePaletteItem(palindex: number) {
+    this.#palette.splice(palindex, 1);
+  }
+
+  addStitch(stitch: Stitch) {
+    if ("full" in stitch) this.addFullStitch(stitch.full);
+    if ("part" in stitch) this.addPartStitch(stitch.part);
+    if ("line" in stitch) this.addLineStitch(stitch.line);
+    if ("node" in stitch) this.addNodeStitch(stitch.node);
+  }
+
+  removeStitch(stitch: Stitch) {
+    if ("full" in stitch) this.removeFullStitch(stitch.full);
+    if ("part" in stitch) this.removePartStitch(stitch.part);
+    if ("line" in stitch) this.removeLineStitch(stitch.line);
+    if ("node" in stitch) this.removeNodeStitch(stitch.node);
   }
 
   addFullStitch(full: FullStitch) {
@@ -234,4 +277,11 @@ export class PatternView {
     const graphics = this.#nodes.delete(node)!;
     this.#stages.nodes.removeChild(graphics);
   }
+}
+
+export interface PaletteItemData {
+  paletteItem: PaletteItem;
+  palindex: number;
+  symbols: Symbols;
+  formats: Formats;
 }

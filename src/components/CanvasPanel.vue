@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, onMounted, onUnmounted, useTemplateRef, watch } from "vue";
+  import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
   import { useThrottleFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
@@ -16,7 +16,7 @@
   import { AddStitchEventStage, EventType } from "#/services/canvas/events.types";
   import type { AddStitchData, RemoveStitchData } from "#/services/canvas/events.types";
   import { useAppStateStore } from "#/stores/state";
-  import { usePatternProjectStore } from "#/stores/patproj";
+  import { usePatternsStore } from "#/stores/patterns";
   import {
     FullStitchKind,
     PartStitchKind,
@@ -25,34 +25,18 @@
     NodeStitchKind,
   } from "#/schemas/pattern";
   import { type Stitch, type StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
-  import { PatternView } from "#/services/pattern-view";
 
   const appStateStore = useAppStateStore();
-  const patternProjectStore = usePatternProjectStore();
-  const { patproj } = storeToRefs(patternProjectStore);
+  const patternProjectStore = usePatternsStore();
+  const { pattern } = storeToRefs(patternProjectStore);
 
   const canvas = useTemplateRef("canvas");
   const canvasService = new CanvasService();
 
-  const patternView = computed(() => new PatternView(patproj.value!));
-  watch(patternView, (view) => canvasService.setPatternView(view));
-
-  watch(
-    () => patproj.value?.pattern.fabric,
-    (fabric) => {
-      if (!patproj.value || !fabric) return;
-      patternView.value.fabric = fabric;
-      patternView.value.grid = patproj.value.displaySettings.grid;
-    },
-  );
-
-  watch(
-    () => patproj.value?.displaySettings.grid,
-    (grid) => {
-      if (!patproj.value || !grid) return;
-      patternView.value.grid = grid;
-    },
-  );
+  watch(pattern, (view) => {
+    if (!view) return;
+    canvasService.setPatternView(view);
+  });
 
   let prevStitchState: Stitch | undefined;
   canvasService.addEventListener(EventType.AddStitch, async (e) => {
@@ -118,7 +102,7 @@
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line: LineStitch = { x: [x1, x2], y: [y1, y2], palindex, kind: tool };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ line });
-        // else canvasService.drawLine(line, patproj.value!.pattern.palette[palindex]!, true);
+        // else canvasService.drawLine(line, pattern.value!.pattern.palette[palindex]!, true);
         break;
       }
 
@@ -132,7 +116,7 @@
           rotated: alt,
         };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ node });
-        // else canvasService.drawNode(node, patproj.value!.pattern.palette[palindex]!, true);
+        // else canvasService.drawNode(node, pattern.value!.pattern.palette[palindex]!, true);
         break;
       }
     }
@@ -181,30 +165,10 @@
     else return [end, start];
   }
 
-  patternProjectStore.$onAction(async ({ name, args }) => {
-    if (name === "addStitch") {
-      const [stitch, isLocal] = args;
-      if (!isLocal) return;
-      if ("full" in stitch) patternView.value.addFullStitch(stitch.full);
-      if ("part" in stitch) patternView.value.addPartStitch(stitch.part);
-      if ("line" in stitch) patternView.value.addLineStitch(stitch.line);
-      if ("node" in stitch) patternView.value.addNodeStitch(stitch.node);
-    }
-
-    if (name === "removeStitch") {
-      const [stitch, isLocal] = args;
-      if (!isLocal) return;
-      if ("full" in stitch) patternView.value.removeFullStitch(stitch.full);
-      if ("part" in stitch) patternView.value.removePartStitch(stitch.part);
-      if ("line" in stitch) patternView.value.removeLineStitch(stitch.line);
-      if ("node" in stitch) patternView.value.removeNodeStitch(stitch.node);
-    }
-  });
-
   onMounted(async () => {
     const { width, height } = canvas.value!.getBoundingClientRect();
     await canvasService.init({ width, height, canvas: canvas.value! });
-    canvasService.setPatternView(patternView.value);
+    canvasService.setPatternView(pattern.value!);
   });
 
   onUnmounted(() => {

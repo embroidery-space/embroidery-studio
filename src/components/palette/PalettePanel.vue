@@ -2,8 +2,8 @@
   <div class="relative h-full">
     <Listbox
       v-model="appState.state.selectedPaletteItemIndex"
-      :options="patproj?.pattern.palette"
-      :option-value="(pi: PaletteItem) => patproj?.pattern.palette.indexOf(pi)"
+      :options="pattern?.palette"
+      :option-value="(pi) => pattern?.palette.indexOf(pi)"
       scroll-height="100%"
       empty-message="No palette items found"
       :dt="{ list: { header: { padding: '4px 8px' } } }"
@@ -12,7 +12,7 @@
       pt:list-container:class="grow"
       pt:list:class="grid gap-1"
       :pt:list:style="{
-        gridTemplateColumns: `repeat(${patproj?.pattern.palette.length ? paletteDisplayOptions.columnsNumber : 1}, minmax(0px, 1fr))`,
+        gridTemplateColumns: `repeat(${pattern?.palette.length ? paletteDisplayOptions.columnsNumber : 1}, minmax(0px, 1fr))`,
       }"
       pt:option:class="p-0"
       @option-dblclick="({ value }) => emit('removePaletteItem', value)"
@@ -20,7 +20,7 @@
       <template #header>
         <div class="flex min-h-9 w-full items-center justify-between">
           <div class="text-color">Palette</div>
-          <ButtonGroup v-if="patproj?.pattern.palette !== undefined">
+          <ButtonGroup v-if="pattern?.palette !== undefined">
             <Button
               severity="primary"
               :icon="`pi ${showPaletteCatalog ? 'pi-minus' : 'pi-plus'}`"
@@ -46,7 +46,7 @@
 
     <Listbox
       v-if="showPaletteCatalog"
-      :model-value="patproj?.pattern.palette.map((pi) => ({ brand: pi.brand, number: pi.number }))"
+      :model-value="pattern?.palette.map((pi) => ({ brand: pi.brand, number: pi.number }))"
       :options="selectedPalette"
       :option-value="(pi: PaletteItem) => ({ brand: pi.brand, number: pi.number })"
       :multiple="true"
@@ -64,7 +64,7 @@
       class="absolute left-full top-0 z-10 w-max"
       @option-dblclick="
         ({ value }) => {
-          if (!patproj?.pattern.palette.find((pi) => pi.brand === value.brand && pi.number === value.number)) {
+          if (!pattern?.palette.find((pi) => pi.brand === value.brand && pi.number === value.number)) {
             emit('addPaletteItem', value);
           }
         }
@@ -85,8 +85,7 @@
         <PalItem
           :palette-item="option"
           :selected="
-            patproj?.pattern.palette.find((pi) => pi.brand === option.brand && pi.number === option.number) !==
-            undefined
+            pattern?.palette.find((pi) => pi.brand === option.brand && pi.number === option.number) !== undefined
           "
           :display-options="paletteCatalogDisplayOptions"
         />
@@ -173,7 +172,7 @@
   import { DEFAULT_PALETTE_DISPLAY_OPTIONS, type PaletteDisplayOptions } from "#/utils/paletteItem";
   import { useAppStateStore } from "#/stores/state";
   import type { PaletteItem, PaletteItemBase } from "#/types/pattern/pattern";
-  import { usePatternProjectStore } from "#/stores/patproj";
+  import { usePatternsStore } from "#/stores/patterns";
 
   interface PalettePanelEmits {
     (e: "addPaletteItem", pi: PaletteItem): void;
@@ -183,8 +182,8 @@
   const emit = defineEmits<PalettePanelEmits>();
 
   const appState = useAppStateStore();
-  const patternProjectStore = usePatternProjectStore();
-  const { patproj } = storeToRefs(patternProjectStore);
+  const patternProjectStore = usePatternsStore();
+  const { pattern } = storeToRefs(patternProjectStore);
 
   const paletteDisplayOptions = reactive<PaletteDisplayOptions>({ ...DEFAULT_PALETTE_DISPLAY_OPTIONS });
   const paletteSettingsPopover = useTemplateRef("paletteSettingsPopover");
