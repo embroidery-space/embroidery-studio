@@ -1,12 +1,17 @@
 import { Application, Container, Graphics } from "pixi.js";
-import type { ApplicationOptions, FederatedPointerEvent, Point } from "pixi.js";
+import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { SpatialHash as Culler } from "pixi-cull";
 import type { PatternView } from "../pattern-view";
 import { AddStitchEventStage, EventType, type AddStitchData, type RemoveStitchData } from "./events.types";
-import { StitchGraphics } from "#/plugins/pixi/graphics";
-
-const SCALE_FACTOR = 10;
+import {
+  TextureManager,
+  StitchGraphics,
+  StitchSprite,
+  STITCH_SCALE_FACTOR,
+  VIEWPORT_SCALE_FACTOR,
+} from "#/plugins/pixi";
+import { Bead, type LineStitch, type NodeStitch } from "#/schemas/pattern";
 
 const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
   eventMode: "passive",
@@ -17,6 +22,7 @@ const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
 
 export class CanvasService extends EventTarget {
   #pixi = new Application();
+  #tm!: TextureManager;
   #viewport!: Viewport;
   #culler = new Culler();
 
@@ -29,10 +35,11 @@ export class CanvasService extends EventTarget {
 
   async init(options?: Partial<ApplicationOptions>) {
     await this.#pixi.init(Object.assign({}, DEFAULT_INIT_OPTIONS, options));
+    this.#tm = new TextureManager(this.#pixi);
     this.#viewport = this.#pixi.stage.addChild(new Viewport({ events: this.#pixi.renderer.events }));
 
     // Configure the viewport.
-    this.#viewport.scale.set(SCALE_FACTOR);
+    this.#viewport.scale.set(VIEWPORT_SCALE_FACTOR);
     this.#viewport
       .drag({ keyToPress: ["ShiftLeft"], factor: 2 })
       .wheel()
@@ -55,6 +62,7 @@ export class CanvasService extends EventTarget {
 
   setPatternView(view: PatternView) {
     this.clear();
+    view.init(this.#tm);
     for (const stage of Object.values(view.stages)) {
       this.#viewport.addChild(stage);
       if (stage instanceof Container) this.#culler.addContainer(stage, true);
@@ -73,9 +81,35 @@ export class CanvasService extends EventTarget {
     this.#viewport.resize(width, height);
   }
 
+  drawLineHint(line: LineStitch, color: ColorSource) {
+    const { x, y } = line;
+    const start = { x: x[0], y: y[0] };
+    const end = { x: x[1], y: y[1] };
+    this.#clearHint()
+      .moveTo(start.x, start.y)
+      .lineTo(end.x, end.y)
+      // Draw a line with a larger width to make it look like a border.
+      .stroke({ width: 0.225, color: 0x000000, cap: "round" })
+      .moveTo(start.x, start.y)
+      .lineTo(end.x, end.y)
+      // Draw a line with a smaller width to make it look like a fill.
+      .stroke({ width: 0.2, color, cap: "round" });
+  }
+
+  drawNodeHint(node: NodeStitch, color: ColorSource, bead?: Bead) {
+    const { x, y, kind, rotated } = node;
+    const graphics = this.#clearHint();
+    graphics.texture(this.#tm.getNodeTexture(kind, bead), color);
+    graphics.pivot.set(graphics.width / 2, graphics.height / 2);
+    graphics.scale.set(STITCH_SCALE_FACTOR);
+    graphics.position.set(x, y);
+    if (rotated) graphics.angle = 90;
+  }
+
   #clearHint() {
     const hint = this.#hint.clear().restore();
     hint.angle = 0;
+    hint.alpha = 0.5;
     hint.pivot.set(0, 0);
     hint.scale.set(1, 1);
     hint.position.set(0, 0);
@@ -127,8 +161,13 @@ export class CanvasService extends EventTarget {
   }
 
   #onRightClick(e: FederatedPointerEvent) {
-    if (e.target instanceof StitchGraphics) {
-      const detail: RemoveStitchData = e.target.stitch;
+    if (e.target instanceof StitchGraphics || e.target instanceof StitchSprite) {
+      const detail: RemoveStitchData = { stitch: e.target.stitch };
+      this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
+    } else {
+      // If the target is not a stitch graphics or sprite, then it is a particle which is not interactive.
+      // We handle such elements by dispatching an event with the point where the right click occurred.
+      const detail: RemoveStitchData = { point: this.#viewport.toWorld(e.global) };
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
     }
   }

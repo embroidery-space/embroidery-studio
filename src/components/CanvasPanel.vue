@@ -102,7 +102,7 @@
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line: LineStitch = { x: [x1, x2], y: [y1, y2], palindex, kind: tool };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ line });
-        // else canvasService.drawLine(line, pattern.value!.pattern.palette[palindex]!, true);
+        else canvasService.drawLineHint(line, pattern.value!.palette[palindex]!.color);
         break;
       }
 
@@ -116,7 +116,10 @@
           rotated: alt,
         };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ node });
-        // else canvasService.drawNode(node, pattern.value!.pattern.palette[palindex]!, true);
+        else {
+          const palitem = pattern.value!.palette[palindex]!;
+          canvasService.drawNodeHint(node, palitem.color, palitem.bead);
+        }
         break;
       }
     }
@@ -125,8 +128,31 @@
   });
 
   canvasService.addEventListener(EventType.RemoveStitch, async (e) => {
-    const stitch: RemoveStitchData = (e as CustomEvent).detail;
-    await patternProjectStore.removeStitch(stitch);
+    const detail: RemoveStitchData = (e as CustomEvent).detail;
+    if ("stitch" in detail) await patternProjectStore.removeStitch(detail.stitch);
+    else {
+      // In this case we need to determine the stitch based on the point.
+      // The simplest (but not so optimized) way is to try to remove all the possible simple stitches.
+      // This is not the best way but we okay with it for now.
+
+      loop: for (const kind of [
+        // small stitches go first
+        FullStitchKind.Petite,
+        PartStitchKind.Quarter,
+        // normal stitches go last
+        FullStitchKind.Full,
+        PartStitchKind.Half,
+      ]) {
+        const { x, y } = adjustStitchCoordinate(detail.point, kind);
+        if (kind === FullStitchKind.Full || kind === FullStitchKind.Petite) {
+          if (await patternProjectStore.removeStitch({ full: { x, y, kind, palindex: 0 } })) break loop;
+        } else {
+          for (const direction of [PartStitchDirection.Forward, PartStitchDirection.Backward]) {
+            if (await patternProjectStore.removeStitch({ part: { x, y, kind, direction, palindex: 0 } })) break loop;
+          }
+        }
+      }
+    }
   });
 
   function adjustStitchCoordinate({ x, y }: Point, tool: StitchKind): Point {

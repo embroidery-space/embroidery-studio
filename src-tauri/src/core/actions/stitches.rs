@@ -58,12 +58,18 @@ impl<R: tauri::Runtime> Action<R> for AddStitchAction {
 
 #[derive(Clone)]
 pub struct RemoveStitchAction {
-  stitch: Stitch,
+  // Actual stitch contains only the necessary stitch properties ...
+  target_stitch: Stitch,
+  // ... while the actual stitch contains all properties.
+  actual_stitch: OnceLock<Stitch>,
 }
 
 impl RemoveStitchAction {
   pub fn new(stitch: Stitch) -> Self {
-    Self { stitch }
+    Self {
+      target_stitch: stitch,
+      actual_stitch: OnceLock::new(),
+    }
   }
 }
 
@@ -73,8 +79,11 @@ impl<R: tauri::Runtime> Action<R> for RemoveStitchAction {
   /// **Emits:**
   /// - `stitches:remove_one` with the removed stitch
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    patproj.pattern.remove_stitch(self.stitch);
-    window.emit("stitches:remove_one", self.stitch)?;
+    let stitch = patproj.pattern.remove_stitch(self.target_stitch).unwrap();
+    if self.actual_stitch.get().is_none() {
+      self.actual_stitch.set(stitch).unwrap();
+    }
+    window.emit("stitches:remove_one", stitch)?;
     Ok(())
   }
 
@@ -83,8 +92,9 @@ impl<R: tauri::Runtime> Action<R> for RemoveStitchAction {
   /// **Emits:**
   /// - `stitches:add_one` with the added stitch
   fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    patproj.pattern.add_stitch(self.stitch);
-    window.emit("stitches:add_one", self.stitch)?;
+    let stitch = self.actual_stitch.get().unwrap();
+    patproj.pattern.add_stitch(*stitch);
+    window.emit("stitches:add_one", stitch)?;
     Ok(())
   }
 }

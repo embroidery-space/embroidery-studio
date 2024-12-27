@@ -21,6 +21,43 @@ impl Pattern {
     Pattern { fabric, ..Pattern::default() }
   }
 
+  /// Get a stitch from the pattern.
+  pub fn get_stitch(&self, stitch: &Stitch) -> Option<Stitch> {
+    // This method accepts a reference stitch which may not contain all the stitch properties.
+    // We use this method to find the actual stitch.
+
+    match stitch {
+      Stitch::Full(fullstitch) => {
+        if let Some(&fullstitch) = self.fullstitches.get(fullstitch) {
+          Some(Stitch::Full(fullstitch))
+        } else {
+          None
+        }
+      }
+      Stitch::Part(partstitch) => {
+        if let Some(&partstitch) = self.partstitches.get(partstitch) {
+          Some(Stitch::Part(partstitch))
+        } else {
+          None
+        }
+      }
+      Stitch::Node(node) => {
+        if let Some(&node) = self.nodes.get(node) {
+          Some(Stitch::Node(node))
+        } else {
+          None
+        }
+      }
+      Stitch::Line(line) => {
+        if let Some(&line) = self.lines.get(line) {
+          Some(Stitch::Line(line))
+        } else {
+          None
+        }
+      }
+    }
+  }
+
   /// Check if the pattern contains a stitch.
   pub fn contains_stitch(&self, stitch: &Stitch) -> bool {
     match stitch {

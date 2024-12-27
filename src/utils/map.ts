@@ -11,16 +11,15 @@ export class ObjectedMap<K, V> {
 
   /** Set a key-value pair. */
   set(key: K, value: V): this {
-    const existingEntry = this.#entries.find((entry) => dequal(entry.key, key));
-    if (existingEntry) existingEntry.value = value;
-    else this.#entries.push({ key, value });
+    // In our case the keys are always unique, so we don't need to check for duplicates.
+    this.#entries.push({ key, value });
     return this;
   }
 
   /** Get a value by key. */
   get(key: K): V | undefined {
     const entry = this.#entries.find((entry) => dequal(entry.key, key));
-    return entry ? entry.value : undefined;
+    return entry?.value;
   }
 
   /** Check if a key exists in the map. */

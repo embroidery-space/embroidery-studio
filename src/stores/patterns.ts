@@ -162,13 +162,13 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     triggerRef(pattern);
   });
 
-  async function addStitch(stitch: Stitch) {
+  function addStitch(stitch: Stitch) {
     if (!pattern.value) return;
-    await StitchesApi.addStitch(pattern.value.key, stitch);
+    return StitchesApi.addStitch(pattern.value.key, stitch);
   }
-  async function removeStitch(stitch: Stitch) {
+  function removeStitch(stitch: Stitch) {
     if (!pattern.value) return;
-    await StitchesApi.removeStitch(pattern.value.key, stitch);
+    return StitchesApi.removeStitch(pattern.value.key, stitch);
   }
   appWindow.listen<Stitch>("stitches:add_one", ({ payload }) => {
     if (!pattern.value) return;

@@ -237,7 +237,7 @@ export class LineStitch {
 
   @field({
     serialize: (kind, writer) => (kind === LineStitchKind.Back ? writer.u8(0) : writer.u8(1)),
-    deserialize: (reader) => (reader.u8() === 0 ? LineStitchKind.Straight : PartStitchKind.Quarter),
+    deserialize: (reader) => (reader.u8() === 0 ? LineStitchKind.Back : LineStitchKind.Straight),
   })
   kind: LineStitchKind;
 

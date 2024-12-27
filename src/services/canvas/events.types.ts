@@ -36,4 +36,4 @@ export const enum AddStitchEventStage {
   End = "end",
 }
 
-export type RemoveStitchData = Stitch;
+export type RemoveStitchData = { stitch: Stitch } | { point: Point };
