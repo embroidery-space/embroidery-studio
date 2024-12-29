@@ -20,6 +20,8 @@ import type {
   PatternInfo,
   PatternKey,
   PatternProject,
+  SpecialStitch,
+  SpecialStitchModel,
   Stitch,
   Symbols,
 } from "#/schemas/pattern";
@@ -47,6 +49,9 @@ export class PatternView {
   #lines = new ObjectedMap<LineStitch, StitchGraphics | undefined>();
   #nodes = new ObjectedMap<NodeStitch, StitchSprite | undefined>();
 
+  #specialstitches: SpecialStitch[];
+  #specialStitchModels: SpecialStitchModel[];
+
   #textureManager!: TextureManager;
   #stages = {
     // lowest
@@ -56,9 +61,9 @@ export class PatternView {
     halfstitches: new StitchParticleContainer(PartStitchKind.Half),
     quarters: new StitchParticleContainer(PartStitchKind.Quarter),
     grid: new Graphics(),
+    specialstitches: new Container(),
     lines: new Container(),
     nodes: new Container(),
-    specialstitches: new Container(),
     // highest
   };
 
@@ -83,6 +88,9 @@ export class PatternView {
     for (const partstitch of pattern.partstitches) this.#partstitches.set(partstitch, undefined);
     for (const line of pattern.lines) this.#lines.set(line, undefined);
     for (const node of pattern.nodes) this.#nodes.set(node, undefined);
+
+    this.#specialstitches = pattern.specialstitches;
+    this.#specialStitchModels = pattern.specialStitchModels;
   }
 
   init(textureManager: TextureManager) {
@@ -93,6 +101,7 @@ export class PatternView {
     for (const partstitch of this.#partstitches.extract().map((entry) => entry.key)) this.addPartStitch(partstitch);
     for (const line of this.#lines.extract().map((entry) => entry.key)) this.addLineStitch(line);
     for (const node of this.#nodes.extract().map((entry) => entry.key)) this.addNodeStitch(node);
+    for (const specialstitch of this.#specialstitches) this.addSpecialStitch(specialstitch);
   }
 
   get key() {
@@ -273,6 +282,54 @@ export class PatternView {
   removeNodeStitch(node: NodeStitch) {
     const graphics = this.#nodes.delete(node)!;
     this.#stages.nodes.removeChild(graphics);
+  }
+
+  addSpecialStitch(specialStitch: SpecialStitch) {
+    const { x, y, rotation, flip, palindex, modindex } = specialStitch;
+    const model = this.#specialStitchModels[modindex]!;
+
+    // Special stitches are very rare and complex so it is easier to draw them using graphics.
+    const graphics = new Graphics();
+
+    for (const { points } of model.curves) {
+      // Draw a polyline with a larger width to make it look like a border.
+      graphics.poly(points.flat(), false).stroke({ width: 0.225, color: 0x000000, cap: "round", join: "round" });
+      // Draw a polyline with a smaller width to make it look like a fill.
+      graphics.poly(points.flat(), false).stroke({ width: 0.2, cap: "round", join: "round" });
+    }
+
+    for (const { x, y } of model.lines) {
+      const start = { x: x[0], y: y[0] };
+      const end = { x: x[1], y: y[1] };
+      graphics
+        // Draw a line with a larger width to make it look like a border.
+        .moveTo(start.x, start.y)
+        .lineTo(end.x, end.y)
+        .stroke({ width: 0.225, color: 0x000000, cap: "round" })
+        // Draw a line with a smaller width to make it look like a fill.
+        .moveTo(start.x, start.y)
+        .lineTo(end.x, end.y)
+        .stroke({ width: 0.2, cap: "round" });
+    }
+
+    // Decrease the scale factor to draw the nodes with more points.
+    graphics.scale.set(0.1);
+    for (const { x, y } of model.nodes) {
+      // All nodes are french knotes there.
+      graphics
+        .circle(x * 10, y * 10, 5)
+        .stroke({ pixelLine: true, color: 0x000000, cap: "round" })
+        .fill(0xffffff);
+    }
+    graphics.scale.set(1);
+
+    graphics.tint = this.palette[palindex]!.color;
+    graphics.position.set(x, y);
+    graphics.angle = rotation;
+    if (flip[0]) graphics.scale.x = -1;
+    if (flip[1]) graphics.scale.y = -1;
+
+    this.#stages.specialstitches.addChild(graphics);
   }
 }
 
