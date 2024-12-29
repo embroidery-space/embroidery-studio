@@ -1,3 +1,3 @@
 export * from "./constants";
-export * from "./graphics";
+export * from "./display-objects";
 export * from "./texture-manager";

@@ -1,5 +1,11 @@
-import { Container, Graphics, Particle, ParticleContainer } from "pixi.js";
-import { TextureManager, StitchGraphics, StitchSprite, STITCH_SCALE_FACTOR } from "#/plugins/pixi";
+import { Container, Graphics, Particle } from "pixi.js";
+import {
+  TextureManager,
+  StitchGraphics,
+  StitchSprite,
+  STITCH_SCALE_FACTOR,
+  StitchParticleContainer,
+} from "#/plugins/pixi";
 import { ObjectedMap } from "#/utils/map";
 import { FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
 import type {
@@ -45,10 +51,10 @@ export class PatternView {
   #stages = {
     // lowest
     fabric: new Graphics(),
-    fullstitches: new ParticleContainer(),
-    petites: new ParticleContainer(),
-    halfstitches: new ParticleContainer(),
-    quarters: new ParticleContainer(),
+    fullstitches: new StitchParticleContainer(FullStitchKind.Full),
+    petites: new StitchParticleContainer(FullStitchKind.Petite),
+    halfstitches: new StitchParticleContainer(PartStitchKind.Half),
+    quarters: new StitchParticleContainer(PartStitchKind.Quarter),
     grid: new Graphics(),
     lines: new Container(),
     nodes: new Container(),

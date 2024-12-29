@@ -3,11 +3,16 @@ import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } fr
 import { Viewport } from "pixi-viewport";
 import type { PatternView } from "../pattern-view";
 import { AddStitchEventStage, EventType, type AddStitchData, type RemoveStitchData } from "./events.types";
-import { TextureManager, StitchGraphics, StitchSprite, STITCH_SCALE_FACTOR } from "#/plugins/pixi";
+import {
+  TextureManager,
+  StitchGraphics,
+  StitchSprite,
+  STITCH_SCALE_FACTOR,
+  StitchParticleContainer,
+} from "#/plugins/pixi";
 import { Bead, type LineStitch, type NodeStitch } from "#/schemas/pattern";
 
 const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
-  eventMode: "passive",
   eventFeatures: { globalMove: false },
   antialias: true,
   backgroundAlpha: 0,
@@ -159,10 +164,14 @@ export class CanvasService extends EventTarget {
       const detail: RemoveStitchData = { stitch: e.target.stitch };
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
     } else {
-      // If the target is not a stitch graphics or sprite, then it is a particle which is not interactive.
-      // We handle such elements by dispatching an event with the point where the right click occurred.
-      const detail: RemoveStitchData = { point: this.#viewport.toWorld(e.global) };
-      this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
+      const point = this.#viewport.toWorld(e.global);
+      if (this.#pointIsOutside(point)) return;
+      this.#viewport.children.forEach((child) => {
+        if (child instanceof StitchParticleContainer) {
+          const detail: RemoveStitchData = { point, kind: child.kind };
+          this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
+        }
+      });
     }
   }
 

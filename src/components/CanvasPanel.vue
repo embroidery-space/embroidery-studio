@@ -134,23 +134,17 @@
       // In this case we need to determine the stitch based on the point.
       // The simplest (but not so optimized) way is to try to remove all the possible simple stitches.
       // This is not the best way but we okay with it for now.
-
-      loop: for (const kind of [
-        // small stitches go first
-        FullStitchKind.Petite,
-        PartStitchKind.Quarter,
-        // normal stitches go last
-        FullStitchKind.Full,
-        PartStitchKind.Half,
-      ]) {
-        const { x, y } = adjustStitchCoordinate(detail.point, kind);
-        if (kind === FullStitchKind.Full || kind === FullStitchKind.Petite) {
-          if (await patternProjectStore.removeStitch({ full: { x, y, kind, palindex: 0 } })) break loop;
-        } else {
-          for (const direction of [PartStitchDirection.Forward, PartStitchDirection.Backward]) {
-            if (await patternProjectStore.removeStitch({ part: { x, y, kind, direction, palindex: 0 } })) break loop;
-          }
-        }
+      const kind = detail.kind;
+      const { x, y } = adjustStitchCoordinate(detail.point, kind);
+      if (kind === FullStitchKind.Full || kind === FullStitchKind.Petite) {
+        await patternProjectStore.removeStitch({ full: { x, y, kind, palindex: 0 } });
+      } else if (kind === PartStitchKind.Half || kind === PartStitchKind.Quarter) {
+        const [fractX, fractY] = [detail.point.x - Math.trunc(x), detail.point.y - Math.trunc(y)];
+        const direction =
+          (fractX < 0.5 && fractY > 0.5) || (fractX > 0.5 && fractY < 0.5)
+            ? PartStitchDirection.Forward
+            : PartStitchDirection.Backward;
+        await patternProjectStore.removeStitch({ part: { x, y, kind, direction, palindex: 0 } });
       }
     }
   });
