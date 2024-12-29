@@ -22,11 +22,6 @@ export class ObjectedMap<K, V> {
     return entry?.value;
   }
 
-  /** Check if a key exists in the map. */
-  has(key: K): boolean {
-    return this.#entries.some((entry) => dequal(entry.key, key));
-  }
-
   /** Delete a key-value pair by key. */
   delete(key: K): V | undefined {
     const index = this.#entries.findIndex((entry) => dequal(entry.key, key));
@@ -38,18 +33,10 @@ export class ObjectedMap<K, V> {
     this.#entries = [];
   }
 
-  /** Iterate over keys. */
-  *keys(): IterableIterator<K> {
-    for (const { key } of this.#entries) yield key;
-  }
-
-  /** Iterate over values/ */
-  *values(): IterableIterator<V> {
-    for (const { value } of this.#entries) yield value;
-  }
-
-  /** Iterate over entries. */
-  *entries(): IterableIterator<[K, V]> {
-    for (const { key, value } of this.#entries) yield [key, value];
+  /** Extract all entries from the map. */
+  extract() {
+    const entries = this.#entries;
+    this.clear();
+    return entries;
   }
 }

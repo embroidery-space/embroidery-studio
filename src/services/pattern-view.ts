@@ -11,7 +11,6 @@ import type {
   NodeStitch,
   PaletteItem,
   PartStitch,
-  Pattern,
   PatternInfo,
   PatternKey,
   PatternProject,
@@ -31,17 +30,18 @@ export class PatternView {
   #fabric!: Fabric;
   #grid!: Grid;
 
-  // Simple stitches (full, petite, half, quarter) are rendered using particles.
+  // Simple stitches (fulls, petites, halves and quarters) are rendered using particles.
   // It allows us to render a large number of stitches very efficiently.
   // This is especially important because they are the most common stitches.
-  #fullstitches = new ObjectedMap<FullStitch, Particle>();
-  #partstitches = new ObjectedMap<PartStitch, Particle>();
+  #fullstitches = new ObjectedMap<FullStitch, Particle | undefined>();
+  #partstitches = new ObjectedMap<PartStitch, Particle | undefined>();
 
   // Complex stitches (back and straight stitches, french knots, beads and special stitches) are rendered using graphics and sprites.
   // They are more complex and require more control over their rendering.
-  #lines = new ObjectedMap<LineStitch, StitchGraphics>();
-  #nodes = new ObjectedMap<NodeStitch, StitchSprite>();
+  #lines = new ObjectedMap<LineStitch, StitchGraphics | undefined>();
+  #nodes = new ObjectedMap<NodeStitch, StitchSprite | undefined>();
 
+  #textureManager!: TextureManager;
   #stages = {
     // lowest
     fabric: new Graphics(),
@@ -56,13 +56,9 @@ export class PatternView {
     // highest
   };
 
-  #pattern: Pattern;
-  #tm!: TextureManager;
-
   constructor({ key, pattern, displaySettings }: PatternProject) {
     this.#key = key;
     this.#info = pattern.info;
-    this.#pattern = pattern;
 
     // Create a palette with symbols and formats.
     this.#palette = pattern.palette.map((palitem, idx) => {
@@ -74,16 +70,23 @@ export class PatternView {
     // Set the fabric and grid.
     this.setFabric(pattern.fabric);
     this.setGrid(displaySettings.grid);
+
+    // Save stitches in the state.
+    // They will be replaced with the actual display objects when the view is initialized.
+    for (const fullstitch of pattern.fullstitches) this.#fullstitches.set(fullstitch, undefined);
+    for (const partstitch of pattern.partstitches) this.#partstitches.set(partstitch, undefined);
+    for (const line of pattern.lines) this.#lines.set(line, undefined);
+    for (const node of pattern.nodes) this.#nodes.set(node, undefined);
   }
 
-  init(tm: TextureManager) {
-    this.#tm = tm;
+  init(textureManager: TextureManager) {
+    this.#textureManager = textureManager;
 
-    // Add stitches to the view.
-    for (const fullstitch of this.#pattern.fullstitches) this.addFullStitch(fullstitch);
-    for (const partstitch of this.#pattern.partstitches) this.addPartStitch(partstitch);
-    for (const line of this.#pattern.lines) this.addLineStitch(line);
-    for (const node of this.#pattern.nodes) this.addNodeStitch(node);
+    // Add actual stitches to the view.
+    for (const fullstitch of this.#fullstitches.extract().map((entry) => entry.key)) this.addFullStitch(fullstitch);
+    for (const partstitch of this.#partstitches.extract().map((entry) => entry.key)) this.addPartStitch(partstitch);
+    for (const line of this.#lines.extract().map((entry) => entry.key)) this.addLineStitch(line);
+    for (const node of this.#nodes.extract().map((entry) => entry.key)) this.addNodeStitch(node);
   }
 
   get key() {
@@ -184,7 +187,7 @@ export class PatternView {
   addFullStitch(full: FullStitch) {
     const { x, y, palindex, kind } = full;
     const particle = new Particle({
-      texture: this.#tm.getFullStitchTexture(kind),
+      texture: this.#textureManager.getFullStitchTexture(kind),
       x,
       y,
       tint: this.#palette[palindex]!.color,
@@ -205,7 +208,7 @@ export class PatternView {
   addPartStitch(part: PartStitch) {
     const { x, y, palindex, kind, direction } = part;
     const particle = new Particle({
-      texture: this.#tm.getPartStitchTexture(kind),
+      texture: this.#textureManager.getPartStitchTexture(kind),
       x,
       y,
       tint: this.#palette[palindex]!.color,
@@ -250,7 +253,7 @@ export class PatternView {
   addNodeStitch(node: NodeStitch) {
     const { x, y, palindex, kind, rotated } = node;
     const palitem = this.#palette[palindex]!;
-    const sprite = new StitchSprite({ node }, this.#tm.getNodeTexture(kind, palitem.bead));
+    const sprite = new StitchSprite({ node }, this.#textureManager.getNodeTexture(kind, palitem.bead));
     sprite.eventMode = "static";
     sprite.tint = palitem.color;
     sprite.pivot.set(sprite.width / 2, sprite.height / 2);

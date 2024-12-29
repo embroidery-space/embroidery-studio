@@ -33,7 +33,7 @@ export class CanvasService extends EventTarget {
 
   async init(options?: Partial<ApplicationOptions>) {
     await this.#pixi.init(Object.assign({}, DEFAULT_INIT_OPTIONS, options));
-    this.#tm = new TextureManager(this.#pixi);
+    this.#tm = new TextureManager(this.#pixi.renderer);
     this.#viewport = this.#pixi.stage.addChild(new Viewport({ events: this.#pixi.renderer.events }));
 
     // Configure the viewport.
