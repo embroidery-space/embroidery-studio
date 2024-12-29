@@ -10,10 +10,10 @@ export class ObjectedMap<K, V> {
   }
 
   /** Set a key-value pair. */
-  set(key: K, value: V): this {
+  set(key: K, value: V): V {
     // In our case the keys are always unique, so we don't need to check for duplicates.
     this.#entries.push({ key, value });
-    return this;
+    return value;
   }
 
   /** Get a value by key. */

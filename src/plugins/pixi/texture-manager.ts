@@ -21,7 +21,7 @@ export class TextureManager {
   #partstitches: Record<PartStitchKind, RenderTexture>;
 
   #frenchKnot: RenderTexture;
-  #nodes = new ObjectedMap<Bead, RenderTexture>(); // Bead textures are created based on the bead's properties.
+  #beads = new ObjectedMap<Bead, RenderTexture>(); // Bead textures are created based on the bead's properties.
 
   constructor(renderer: Renderer, rtOptions?: TextureSourceOptions) {
     this.#renderer = renderer;
@@ -86,7 +86,9 @@ export class TextureManager {
 
   getNodeTexture(kind: NodeStitchKind, bead: Bead = { length: 1.5, diameter: 2.5 }) {
     if (kind === NodeStitchKind.FrenchKnot) return this.#frenchKnot;
-    else return this.#nodes.get(bead!) ?? this.#createBeadTexture(bead!);
+    const texture = this.#beads.get(bead!);
+    if (texture) return texture;
+    return this.#beads.set(bead, this.#createBeadTexture(bead));
   }
 
   #createFrenchKnotTexture() {
