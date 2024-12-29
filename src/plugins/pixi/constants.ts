@@ -1,6 +1,5 @@
 import type { StrokeInput } from "pixi.js";
 
-export const VIEWPORT_SCALE_FACTOR = 10;
 export const STITCH_SCALE_FACTOR = 1 / 100;
 
 export const GRAPHICS_STROKE: StrokeInput = { pixelLine: true, alignment: 0.5, color: 0x000000 };

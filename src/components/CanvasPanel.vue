@@ -40,9 +40,9 @@
 
   let prevStitchState: Stitch | undefined;
   canvasService.addEventListener(EventType.AddStitch, async (e) => {
-    const palindex = appStateStore.state.selectedPaletteItemIndex;
-    if (palindex === undefined) return;
     const tool = appStateStore.state.selectedStitchTool;
+    const palindex = appStateStore.state.selectedPaletteItemIndex;
+    if (!palindex) return;
 
     // A start point is needed to draw the lines.
     // An end point is needed to draw all the other kinds of stitches (in addition to lines).
@@ -192,8 +192,7 @@
   }
 
   onMounted(async () => {
-    const { width, height } = canvas.value!.getBoundingClientRect();
-    await canvasService.init({ width, height, canvas: canvas.value! });
+    await canvasService.init(canvas.value!.getBoundingClientRect(), { canvas: canvas.value! });
     canvasService.setPatternView(pattern.value!);
   });
 

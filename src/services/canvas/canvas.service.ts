@@ -3,13 +3,7 @@ import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } fr
 import { Viewport } from "pixi-viewport";
 import type { PatternView } from "../pattern-view";
 import { AddStitchEventStage, EventType, type AddStitchData, type RemoveStitchData } from "./events.types";
-import {
-  TextureManager,
-  StitchGraphics,
-  StitchSprite,
-  STITCH_SCALE_FACTOR,
-  VIEWPORT_SCALE_FACTOR,
-} from "#/plugins/pixi";
+import { TextureManager, StitchGraphics, StitchSprite, STITCH_SCALE_FACTOR } from "#/plugins/pixi";
 import { Bead, type LineStitch, type NodeStitch } from "#/schemas/pattern";
 
 const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
@@ -31,16 +25,22 @@ export class CanvasService extends EventTarget {
     super();
   }
 
-  async init(options?: Partial<ApplicationOptions>) {
-    await this.#pixi.init(Object.assign({}, DEFAULT_INIT_OPTIONS, options));
+  async init({ width, height }: CanvasSize, options?: Partial<Omit<ApplicationOptions, "width" | "height">>) {
+    await this.#pixi.init(Object.assign({ width, height }, DEFAULT_INIT_OPTIONS, options));
     this.#tm = new TextureManager(this.#pixi.renderer);
-    this.#viewport = this.#pixi.stage.addChild(new Viewport({ events: this.#pixi.renderer.events }));
+    this.#viewport = this.#pixi.stage.addChild(
+      new Viewport({
+        screenWidth: width,
+        screenHeight: height,
+        events: this.#pixi.renderer.events,
+      }),
+    );
 
     // Configure the viewport.
-    this.#viewport.scale.set(VIEWPORT_SCALE_FACTOR);
     this.#viewport
-      .drag({ keyToPress: ["ShiftLeft"], factor: 2 })
-      .wheel()
+      .drag({ keyToPress: ["ShiftLeft", "ShiftRight"], mouseButtons: "right", factor: 2 })
+      .pinch({ factor: 2 })
+      .wheel({ smooth: 2, trackpadPinch: true, wheelZoom: false })
       .clampZoom({ minScale: 1, maxScale: 100 });
 
     // Set up event listeners.
@@ -52,12 +52,17 @@ export class CanvasService extends EventTarget {
 
   setPatternView(view: PatternView) {
     this.clear();
+
     view.init(this.#tm);
-    for (const stage of Object.values(view.stages)) {
-      this.#viewport.addChild(stage);
-      // if (stage instanceof Container) this.#culler.addContainer(stage, true);
-    }
+    for (const stage of Object.values(view.stages)) this.#viewport.addChild(stage);
     this.#viewport.addChild(this.#hint);
+
+    const { width, height } = view.fabric;
+    this.#viewport.worldWidth = width;
+    this.#viewport.worldHeight = height;
+
+    this.#viewport.fitHeight();
+    this.#viewport.moveCenter(width / 2, height / 2);
   }
 
   clear() {
@@ -149,6 +154,7 @@ export class CanvasService extends EventTarget {
   }
 
   #onRightClick(e: FederatedPointerEvent) {
+    if (e.shiftKey) return; // Shift key is used to pan the viewport.
     if (e.target instanceof StitchGraphics || e.target instanceof StitchSprite) {
       const detail: RemoveStitchData = { stitch: e.target.stitch };
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
