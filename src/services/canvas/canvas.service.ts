@@ -1,7 +1,6 @@
-import { Application, Container, Graphics } from "pixi.js";
+import { Application, Graphics } from "pixi.js";
 import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } from "pixi.js";
 import { Viewport } from "pixi-viewport";
-import { SpatialHash as Culler } from "pixi-cull";
 import type { PatternView } from "../pattern-view";
 import { AddStitchEventStage, EventType, type AddStitchData, type RemoveStitchData } from "./events.types";
 import {
@@ -24,7 +23,6 @@ export class CanvasService extends EventTarget {
   #pixi = new Application();
   #tm!: TextureManager;
   #viewport!: Viewport;
-  #culler = new Culler();
 
   #startPoint: Point | undefined = undefined;
   #hint = new Graphics();
@@ -45,14 +43,6 @@ export class CanvasService extends EventTarget {
       .wheel()
       .clampZoom({ minScale: 1, maxScale: 100 });
 
-    // Initialize the culler.
-    this.#pixi.ticker.add(() => {
-      if (this.#viewport.dirty) {
-        this.#culler.cull(this.#viewport.getVisibleBounds());
-        this.#viewport.dirty = false;
-      }
-    });
-
     // Set up event listeners.
     this.#viewport.on("pointerdown", this.#onPointerDown, this);
     this.#viewport.on("pointermove", this.#onPointerMove, this);
@@ -65,15 +55,13 @@ export class CanvasService extends EventTarget {
     view.init(this.#tm);
     for (const stage of Object.values(view.stages)) {
       this.#viewport.addChild(stage);
-      if (stage instanceof Container) this.#culler.addContainer(stage, true);
+      // if (stage instanceof Container) this.#culler.addContainer(stage, true);
     }
     this.#viewport.addChild(this.#hint);
   }
 
   clear() {
-    for (const container of this.#viewport.removeChildren()) {
-      this.#culler.removeContainer(container);
-    }
+    this.#viewport.removeChildren();
   }
 
   resize({ width, height }: CanvasSize) {
