@@ -6,7 +6,7 @@ import { useDialog } from "primevue";
 import { defineStore } from "pinia";
 import { useAppStateStore } from "./state";
 import { FabricApi, GridApi, HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
-import { PatternView, type PaletteItemData } from "#/services/pattern-view";
+import { PatternView, type PaletteItemData } from "#/plugins/pixi";
 import type { PaletteItem, Stitch, Fabric, Grid } from "#/schemas/pattern";
 
 export const usePatternsStore = defineStore("pattern-project", () => {

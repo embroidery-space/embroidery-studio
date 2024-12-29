@@ -1,8 +1,7 @@
 import { Application, Graphics } from "pixi.js";
 import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } from "pixi.js";
 import { Viewport } from "pixi-viewport";
-import type { PatternView } from "../pattern-view";
-import { AddStitchEventStage, EventType, type AddStitchData, type RemoveStitchData } from "./events.types";
+import type { PatternView } from "./pattern-view";
 import {
   TextureManager,
   StitchGraphics,
@@ -10,7 +9,7 @@ import {
   STITCH_SCALE_FACTOR,
   StitchParticleContainer,
 } from "#/plugins/pixi";
-import { Bead, type LineStitch, type NodeStitch } from "#/schemas/pattern";
+import type { Bead, LineStitch, NodeStitch, Stitch, StitchKind } from "#/schemas/pattern";
 
 const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
   eventFeatures: { globalMove: false },
@@ -18,7 +17,7 @@ const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
   backgroundAlpha: 0,
 };
 
-export class CanvasService extends EventTarget {
+export class PatternCanvas extends EventTarget {
   #pixi = new Application();
   #tm!: TextureManager;
   #viewport!: Viewport;
@@ -184,3 +183,40 @@ export interface CanvasSize {
   width: number;
   height: number;
 }
+
+export const enum EventType {
+  AddStitch = "add_stitch",
+  RemoveStitch = "remove_stitch",
+}
+
+export const enum AddStitchEventStage {
+  Start = "start",
+  Continue = "continue",
+  End = "end",
+}
+
+/**
+ * Represents the data for the `AddStitch` event.
+ *
+ * It has the `start` and `end` points of the stitch.
+ * If the stitch is "single-point" (i.e. cross stitch, petite, bead, etc.) then these points will be the same.
+ * If the stitch is "double-point" (i.e. back and straight stitch) then these points will be different.
+ */
+export interface AddStitchData {
+  /** The stage of the event. */
+  stage: AddStitchEventStage;
+
+  /** The point where the event started. */
+  start: Point;
+
+  /** The point where the event ended. */
+  end: Point;
+
+  /** Whether the stitch should be drawn in its "alternative" view (e.g. rotated). */
+  alt: boolean;
+
+  /** Whether the stitch should be drawn in its previous view (i.e. in the same direction). */
+  fixed: boolean;
+}
+
+export type RemoveStitchData = { stitch: Stitch } | { point: Point; kind: StitchKind };

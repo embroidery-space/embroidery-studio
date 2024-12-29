@@ -1,7 +1,7 @@
 <template>
   <canvas
     ref="canvas"
-    v-element-size="useThrottleFn((size: CanvasSize) => canvasService.resize(size), 500)"
+    v-element-size="useThrottleFn((size: CanvasSize) => patternCanvas.resize(size), 500)"
     class="size-full"
   ></canvas>
 </template>
@@ -12,9 +12,8 @@
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
-  import { CanvasService, type CanvasSize } from "#/services/canvas/canvas.service";
-  import { AddStitchEventStage, EventType } from "#/services/canvas/events.types";
-  import type { AddStitchData, RemoveStitchData } from "#/services/canvas/events.types";
+  import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
+  import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
   import {
@@ -31,15 +30,15 @@
   const { pattern } = storeToRefs(patternProjectStore);
 
   const canvas = useTemplateRef("canvas");
-  const canvasService = new CanvasService();
+  const patternCanvas = new PatternCanvas();
 
   watch(pattern, (view) => {
     if (!view) return;
-    canvasService.setPatternView(view);
+    patternCanvas.setPatternView(view);
   });
 
   let prevStitchState: Stitch | undefined;
-  canvasService.addEventListener(EventType.AddStitch, async (e) => {
+  patternCanvas.addEventListener(EventType.AddStitch, async (e) => {
     const tool = appStateStore.state.selectedStitchTool;
     const palindex = appStateStore.state.selectedPaletteItemIndex;
     if (!palindex) return;
@@ -102,7 +101,7 @@
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line: LineStitch = { x: [x1, x2], y: [y1, y2], palindex, kind: tool };
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ line });
-        else canvasService.drawLineHint(line, pattern.value!.palette[palindex]!.color);
+        else patternCanvas.drawLineHint(line, pattern.value!.palette[palindex]!.color);
         break;
       }
 
@@ -118,7 +117,7 @@
         if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch({ node });
         else {
           const palitem = pattern.value!.palette[palindex]!;
-          canvasService.drawNodeHint(node, palitem.color, palitem.bead);
+          patternCanvas.drawNodeHint(node, palitem.color, palitem.bead);
         }
         break;
       }
@@ -127,7 +126,7 @@
     if (stage === AddStitchEventStage.End) prevStitchState = undefined;
   });
 
-  canvasService.addEventListener(EventType.RemoveStitch, async (e) => {
+  patternCanvas.addEventListener(EventType.RemoveStitch, async (e) => {
     const detail: RemoveStitchData = (e as CustomEvent).detail;
     if ("stitch" in detail) await patternProjectStore.removeStitch(detail.stitch);
     else {
@@ -186,11 +185,11 @@
   }
 
   onMounted(async () => {
-    await canvasService.init(canvas.value!.getBoundingClientRect(), { canvas: canvas.value! });
-    canvasService.setPatternView(pattern.value!);
+    await patternCanvas.init(canvas.value!.getBoundingClientRect(), { canvas: canvas.value! });
+    patternCanvas.setPatternView(pattern.value!);
   });
 
   onUnmounted(() => {
-    canvasService.clear();
+    patternCanvas.clear();
   });
 </script>
