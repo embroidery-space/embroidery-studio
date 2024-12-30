@@ -163,10 +163,10 @@
         return new Point(fracX > 0.5 ? intX + 0.5 : intX, fracY > 0.5 ? intY + 0.5 : intY);
       }
       case LineStitchKind.Back: {
-        if (fracX <= 0.25 && fracY <= 0.25) return new Point(intX, intY); // top-left
-        if (fracX >= 0.75 && fracY <= 0.25) return new Point(intX + 1, intY); // top-right
-        if (fracX <= 0.25 && fracY >= 0.75) return new Point(intX, intY + 1); // bottom-left
-        if (fracX >= 0.75 && fracY >= 0.75) return new Point(intX + 1, intY + 1); // bottom-right
+        if (fracX <= 0.4 && fracY <= 0.4) return new Point(intX, intY); // top-left
+        if (fracX >= 0.6 && fracY <= 0.4) return new Point(intX + 1, intY); // top-right
+        if (fracX <= 0.4 && fracY >= 0.6) return new Point(intX, intY + 1); // bottom-left
+        if (fracX >= 0.6 && fracY >= 0.6) return new Point(intX + 1, intY + 1); // bottom-right
         return new Point(); // to not handle it
       }
       case LineStitchKind.Straight:
