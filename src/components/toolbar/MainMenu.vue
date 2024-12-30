@@ -18,12 +18,12 @@
   import { Button, TieredMenu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { usePreferencesStore } from "#/stores/preferences";
-  import { usePatternProjectStore } from "#/stores/patproj";
+  import { usePatternsStore } from "#/stores/patterns";
   import { storeToRefs } from "pinia";
 
   const preferencesStore = usePreferencesStore();
-  const patternProjectStore = usePatternProjectStore();
-  const { patproj } = storeToRefs(patternProjectStore);
+  const patternProjectStore = usePatternsStore();
+  const { pattern } = storeToRefs(patternProjectStore);
 
   const menu = useTemplateRef("menu");
 
@@ -62,7 +62,7 @@
   const editOptions: MenuItem = {
     label: "Edit",
     icon: "pi pi-pencil",
-    visible: () => patproj.value !== undefined,
+    visible: () => pattern.value !== undefined,
     items: [
       {
         label: "Fabric Properties",

@@ -40,7 +40,7 @@
 
       <SplitterPanel :size="85">
         <ProgressSpinner v-if="loading" class="absolute left-1/2 top-1/2" />
-        <Suspense v-if="patproj"><CanvasPanel /></Suspense>
+        <Suspense v-if="pattern"><CanvasPanel /></Suspense>
         <div v-else class="relative flex h-full w-full items-center justify-center">
           <Panel header="No pattern loaded" class="w-3/12 border-0">
             <p class="m-0">Open a pattern or create a new one to get started.</p>
@@ -79,12 +79,12 @@
   import WindowControls from "./components/toolbar/WindowControls.vue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
-  import { usePatternProjectStore } from "./stores/patproj";
+  import { usePatternsStore } from "./stores/patterns";
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
-  const patternProjectStore = usePatternProjectStore();
-  const { patproj, loading } = storeToRefs(patternProjectStore);
+  const patternProjectStore = usePatternsStore();
+  const { pattern, loading } = storeToRefs(patternProjectStore);
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);
