@@ -48,6 +48,7 @@
     const { stage, start, end, alt, fixed }: AddStitchData = (e as CustomEvent).detail;
     const { x, y } = adjustStitchCoordinate(end, tool);
 
+    if (stage === AddStitchEventStage.Start) prevStitchState = undefined;
     switch (tool) {
       case FullStitchKind.Full:
       case FullStitchKind.Petite: {
@@ -90,6 +91,9 @@
           line.y[0] = prevStitchState.line.y[1];
         }
         if (line.x[0] === line.x[1] && line.y[0] === line.y[1]) return;
+        const lineLength = Math.sqrt(Math.pow(line.x[1] - line.x[0], 2) + Math.pow(line.y[1] - line.y[0], 2));
+        // Check that the line is not longer than 1 horizontally and vertically, or it is diagonal.
+        if (lineLength > 1 && lineLength !== Math.sqrt(2)) return;
         prevStitchState = { line };
         if (stage === AddStitchEventStage.Continue) await patternProjectStore.addStitch({ line });
         break;
@@ -122,8 +126,6 @@
         break;
       }
     }
-
-    if (stage === AddStitchEventStage.End) prevStitchState = undefined;
   });
 
   patternCanvas.addEventListener(EventType.RemoveStitch, async (e) => {
