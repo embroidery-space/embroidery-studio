@@ -28,10 +28,10 @@
   const menu = useTemplateRef("menu");
 
   const keys = useMagicKeys();
-  whenever(keys.ctrl_o!, patternProjectStore.loadPattern);
-  whenever(keys.ctrl_n!, patternProjectStore.createPattern);
-  whenever(keys.ctrl_s!, patternProjectStore.savePattern);
-  whenever(keys.ctrl_w!, patternProjectStore.closePattern);
+  whenever(keys["Ctrl+KeyO"]!, patternProjectStore.loadPattern);
+  whenever(keys["Ctrl+KeyN"]!, patternProjectStore.createPattern);
+  whenever(keys["Ctrl+KeyS"]!, patternProjectStore.savePattern);
+  whenever(keys["Ctrl+KeyW"]!, patternProjectStore.closePattern);
 
   const fileOptions: MenuItem = {
     label: "File",

@@ -188,11 +188,11 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   });
 
   const keys = useMagicKeys();
-  whenever(keys.ctrl_z!, async () => {
+  whenever(keys["Ctrl+KeyZ"]!, async () => {
     if (!pattern.value) return;
     await HistoryApi.undo(pattern.value.key);
   });
-  whenever(keys.ctrl_y!, async () => {
+  whenever(keys["Ctrl+KeyY"]!, async () => {
     if (!pattern.value) return;
     await HistoryApi.redo(pattern.value.key);
   });
