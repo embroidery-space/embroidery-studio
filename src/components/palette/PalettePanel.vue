@@ -2,8 +2,8 @@
   <div class="relative h-full">
     <Listbox
       v-model="appState.state.selectedPaletteItemIndex"
-      :options="pattern?.palette"
-      :option-value="(pi) => pattern?.palette.indexOf(pi)"
+      :options="pattern?.palette.map((pi) => pi.palitem)"
+      :option-value="(pi) => pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
       scroll-height="100%"
       empty-message="No palette items found"
       :dt="{ list: { header: { padding: '4px 8px' } } }"
@@ -20,7 +20,7 @@
       <template #header>
         <div class="flex min-h-9 w-full items-center justify-between">
           <div class="text-color">Palette</div>
-          <ButtonGroup v-if="pattern?.palette !== undefined">
+          <ButtonGroup v-if="pattern !== undefined">
             <Button
               severity="primary"
               :icon="`pi ${showPaletteCatalog ? 'pi-minus' : 'pi-plus'}`"
@@ -65,7 +65,7 @@
       @option-dblclick="
         ({ value }) => {
           if (!pattern?.palette.find((pi) => pi.brand === value.brand && pi.number === value.number)) {
-            emit('addPaletteItem', value);
+            emit('addPaletteItem', new PaletteItem(value));
           }
         }
       "
@@ -154,6 +154,7 @@
   import { onMounted, reactive, ref, useTemplateRef } from "vue";
   import { computedAsync } from "@vueuse/core";
   import { storeToRefs } from "pinia";
+  import { dequal } from "dequal/lite";
   import {
     Button,
     ButtonGroup,
@@ -171,8 +172,8 @@
   import PalItem from "./PaletteItem.vue";
   import { DEFAULT_PALETTE_DISPLAY_OPTIONS, type PaletteDisplayOptions } from "#/utils/paletteItem";
   import { useAppStateStore } from "#/stores/state";
-  import type { PaletteItem, PaletteItemBase } from "#/types/pattern/pattern";
   import { usePatternsStore } from "#/stores/patterns";
+  import { PaletteItem } from "#/schemas/pattern";
 
   interface PalettePanelEmits {
     (e: "addPaletteItem", pi: PaletteItem): void;
@@ -228,4 +229,11 @@
       }
     }
   });
+
+  interface PaletteItemBase {
+    brand: string;
+    number: string;
+    name: string;
+    color: string;
+  }
 </script>

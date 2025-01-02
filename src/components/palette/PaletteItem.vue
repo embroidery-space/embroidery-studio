@@ -18,7 +18,7 @@
   import { computed } from "vue";
   import { contrastColor } from "#/utils/color";
   import { paletteItemTitle, type PaletteDisplayOptions } from "#/utils/paletteItem";
-  import type { PaletteItem } from "#/types/pattern/pattern";
+  import type { PaletteItem } from "#/schemas/pattern";
 
   interface PaletteItemProps {
     paletteItem: PaletteItem;

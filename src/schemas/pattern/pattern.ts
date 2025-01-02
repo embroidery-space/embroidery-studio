@@ -391,5 +391,5 @@ export class Pattern {
   }
 }
 
-export type Stitch = { full: FullStitch } | { part: PartStitch } | { node: NodeStitch } | { line: LineStitch };
+export type Stitch = FullStitch | PartStitch | NodeStitch | LineStitch;
 export type StitchKind = FullStitchKind | PartStitchKind | NodeStitchKind | LineStitchKind;

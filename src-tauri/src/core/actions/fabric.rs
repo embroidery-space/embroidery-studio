@@ -1,6 +1,8 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
@@ -13,14 +15,14 @@ mod tests;
 #[derive(Clone)]
 pub struct UpdateFabricPropertiesAction {
   fabric: Fabric,
-  conflicts: OnceLock<Fabric>,
+  old_fabric: OnceLock<Fabric>,
 }
 
 impl UpdateFabricPropertiesAction {
   pub fn new(fabric: Fabric) -> Self {
     Self {
       fabric,
-      conflicts: OnceLock::new(),
+      old_fabric: OnceLock::new(),
     }
   }
 }
@@ -31,10 +33,10 @@ impl<R: tauri::Runtime> Action<R> for UpdateFabricPropertiesAction {
   /// **Emits:**
   /// - `fabric:update` with the updated fabric properties.
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    window.emit("fabric:update", &self.fabric)?;
-    let conflicts = std::mem::replace(&mut patproj.pattern.fabric, self.fabric.clone());
-    if self.conflicts.get().is_none() {
-      self.conflicts.set(conflicts).unwrap();
+    window.emit("fabric:update", STANDARD.encode(borsh::to_vec(&self.fabric)?))?;
+    let old_fabric = std::mem::replace(&mut patproj.pattern.fabric, self.fabric.clone());
+    if self.old_fabric.get().is_none() {
+      self.old_fabric.set(old_fabric).unwrap();
     }
     Ok(())
   }
@@ -44,9 +46,9 @@ impl<R: tauri::Runtime> Action<R> for UpdateFabricPropertiesAction {
   /// **Emits:**
   /// - `fabric:update` with the previous fabric properties.
   fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    let conflicts = self.conflicts.get().unwrap();
-    window.emit("fabric:update", &conflicts)?;
-    patproj.pattern.fabric = conflicts.clone();
+    let old_fabric = self.old_fabric.get().unwrap();
+    window.emit("fabric:update", STANDARD.encode(borsh::to_vec(&old_fabric)?))?;
+    patproj.pattern.fabric = old_fabric.clone();
     Ok(())
   }
 }

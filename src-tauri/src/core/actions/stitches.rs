@@ -1,6 +1,8 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
@@ -33,8 +35,8 @@ impl<R: tauri::Runtime> Action<R> for AddStitchAction {
   /// - `stitches:remove_many` with the removed stitches that conflict with the new stitch
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
     let conflicts = patproj.pattern.add_stitch(self.stitch);
-    window.emit("stitches:add_one", self.stitch)?;
-    window.emit("stitches:remove_many", &conflicts)?;
+    window.emit("stitches:add_one", STANDARD.encode(borsh::to_vec(&self.stitch)?))?;
+    window.emit("stitches:remove_many", STANDARD.encode(borsh::to_vec(&conflicts)?))?;
     if self.conflicts.get().is_none() {
       self.conflicts.set(conflicts).unwrap();
     }
@@ -50,8 +52,8 @@ impl<R: tauri::Runtime> Action<R> for AddStitchAction {
     let conflicts = self.conflicts.get().unwrap();
     patproj.pattern.remove_stitch(self.stitch);
     patproj.pattern.add_stitches(conflicts.clone());
-    window.emit("stitches:remove_one", self.stitch)?;
-    window.emit("stitches:add_many", &conflicts)?;
+    window.emit("stitches:remove_one", STANDARD.encode(borsh::to_vec(&self.stitch)?))?;
+    window.emit("stitches:add_many", STANDARD.encode(borsh::to_vec(&conflicts)?))?;
     Ok(())
   }
 }
@@ -83,7 +85,7 @@ impl<R: tauri::Runtime> Action<R> for RemoveStitchAction {
     if self.actual_stitch.get().is_none() {
       self.actual_stitch.set(stitch).unwrap();
     }
-    window.emit("stitches:remove_one", stitch)?;
+    window.emit("stitches:remove_one", STANDARD.encode(borsh::to_vec(&stitch)?))?;
     Ok(())
   }
 
@@ -94,7 +96,7 @@ impl<R: tauri::Runtime> Action<R> for RemoveStitchAction {
   fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
     let stitch = self.actual_stitch.get().unwrap();
     patproj.pattern.add_stitch(*stitch);
-    window.emit("stitches:add_one", stitch)?;
+    window.emit("stitches:add_one", STANDARD.encode(borsh::to_vec(&stitch)?))?;
     Ok(())
   }
 }

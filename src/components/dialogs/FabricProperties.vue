@@ -185,7 +185,7 @@
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
   import { contrastColor } from "#/utils/color";
-  import type { Fabric } from "#/schemas/pattern";
+  import { Fabric } from "#/schemas/pattern";
 
   // Is used to set the background color of the input fields.
   const background = dt("dialog.background");
@@ -195,7 +195,7 @@
   const DEFAULT_FABRIC: Fabric = { width: 60, height: 80, name: "White", color: "FFFFFF", kind: "Aida", spi: [14, 14] };
 
   // Copy the data from the dialog reference to a reactive object.
-  const fabric = reactive<Fabric>(Object.assign({}, DEFAULT_FABRIC, dialogRef.value.data?.fabric));
+  const fabric = reactive<Fabric>(new Fabric(Object.assign({}, DEFAULT_FABRIC, dialogRef.value.data?.fabric)));
 
   const squareStitches = ref(true);
 

@@ -13,7 +13,7 @@ mod tests;
 
 pub type Coord = ordered_float::NotNan<f32>;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Stitch {
   Full(FullStitch),

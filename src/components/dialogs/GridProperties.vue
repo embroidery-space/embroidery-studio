@@ -60,7 +60,7 @@
   import { ColorPicker, Fieldset, FloatLabel, InputNumber } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
   import DialogFooter from "./DialogFooter.vue";
-  import type { Grid } from "#/schemas/pattern";
+  import { Grid } from "#/schemas/pattern";
 
   // Is used to set the background color of the input fields.
   const background = dt("dialog.background");
@@ -68,5 +68,5 @@
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
 
   // Copy the data from the dialog reference to a reactive object.
-  const grid = reactive<Grid>(Object.assign({}, dialogRef.value.data!.grid));
+  const grid = reactive<Grid>(new Grid(Object.assign({}, dialogRef.value.data!.grid)));
 </script>

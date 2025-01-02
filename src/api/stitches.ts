@@ -1,7 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { PatternKey, Stitch } from "#/schemas/pattern";
+import { serializeStitch, type PatternKey, type Stitch } from "#/schemas/pattern";
 
-export const addStitch = (patternKey: PatternKey, stitch: Stitch) =>
-  invoke<boolean>("add_stitch", { patternKey, stitch });
-export const removeStitch = (patternKey: PatternKey, stitch: Stitch) =>
-  invoke<boolean>("remove_stitch", { patternKey, stitch });
+export function addStitch(patternKey: PatternKey, stitch: Stitch) {
+  return invoke<boolean>("add_stitch", serializeStitch(stitch), { headers: { patternKey } });
+}
+
+export function removeStitch(patternKey: PatternKey, stitch: Stitch) {
+  return invoke<boolean>("remove_stitch", serializeStitch(stitch), { headers: { patternKey } });
+}

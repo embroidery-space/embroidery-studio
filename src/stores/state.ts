@@ -9,8 +9,8 @@ interface OpenedPattern {
 
 export interface AppState {
   selectedStitchTool: StitchKind;
-  selectedPaletteItemIndex?: number;
-  openedPatterns?: OpenedPattern[];
+  selectedPaletteItemIndex: number | null;
+  openedPatterns: OpenedPattern[];
   currentPattern?: OpenedPattern;
 }
 
@@ -19,6 +19,8 @@ export const useAppStateStore = defineStore(
   () => {
     const state = reactive<AppState>({
       selectedStitchTool: FullStitchKind.Full,
+      selectedPaletteItemIndex: null,
+      openedPatterns: [],
     });
 
     /**
@@ -29,7 +31,6 @@ export const useAppStateStore = defineStore(
      * @param key The key of the pattern. Actually, the key is the file path of the pattern.
      */
     function addOpenedPattern(title: string, key: PatternKey) {
-      if (!state.openedPatterns) state.openedPatterns = [];
       const openedPattern: OpenedPattern = { title, key };
       if (state.openedPatterns.findIndex((p) => p.key === key) < 0) state.openedPatterns.push(openedPattern);
       state.currentPattern = openedPattern;

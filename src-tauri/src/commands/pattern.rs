@@ -37,27 +37,33 @@ pub fn load_pattern(file_path: std::path::PathBuf, patterns: tauri::State<Patter
 
 #[tauri::command]
 pub fn create_pattern<R: tauri::Runtime>(
-  fabric: Fabric,
+  request: tauri::ipc::Request<'_>,
   app_handle: tauri::AppHandle<R>,
   patterns: tauri::State<PatternsState>,
 ) -> CommandResult<Vec<u8>> {
-  log::trace!("Creating new pattern");
-  let mut patterns = patterns.write().unwrap();
+  if let tauri::ipc::InvokeBody::Raw(data) = request.body() {
+    log::trace!("Creating new pattern");
 
-  let pattern = Pattern::new(fabric);
-  let patproj = PatternProject {
-    file_path: app_document_dir(&app_handle)?.join(format!("{}.{}", pattern.info.title, PatternFormat::default())),
-    pattern,
-    display_settings: DisplaySettings::new(2),
-    print_settings: PrintSettings::default(),
-  };
+    let fabric: Fabric = borsh::from_slice(data)?;
+    let pattern = Pattern::new(fabric);
+    let patproj = PatternProject {
+      file_path: app_document_dir(&app_handle)?.join(format!("{}.{}", pattern.info.title, PatternFormat::default())),
+      pattern,
+      display_settings: DisplaySettings::new(2),
+      print_settings: PrintSettings::default(),
+    };
 
-  let pattern_key = PatternKey::from(&patproj.file_path);
-  let result = borsh::to_vec(&(&pattern_key, &patproj))?;
-  patterns.insert(pattern_key, patproj);
+    let pattern_key = PatternKey::from(&patproj.file_path);
+    let result = borsh::to_vec(&(&pattern_key, &patproj))?;
 
-  log::trace!("Pattern has been created");
-  Ok(result)
+    let mut patterns = patterns.write().unwrap();
+    patterns.insert(pattern_key, patproj);
+
+    log::trace!("Pattern has been created");
+    Ok(result)
+  } else {
+    Err(anyhow::anyhow!("Invalid request body").into())
+  }
 }
 
 #[tauri::command]
