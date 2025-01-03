@@ -1,5 +1,4 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use serde::{Deserialize, Serialize};
 
 use super::stitches::*;
 
@@ -267,7 +266,7 @@ impl Default for PatternInfo {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct PaletteItem {
   pub brand: String,
   pub number: String,
@@ -278,7 +277,7 @@ pub struct PaletteItem {
   pub strands: Option<PaletteItemStitchStrands>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct Blend {
   pub brand: String,
   pub number: String,
@@ -287,17 +286,17 @@ pub struct Blend {
 
 #[nutype::nutype(
   sanitize(with = |raw| raw.clamp(1, 6)),
-  derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)
+  derive(Debug, Clone, Copy, PartialEq, BorshSerialize, BorshDeserialize)
 )]
 pub struct BlendStrands(u8);
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct Bead {
   pub length: f32,
   pub diameter: f32,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Default, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct StitchStrandsStruct<T> {
   pub full: T,
   pub petite: T,
@@ -311,7 +310,7 @@ pub struct StitchStrandsStruct<T> {
 
 #[nutype::nutype(
   sanitize(with = |raw| raw.clamp(1, 12)),
-  derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)
+  derive(Debug, Clone, Copy, PartialEq, BorshSerialize, BorshDeserialize)
 )]
 pub struct StitchStrands(u8);
 
@@ -333,7 +332,7 @@ impl Default for DefaultStitchStrands {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct Fabric {
   pub width: u16,
   pub height: u16,

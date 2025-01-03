@@ -3,7 +3,6 @@ use std::collections::BTreeSet;
 
 use borsh::{BorshDeserialize, BorshSerialize};
 use ordered_float::NotNan;
-use serde::{Deserialize, Serialize};
 
 use super::*;
 
@@ -13,8 +12,7 @@ mod tests;
 
 pub type Coord = ordered_float::NotNan<f32>;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub enum Stitch {
   Full(FullStitch),
   Part(PartStitch),
