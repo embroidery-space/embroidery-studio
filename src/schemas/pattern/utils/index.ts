@@ -1,2 +1,2 @@
-export * from "./serde";
+export * from "./borsh";
 export * from "./palette";
