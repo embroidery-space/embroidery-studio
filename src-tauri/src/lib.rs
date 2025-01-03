@@ -8,10 +8,11 @@ pub mod commands;
 pub mod state;
 
 mod core;
-mod utils;
+pub use core::pattern::*;
 
 mod error;
 mod logger;
+mod utils;
 
 pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
   builder

@@ -7,10 +7,11 @@ use crate::state::{PatternKey, PatternsState};
 use crate::utils::path::app_document_dir;
 
 #[tauri::command]
-pub fn load_pattern(file_path: std::path::PathBuf, patterns: tauri::State<PatternsState>) -> CommandResult<Vec<u8>> {
+pub fn load_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<PatternsState>) -> CommandResult<Vec<u8>> {
   log::trace!("Loading pattern");
-  let mut patterns = patterns.write().unwrap();
+  let file_path: std::path::PathBuf = request.headers().get("filePath").unwrap().to_str().unwrap().into();
 
+  let mut patterns = patterns.write().unwrap();
   let pattern_key = PatternKey::from(&file_path);
   if let Some(pattern) = patterns.get(&pattern_key) {
     log::trace!("Pattern loaded");
@@ -67,12 +68,12 @@ pub fn create_pattern<R: tauri::Runtime>(
 }
 
 #[tauri::command]
-pub fn save_pattern(
-  pattern_key: PatternKey,
-  file_path: std::path::PathBuf,
-  patterns: tauri::State<PatternsState>,
-) -> CommandResult<()> {
+pub fn save_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<PatternsState>) -> CommandResult<()> {
   log::trace!("Saving pattern");
+
+  let pattern_key = request.headers().get("patternKey").unwrap().to_str().unwrap().into();
+  let file_path = request.headers().get("filePath").unwrap().to_str().unwrap().into();
+
   let mut patterns = patterns.write().unwrap();
   let patproj = patterns.get_mut(&pattern_key).unwrap();
   patproj.file_path = file_path;
@@ -81,13 +82,15 @@ pub fn save_pattern(
     PatternFormat::Oxs => parser::oxs::save_pattern(patproj),
     PatternFormat::EmbProj => parser::embproj::save_pattern(patproj),
   }?;
+
   log::trace!("Pattern saved");
   Ok(())
 }
 
 #[tauri::command]
-pub fn close_pattern(pattern_key: PatternKey, patterns: tauri::State<PatternsState>) {
-  log::trace!("Closing pattern {:?}", pattern_key);
+pub fn close_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<PatternsState>) {
+  log::trace!("Closing pattern");
+  let pattern_key = request.headers().get("patternKey").unwrap().to_str().unwrap().into();
   patterns.write().unwrap().remove(&pattern_key);
   log::trace!("Pattern closed");
 }

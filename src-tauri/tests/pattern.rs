@@ -1,6 +1,7 @@
 use embroidery_studio::state::{PatternKey, PatternsState};
-use embroidery_studio::{commands, setup_app};
-use tauri::test::{mock_builder, MockRuntime};
+use embroidery_studio::{setup_app, Fabric};
+use tauri::http::{HeaderMap, HeaderValue};
+use tauri::test::{get_ipc_response, mock_builder, MockRuntime, INVOKE_KEY};
 use tauri::Manager;
 
 fn get_all_test_patterns() -> Vec<std::io::Result<std::fs::DirEntry>> {
@@ -15,12 +16,31 @@ fn get_all_test_patterns() -> Vec<std::io::Result<std::fs::DirEntry>> {
 #[test]
 fn parses_supported_pattern_formats() {
   let app = setup_app::<MockRuntime>(mock_builder());
-  let app_handle = app.handle();
-  let patterns_state = app_handle.state::<PatternsState>();
+  let webview = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+    .build()
+    .unwrap();
+  let patterns_state = app.handle().state::<PatternsState>();
 
   for file_path in get_all_test_patterns().into_iter() {
     let file_path = file_path.unwrap().path();
-    assert!(commands::pattern::load_pattern(file_path.clone(), patterns_state.clone()).is_ok());
+
+    assert!(get_ipc_response(
+      &webview,
+      tauri::webview::InvokeRequest {
+        cmd: "load_pattern".to_string(),
+        callback: tauri::ipc::CallbackFn(0),
+        error: tauri::ipc::CallbackFn(1),
+        url: "http://tauri.localhost".parse().unwrap(),
+        body: tauri::ipc::InvokeBody::default(),
+        headers: {
+          let mut headers = HeaderMap::new();
+          headers.insert("filePath", HeaderValue::from_str(file_path.to_str().unwrap()).unwrap());
+          headers
+        },
+        invoke_key: INVOKE_KEY.to_string(),
+      },
+    )
+    .is_ok());
     assert!(patterns_state
       .read()
       .unwrap()
@@ -31,30 +51,97 @@ fn parses_supported_pattern_formats() {
 #[test]
 fn creates_new_pattern() {
   let app = setup_app::<MockRuntime>(mock_builder());
-  let app_handle = app.handle();
-  let patterns_state = app_handle.state::<PatternsState>();
+  let webview = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+    .build()
+    .unwrap();
+  let patterns_state = app.handle().state::<PatternsState>();
 
   assert!(patterns_state.read().unwrap().is_empty());
-  commands::pattern::create_pattern(Default::default(), app_handle.clone(), patterns_state.clone()).unwrap();
+  assert!(get_ipc_response(
+    &webview,
+    tauri::webview::InvokeRequest {
+      cmd: "create_pattern".to_string(),
+      callback: tauri::ipc::CallbackFn(0),
+      error: tauri::ipc::CallbackFn(1),
+      url: "http://tauri.localhost".parse().unwrap(),
+      body: tauri::ipc::InvokeBody::Raw(borsh::to_vec(&Fabric::default()).unwrap()),
+      headers: HeaderMap::default(),
+      invoke_key: INVOKE_KEY.to_string(),
+    },
+  )
+  .is_ok());
   assert_eq!(patterns_state.read().unwrap().len(), 1);
 }
 
 #[test]
 fn saves_pattern() {
   let app = setup_app::<MockRuntime>(mock_builder());
-  let app_handle = app.handle();
-  let patterns_state = app_handle.state::<PatternsState>();
+  let webview = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+    .build()
+    .unwrap();
 
   for file_path in get_all_test_patterns().into_iter() {
     let file_path = file_path.unwrap().path();
-    commands::pattern::load_pattern(file_path.clone(), patterns_state.clone()).unwrap();
-    let pattern_key = PatternKey::from(&file_path);
 
+    // Loading the pattern first.
+    assert!(get_ipc_response(
+      &webview,
+      tauri::webview::InvokeRequest {
+        cmd: "load_pattern".to_string(),
+        callback: tauri::ipc::CallbackFn(0),
+        error: tauri::ipc::CallbackFn(1),
+        url: "http://tauri.localhost".parse().unwrap(),
+        body: tauri::ipc::InvokeBody::default(),
+        headers: {
+          let mut headers = HeaderMap::new();
+          headers.insert("filePath", HeaderValue::from_str(file_path.to_str().unwrap()).unwrap());
+          headers
+        },
+        invoke_key: INVOKE_KEY.to_string(),
+      },
+    )
+    .is_ok());
+
+    let pattern_key = PatternKey::from(&file_path);
     for extension in ["oxs", "embproj"] {
       let file_path = std::env::temp_dir().join(format!("pattern.{}", extension));
+
       // If we can save the pattern and then parse it back, we can consider it a success.
-      assert!(commands::pattern::save_pattern(pattern_key.clone(), file_path.clone(), patterns_state.clone()).is_ok());
-      assert!(commands::pattern::load_pattern(file_path.clone(), patterns_state.clone()).is_ok());
+      assert!(get_ipc_response(
+        &webview,
+        tauri::webview::InvokeRequest {
+          cmd: "save_pattern".to_string(),
+          callback: tauri::ipc::CallbackFn(0),
+          error: tauri::ipc::CallbackFn(1),
+          url: "http://tauri.localhost".parse().unwrap(),
+          body: tauri::ipc::InvokeBody::default(),
+          headers: {
+            let mut headers = HeaderMap::new();
+            headers.insert("patternKey", HeaderValue::from_str(pattern_key.as_ref()).unwrap());
+            headers.insert("filePath", HeaderValue::from_str(file_path.to_str().unwrap()).unwrap());
+            headers
+          },
+          invoke_key: INVOKE_KEY.to_string(),
+        },
+      )
+      .is_ok());
+      assert!(get_ipc_response(
+        &webview,
+        tauri::webview::InvokeRequest {
+          cmd: "load_pattern".to_string(),
+          callback: tauri::ipc::CallbackFn(0),
+          error: tauri::ipc::CallbackFn(1),
+          url: "http://tauri.localhost".parse().unwrap(),
+          body: tauri::ipc::InvokeBody::default(),
+          headers: {
+            let mut headers = HeaderMap::new();
+            headers.insert("filePath", HeaderValue::from_str(file_path.to_str().unwrap()).unwrap());
+            headers
+          },
+          invoke_key: INVOKE_KEY.to_string(),
+        },
+      )
+      .is_ok());
     }
   }
 }
@@ -62,11 +149,25 @@ fn saves_pattern() {
 #[test]
 fn closes_pattern() {
   let app = setup_app::<MockRuntime>(mock_builder());
-  let app_handle = app.handle();
-  let patterns_state = app_handle.state::<PatternsState>();
+  let webview = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+    .build()
+    .unwrap();
+  let patterns_state = app.handle().state::<PatternsState>();
 
   assert!(patterns_state.read().unwrap().is_empty());
-  commands::pattern::create_pattern(Default::default(), app_handle.clone(), patterns_state.clone()).unwrap();
+  assert!(get_ipc_response(
+    &webview,
+    tauri::webview::InvokeRequest {
+      cmd: "create_pattern".to_string(),
+      callback: tauri::ipc::CallbackFn(0),
+      error: tauri::ipc::CallbackFn(1),
+      url: "http://tauri.localhost".parse().unwrap(),
+      body: tauri::ipc::InvokeBody::Raw(borsh::to_vec(&Fabric::default()).unwrap()),
+      headers: HeaderMap::default(),
+      invoke_key: INVOKE_KEY.to_string(),
+    },
+  )
+  .is_ok());
   assert_eq!(patterns_state.read().unwrap().len(), 1);
 
   let pattern_key = patterns_state
@@ -78,6 +179,22 @@ fn closes_pattern() {
     .first()
     .unwrap()
     .to_owned();
-  commands::pattern::close_pattern(pattern_key, patterns_state.clone());
+  assert!(get_ipc_response(
+    &webview,
+    tauri::webview::InvokeRequest {
+      cmd: "close_pattern".to_string(),
+      callback: tauri::ipc::CallbackFn(0),
+      error: tauri::ipc::CallbackFn(1),
+      url: "http://tauri.localhost".parse().unwrap(),
+      body: tauri::ipc::InvokeBody::default(),
+      headers: {
+        let mut headers = HeaderMap::new();
+        headers.insert("patternKey", HeaderValue::from_str(pattern_key.as_ref()).unwrap());
+        headers
+      },
+      invoke_key: INVOKE_KEY.to_string(),
+    },
+  )
+  .is_ok());
   assert!(patterns_state.read().unwrap().is_empty());
 }
