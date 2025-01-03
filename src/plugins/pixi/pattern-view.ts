@@ -7,23 +7,21 @@ import {
   StitchParticleContainer,
 } from "#/plugins/pixi";
 import { ObjectedMap } from "#/utils/map";
-import { FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
-import type {
-  Fabric,
-  Formats,
+import { AddedPaletteItemData, FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
+import {
+  CompletePaletteItem,
   FullStitch,
-  Grid,
   LineStitch,
-  NodeStitch,
-  PaletteItem,
   PartStitch,
-  PatternInfo,
-  PatternKey,
-  PatternProject,
-  SpecialStitch,
-  SpecialStitchModel,
-  Stitch,
-  Symbols,
+  type Fabric,
+  type Grid,
+  type NodeStitch,
+  type PatternInfo,
+  type PatternKey,
+  type PatternProject,
+  type SpecialStitch,
+  type SpecialStitchModel,
+  type Stitch,
 } from "#/schemas/pattern";
 
 /**
@@ -33,7 +31,7 @@ import type {
 export class PatternView {
   #key: PatternKey;
   #info: PatternInfo;
-  #palette: (PaletteItem & { symbols: Symbols; formats: Formats })[];
+  #palette: CompletePaletteItem[];
 
   #fabric!: Fabric;
   #grid!: Grid;
@@ -75,7 +73,7 @@ export class PatternView {
     this.#palette = pattern.palette.map((palitem, idx) => {
       const symbols = displaySettings.symbols[idx]!;
       const formats = displaySettings.formats[idx]!;
-      return Object.assign(palitem, { symbols, formats });
+      return new CompletePaletteItem(palitem, symbols, formats);
     });
 
     // Set the fabric and grid.
@@ -124,6 +122,9 @@ export class PatternView {
     this.#fabric = fabric;
     this.#stages.fabric.clear();
     this.#stages.fabric.rect(0, 0, this.fabric.width, this.fabric.height).fill(this.fabric.color);
+
+    // If the grid is set, adjust it to the new fabric.
+    if (this.#grid) this.setGrid(this.#grid);
   }
 
   get grid() {
@@ -176,9 +177,9 @@ export class PatternView {
     return this.#palette;
   }
 
-  addPaletteItem(data: PaletteItemData) {
-    const { paletteItem, palindex, symbols, formats } = data;
-    this.#palette.splice(palindex, 0, Object.assign(paletteItem, { symbols, formats }));
+  addPaletteItem(data: AddedPaletteItemData) {
+    const { palitem, palindex, symbols, formats } = data;
+    this.#palette.splice(palindex, 0, new CompletePaletteItem(palitem, symbols, formats));
   }
 
   removePaletteItem(palindex: number) {
@@ -186,17 +187,17 @@ export class PatternView {
   }
 
   addStitch(stitch: Stitch) {
-    if ("full" in stitch) this.addFullStitch(stitch.full);
-    if ("part" in stitch) this.addPartStitch(stitch.part);
-    if ("line" in stitch) this.addLineStitch(stitch.line);
-    if ("node" in stitch) this.addNodeStitch(stitch.node);
+    if (stitch instanceof FullStitch) this.addFullStitch(stitch);
+    else if (stitch instanceof PartStitch) this.addPartStitch(stitch);
+    else if (stitch instanceof LineStitch) this.addLineStitch(stitch);
+    else this.addNodeStitch(stitch);
   }
 
   removeStitch(stitch: Stitch) {
-    if ("full" in stitch) this.removeFullStitch(stitch.full);
-    if ("part" in stitch) this.removePartStitch(stitch.part);
-    if ("line" in stitch) this.removeLineStitch(stitch.line);
-    if ("node" in stitch) this.removeNodeStitch(stitch.node);
+    if (stitch instanceof FullStitch) this.removeFullStitch(stitch);
+    else if (stitch instanceof PartStitch) this.removePartStitch(stitch);
+    else if (stitch instanceof LineStitch) this.removeLineStitch(stitch);
+    else this.removeNodeStitch(stitch);
   }
 
   addFullStitch(full: FullStitch) {
@@ -246,7 +247,7 @@ export class PatternView {
     const { x, y, palindex } = line;
     const start = { x: x[0], y: y[0] };
     const end = { x: x[1], y: y[1] };
-    const graphics = new StitchGraphics({ line })
+    const graphics = new StitchGraphics(line)
       .moveTo(start.x, start.y)
       .lineTo(end.x, end.y)
       // Draw a line with a larger width to make it look like a border.
@@ -268,7 +269,7 @@ export class PatternView {
   addNodeStitch(node: NodeStitch) {
     const { x, y, palindex, kind, rotated } = node;
     const palitem = this.#palette[palindex]!;
-    const sprite = new StitchSprite({ node }, this.#textureManager.getNodeTexture(kind, palitem.bead));
+    const sprite = new StitchSprite(node, this.#textureManager.getNodeTexture(kind, palitem.bead));
     sprite.eventMode = "static";
     sprite.tint = palitem.color;
     sprite.pivot.set(sprite.width / 2, sprite.height / 2);
@@ -331,11 +332,4 @@ export class PatternView {
 
     this.#stages.specialstitches.addChild(graphics);
   }
-}
-
-export interface PaletteItemData {
-  paletteItem: PaletteItem;
-  palindex: number;
-  symbols: Symbols;
-  formats: Formats;
 }

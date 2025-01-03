@@ -11,6 +11,18 @@ use crate::core::pattern::PatternProject;
 #[repr(transparent)]
 pub struct PatternKey(String);
 
+impl AsRef<str> for PatternKey {
+  fn as_ref(&self) -> &str {
+    &self.0
+  }
+}
+
+impl From<&str> for PatternKey {
+  fn from(value: &str) -> Self {
+    Self(value.to_string())
+  }
+}
+
 impl From<&PathBuf> for PatternKey {
   fn from(value: &PathBuf) -> Self {
     Self(value.to_string_lossy().to_string())

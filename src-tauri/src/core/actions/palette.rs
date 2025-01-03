@@ -1,7 +1,8 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
-use serde::Serialize;
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
@@ -12,9 +13,8 @@ use crate::core::pattern::{PaletteItem, PatternProject, Stitch};
 #[path = "palette.test.rs"]
 mod tests;
 
-#[derive(Clone, Serialize)]
+#[derive(Clone)]
 pub struct AddPaletteItemAction {
-  #[serde(rename = "paletteItem")]
   palitem: PaletteItem,
   symbols: Symbols,
   formats: Formats,
@@ -41,12 +41,12 @@ impl<R: tauri::Runtime> Action<R> for AddPaletteItemAction {
     patproj.display_settings.formats.push(self.formats.clone());
     window.emit(
       "palette:add_palette_item",
-      AddedPaletteItemData {
+      STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
         palitem: self.palitem.clone(),
-        palindex: patproj.pattern.palette.len() - 1,
+        palindex: (patproj.pattern.palette.len() - 1) as u8,
         symbols: self.symbols.clone(),
         formats: self.formats.clone(),
-      },
+      })?),
     )?;
     Ok(())
   }
@@ -105,7 +105,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemAction {
     let formats = patproj.display_settings.formats.remove(palindex);
     let conflicts = patproj.pattern.remove_stitches_by_palindex(palindex as u8);
     window.emit("palette:remove_palette_item", palindex)?;
-    window.emit("stitches:remove_many", &conflicts)?;
+    window.emit("stitches:remove_many", STANDARD.encode(borsh::to_vec(&conflicts)?))?;
     if self.metadata.get().is_none() {
       self
         .metadata
@@ -141,24 +141,26 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemAction {
       .restore_stitches(metadata.conflicts.clone(), metadata.palindex as u8);
     window.emit(
       "palette:add_palette_item",
-      AddedPaletteItemData {
+      STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
         palitem: self.palitem.clone(),
-        palindex: metadata.palindex,
+        palindex: metadata.palindex as u8,
         symbols: metadata.symbols.clone(),
         formats: metadata.formats.clone(),
-      },
+      })?),
     )?;
-    window.emit("stitches:add_many", &metadata.conflicts)?;
+    window.emit(
+      "stitches:add_many",
+      STANDARD.encode(borsh::to_vec(&metadata.conflicts)?),
+    )?;
     Ok(())
   }
 }
 
-#[derive(Debug, Clone, Serialize)]
-#[cfg_attr(test, derive(PartialEq, serde::Deserialize))]
+#[derive(Debug, Clone, borsh::BorshSerialize)]
+#[cfg_attr(test, derive(PartialEq, borsh::BorshDeserialize))]
 struct AddedPaletteItemData {
-  #[serde(rename = "paletteItem")]
   palitem: PaletteItem,
-  palindex: usize,
+  palindex: u8,
   symbols: Symbols,
   formats: Formats,
 }

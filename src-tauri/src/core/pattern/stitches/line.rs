@@ -1,10 +1,9 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use serde::{Deserialize, Serialize};
 
 use super::PaletteIndex;
 use crate::core::pattern::Coord;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub struct Line {
   pub x: (Coord, Coord),
   pub y: (Coord, Coord),
@@ -34,9 +33,7 @@ impl PaletteIndex for Line {
   }
 }
 
-#[derive(
-  Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, BorshSerialize, BorshDeserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
 pub enum LineKind {
   Back = 0,

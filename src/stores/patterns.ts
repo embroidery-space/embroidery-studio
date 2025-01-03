@@ -4,10 +4,13 @@ import { defineAsyncComponent, ref, shallowRef, triggerRef } from "vue";
 import { useMagicKeys, whenever } from "@vueuse/core";
 import { useDialog } from "primevue";
 import { defineStore } from "pinia";
+import { deserialize } from "@dao-xyz/borsh";
+import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
-import { FabricApi, GridApi, HistoryApi, PathApi, PatternApi, StitchesApi } from "#/api";
-import { PatternView, type PaletteItemData } from "#/plugins/pixi";
-import type { PaletteItem, Stitch, Fabric, Grid } from "#/schemas/pattern";
+import { FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import { PatternView } from "#/plugins/pixi";
+import { AddedPaletteItemData, deserializeStitch, deserializeStitches } from "#/schemas/pattern";
+import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
 export const usePatternsStore = defineStore("pattern-project", () => {
   const appWindow = getCurrentWindow();
@@ -114,10 +117,9 @@ export const usePatternsStore = defineStore("pattern-project", () => {
       },
     });
   }
-  appWindow.listen<Fabric>("fabric:update", ({ payload: fabric }) => {
+  appWindow.listen<string>("fabric:update", ({ payload }) => {
     if (!pattern.value) return;
-    pattern.value.setFabric(fabric);
-    pattern.value.setGrid(pattern.value.grid); // Set the grid to adjust it to the new fabric.
+    pattern.value.setFabric(deserialize(toByteArray(payload), Fabric));
   });
 
   function updateGrid() {
@@ -131,30 +133,28 @@ export const usePatternsStore = defineStore("pattern-project", () => {
       onClose: async (options) => {
         if (!options?.data) return;
         const { grid } = options.data;
-        console.log(grid);
-
         await GridApi.updateGrid(pattern.value!.key, grid);
       },
     });
   }
-  appWindow.listen<Grid>("grid:update", ({ payload: grid }) => {
+  appWindow.listen<string>("grid:update", ({ payload }) => {
     if (!pattern.value) return;
-    pattern.value.setGrid(grid);
+    pattern.value.setGrid(deserialize(toByteArray(payload), Grid));
   });
 
   async function addPaletteItem(palitem: PaletteItem) {
     if (!pattern.value) return;
-    await PatternApi.addPaletteItem(pattern.value.key, palitem);
+    await PaletteApi.addPaletteItem(pattern.value.key, palitem);
   }
-  appWindow.listen<PaletteItemData>("palette:add_palette_item", ({ payload }) => {
+  appWindow.listen<string>("palette:add_palette_item", ({ payload }) => {
     if (!pattern.value) return;
-    pattern.value.addPaletteItem(payload);
+    pattern.value.addPaletteItem(deserialize(toByteArray(payload), AddedPaletteItemData));
     triggerRef(pattern);
   });
 
   async function removePaletteItem(palitem: PaletteItem) {
     if (!pattern.value) return;
-    await PatternApi.removePaletteItem(pattern.value.key, palitem);
+    await PaletteApi.removePaletteItem(pattern.value.key, palitem);
   }
   appWindow.listen<number>("palette:remove_palette_item", ({ payload: palindex }) => {
     if (!pattern.value) return;
@@ -170,21 +170,21 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     return StitchesApi.removeStitch(pattern.value.key, stitch);
   }
-  appWindow.listen<Stitch>("stitches:add_one", ({ payload }) => {
+  appWindow.listen<string>("stitches:add_one", ({ payload }) => {
     if (!pattern.value) return;
-    pattern.value.addStitch(payload);
+    pattern.value.addStitch(deserializeStitch(toByteArray(payload)));
   });
-  appWindow.listen<Stitch[]>("stitches:add_many", ({ payload }) => {
+  appWindow.listen<string>("stitches:add_many", ({ payload }) => {
     if (!pattern.value) return;
-    for (const stitch of payload) pattern.value.addStitch(stitch);
+    for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.addStitch(stitch);
   });
-  appWindow.listen<Stitch>("stitches:remove_one", ({ payload }) => {
+  appWindow.listen<string>("stitches:remove_one", ({ payload }) => {
     if (!pattern.value) return;
-    pattern.value.removeStitch(payload);
+    pattern.value.removeStitch(deserializeStitch(toByteArray(payload)));
   });
-  appWindow.listen<Stitch[]>("stitches:remove_many", ({ payload }) => {
+  appWindow.listen<string>("stitches:remove_many", ({ payload }) => {
     if (!pattern.value) return;
-    for (const stitch of payload) pattern.value.removeStitch(stitch);
+    for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.removeStitch(stitch);
   });
 
   const keys = useMagicKeys();

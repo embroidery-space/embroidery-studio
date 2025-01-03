@@ -2,8 +2,8 @@
   <div class="relative h-full">
     <Listbox
       v-model="appState.state.selectedPaletteItemIndex"
-      :options="pattern?.palette"
-      :option-value="(pi) => pattern?.palette.indexOf(pi)"
+      :options="pattern?.palette.map((pi) => pi.palitem)"
+      :option-value="(pi) => pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
       scroll-height="100%"
       empty-message="No palette items found"
       :dt="{ list: { header: { padding: '4px 8px' } } }"
@@ -20,7 +20,7 @@
       <template #header>
         <div class="flex min-h-9 w-full items-center justify-between">
           <div class="text-color">Palette</div>
-          <ButtonGroup v-if="pattern?.palette !== undefined">
+          <ButtonGroup v-if="pattern !== undefined">
             <Button
               severity="primary"
               :icon="`pi ${showPaletteCatalog ? 'pi-minus' : 'pi-plus'}`"
@@ -154,6 +154,7 @@
   import { onMounted, reactive, ref, useTemplateRef } from "vue";
   import { computedAsync } from "@vueuse/core";
   import { storeToRefs } from "pinia";
+  import { dequal } from "dequal/lite";
   import {
     Button,
     ButtonGroup,
@@ -168,11 +169,12 @@
   import { path } from "@tauri-apps/api";
   import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
   import { dt } from "@primevue/themes";
+  import { Color } from "pixi.js";
   import PalItem from "./PaletteItem.vue";
   import { DEFAULT_PALETTE_DISPLAY_OPTIONS, type PaletteDisplayOptions } from "#/utils/paletteItem";
   import { useAppStateStore } from "#/stores/state";
-  import type { PaletteItem, PaletteItemBase } from "#/types/pattern/pattern";
   import { usePatternsStore } from "#/stores/patterns";
+  import { PaletteItem } from "#/schemas/pattern";
 
   interface PalettePanelEmits {
     (e: "addPaletteItem", pi: PaletteItem): void;
@@ -190,7 +192,7 @@
 
   const paletteCatalogDirPath = await path.resolveResource("resources/palettes");
   const showPaletteCatalog = ref(false);
-  const paletteCatalog = ref<Map<string, PaletteItemBase[] | undefined>>(new Map());
+  const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
   const selectedPaletteCatalogItem = ref("DMC");
   const paletteCatalogDisplayOptions: PaletteDisplayOptions = {
     colorOnly: false,
@@ -208,7 +210,14 @@
       let palette = paletteCatalog.value.get(brand);
       if (palette === undefined) {
         const content = await readTextFile(await path.join(paletteCatalogDirPath, `${brand}.json`));
-        palette = JSON.parse(content) as PaletteItemBase[];
+        palette = (
+          JSON.parse(content) as {
+            brand: string;
+            number: string;
+            name: string;
+            color: string;
+          }[]
+        ).map((pi) => new PaletteItem({ ...pi, color: new Color(pi.color) }));
         paletteCatalog.value.set(brand, palette);
       }
       loadingPalette.value = false;

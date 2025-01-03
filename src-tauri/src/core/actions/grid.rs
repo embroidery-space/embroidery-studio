@@ -1,6 +1,8 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
@@ -14,12 +16,12 @@ mod tests;
 #[derive(Clone)]
 pub struct UpdateGridPropertiesAction {
   grid: Grid,
-  conflicts: OnceLock<Grid>,
+  old_grid: OnceLock<Grid>,
 }
 
 impl UpdateGridPropertiesAction {
   pub fn new(grid: Grid) -> Self {
-    Self { grid, conflicts: OnceLock::new() }
+    Self { grid, old_grid: OnceLock::new() }
   }
 }
 
@@ -29,10 +31,10 @@ impl<R: tauri::Runtime> Action<R> for UpdateGridPropertiesAction {
   /// **Emits:**
   /// - `grid:update` with the updated grid properties.
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    window.emit("grid:update", &self.grid)?;
-    let conflicts = std::mem::replace(&mut patproj.display_settings.grid, self.grid.clone());
-    if self.conflicts.get().is_none() {
-      self.conflicts.set(conflicts).unwrap();
+    window.emit("grid:update", STANDARD.encode(borsh::to_vec(&self.grid)?))?;
+    let old_grid = std::mem::replace(&mut patproj.display_settings.grid, self.grid.clone());
+    if self.old_grid.get().is_none() {
+      self.old_grid.set(old_grid).unwrap();
     }
     Ok(())
   }
@@ -42,9 +44,9 @@ impl<R: tauri::Runtime> Action<R> for UpdateGridPropertiesAction {
   /// **Emits:**
   /// - `grid:update` with the previous grid properties.
   fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    let conflicts = self.conflicts.get().unwrap();
-    window.emit("grid:update", &conflicts)?;
-    patproj.display_settings.grid = conflicts.clone();
+    let old_grid = self.old_grid.get().unwrap();
+    window.emit("grid:update", STANDARD.encode(borsh::to_vec(&old_grid)?))?;
+    patproj.display_settings.grid = old_grid.clone();
     Ok(())
   }
 }

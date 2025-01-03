@@ -15,7 +15,7 @@
             (patternPath) => {
               patternProjectStore.openPattern(patternPath);
               // TODO: Store the selected palette item per opened pattern.
-              appStateStore.state.selectedPaletteItemIndex = undefined;
+              appStateStore.state.selectedPaletteItemIndex = null;
             }
           "
         />

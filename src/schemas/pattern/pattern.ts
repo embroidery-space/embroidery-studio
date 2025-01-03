@@ -1,4 +1,5 @@
 import { field, fixedArray, option, vec } from "@dao-xyz/borsh";
+import { Color } from "pixi.js";
 
 export class PatternInfo {
   @field({ type: "string" })
@@ -102,8 +103,11 @@ export class PaletteItem {
   @field({ type: "string" })
   name: string;
 
-  @field({ type: "string" })
-  color: string;
+  @field({
+    serialize: (color, writer) => writer.string(color.toHex().substring(1)),
+    deserialize: (reader) => new Color(reader.string()),
+  })
+  color: Color;
 
   @field({ type: option(vec(Blend)) })
   blends?: Blend[];
@@ -391,5 +395,5 @@ export class Pattern {
   }
 }
 
-export type Stitch = { full: FullStitch } | { part: PartStitch } | { node: NodeStitch } | { line: LineStitch };
+export type Stitch = FullStitch | PartStitch | NodeStitch | LineStitch;
 export type StitchKind = FullStitchKind | PartStitchKind | NodeStitchKind | LineStitchKind;

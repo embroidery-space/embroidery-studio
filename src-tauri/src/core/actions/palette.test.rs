@@ -1,3 +1,5 @@
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::test::{mock_builder, MockRuntime};
 use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindowBuilder};
 
@@ -37,8 +39,10 @@ fn test_add_palette_item() {
   // Test executing the command.
   {
     window.listen("palette:add_palette_item", move |e| {
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let expected: AddedPaletteItemData = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
       assert_eq!(
-        serde_json::from_str::<AddedPaletteItemData>(e.payload()).unwrap(),
+        expected,
         AddedPaletteItemData {
           palitem: palitem.clone(),
           palindex: 7,
@@ -90,7 +94,9 @@ fn test_remove_palette_item() {
       assert_eq!(serde_json::from_str::<usize>(e.payload()).unwrap(), 2);
     });
     window.listen("stitches:remove_many", move |e| {
-      assert!(!serde_json::from_str::<Vec<Stitch>>(e.payload()).unwrap().is_empty());
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let conflicts: Vec<Stitch> = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(conflicts.is_empty(), false);
     });
 
     assert_eq!(patproj.pattern.palette.len(), 7);
@@ -101,8 +107,10 @@ fn test_remove_palette_item() {
   // Test revoking the command.
   {
     window.listen("palette:add_palette_item", move |e| {
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let expected: AddedPaletteItemData = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
       assert_eq!(
-        serde_json::from_str::<AddedPaletteItemData>(e.payload()).unwrap(),
+        expected,
         AddedPaletteItemData {
           palitem: palitem.clone(),
           palindex: 2,
@@ -112,7 +120,9 @@ fn test_remove_palette_item() {
       );
     });
     window.listen("stitches:add_many", move |e| {
-      assert!(!serde_json::from_str::<Vec<Stitch>>(e.payload()).unwrap().is_empty());
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let conflicts: Vec<Stitch> = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(conflicts.is_empty(), false);
     });
 
     assert_eq!(patproj.pattern.palette.len(), 6);

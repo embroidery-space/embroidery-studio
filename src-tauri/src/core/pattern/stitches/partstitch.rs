@@ -1,11 +1,10 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use serde::{Deserialize, Serialize};
 
 use super::fullstitch::*;
 use super::PaletteIndex;
 use crate::core::pattern::Coord;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub struct PartStitch {
   pub x: Coord,
   pub y: Coord,
@@ -71,9 +70,7 @@ impl PaletteIndex for PartStitch {
   }
 }
 
-#[derive(
-  Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, BorshSerialize, BorshDeserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
 pub enum PartStitchDirection {
   Forward = 1,
@@ -90,9 +87,7 @@ impl From<(Coord, Coord)> for PartStitchDirection {
   }
 }
 
-#[derive(
-  Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, BorshSerialize, BorshDeserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
 pub enum PartStitchKind {
   Half = 0,

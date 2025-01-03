@@ -1,3 +1,5 @@
+use base64::engine::general_purpose::STANDARD;
+use base64::Engine;
 use tauri::test::{mock_builder, MockRuntime};
 use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindowBuilder};
 
@@ -26,7 +28,9 @@ fn test_update_fabric() {
   // Test executing the command.
   {
     let event_id = window.listen("grid:update", move |e| {
-      assert_eq!(serde_json::from_str::<Grid>(e.payload()).unwrap(), grid);
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let expected: Grid = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(expected, grid);
     });
 
     action.perform(&window, &mut patproj).unwrap();
@@ -36,7 +40,9 @@ fn test_update_fabric() {
   // Test revoking the command.
   {
     window.listen("fabric:update", move |e| {
-      assert_eq!(serde_json::from_str::<Grid>(e.payload()).unwrap(), Grid::default());
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let expected: Grid = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(expected, Grid::default());
     });
 
     action.revoke(&window, &mut patproj).unwrap();

@@ -1,5 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { PatternKey, Fabric } from "#/schemas/pattern";
+import { serialize } from "@dao-xyz/borsh";
+import { type PatternKey, Fabric } from "#/schemas/pattern";
 
-export const updateFabric = (patternKey: PatternKey, fabric: Fabric) =>
-  invoke<void>("update_fabric", { patternKey, fabric });
+export function updateFabric(patternKey: PatternKey, fabric: Fabric) {
+  return invoke<void>("update_fabric", serialize(fabric), { headers: { patternKey } });
+}

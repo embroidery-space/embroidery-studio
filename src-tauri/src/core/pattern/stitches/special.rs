@@ -1,10 +1,9 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use serde::{Deserialize, Serialize};
 
 use super::{Line, Node};
 use crate::core::pattern::Coord;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub struct SpecialStitch {
   pub x: Coord,
   pub y: Coord,
@@ -28,11 +27,11 @@ impl Ord for SpecialStitch {
 
 #[nutype::nutype(
   sanitize(with = |raw| raw.clamp(0, 360)),
-  derive(Debug, Clone, Copy, PartialEq, Eq, FromStr, Display, Serialize, Deserialize, BorshSerialize, BorshDeserialize)
+  derive(Debug, Clone, Copy, PartialEq, Eq, FromStr, Display, BorshSerialize, BorshDeserialize)
 )]
 pub struct Degree(u16);
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub struct SpecialStitchModel {
   pub unique_name: String,
   pub name: String,
@@ -41,7 +40,7 @@ pub struct SpecialStitchModel {
   pub curves: Vec<Curve>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub struct Curve {
   pub points: Vec<(Coord, Coord)>,
 }

@@ -30,6 +30,7 @@ zip = { version = "2.2.2", features = ["zstd", "time"], default-features = false
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.134"
 borsh = { version = "1.5.2", features = ["derive"] }
+base64 = "0.22.1"
 
 # Error handling
 anyhow = "1.0.95"
@@ -38,6 +39,6 @@ anyhow = "1.0.95"
 log = "0.4.22"
 
 # Other
-ordered-float = { version = "4.6.0", features = ["borsh", "serde"] }
+ordered-float = { version = "4.6.0", features = ["borsh"] }
 dyn-clone = "1.0.17"
-nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = ["borsh", "serde"] }
+nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = ["borsh"] }
