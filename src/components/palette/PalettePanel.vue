@@ -65,7 +65,7 @@
       @option-dblclick="
         ({ value }) => {
           if (!pattern?.palette.find((pi) => pi.brand === value.brand && pi.number === value.number)) {
-            emit('addPaletteItem', new PaletteItem(value));
+            emit('addPaletteItem', value);
           }
         }
       "
@@ -169,6 +169,7 @@
   import { path } from "@tauri-apps/api";
   import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
   import { dt } from "@primevue/themes";
+  import { Color } from "pixi.js";
   import PalItem from "./PaletteItem.vue";
   import { DEFAULT_PALETTE_DISPLAY_OPTIONS, type PaletteDisplayOptions } from "#/utils/paletteItem";
   import { useAppStateStore } from "#/stores/state";
@@ -191,7 +192,7 @@
 
   const paletteCatalogDirPath = await path.resolveResource("resources/palettes");
   const showPaletteCatalog = ref(false);
-  const paletteCatalog = ref<Map<string, PaletteItemBase[] | undefined>>(new Map());
+  const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
   const selectedPaletteCatalogItem = ref("DMC");
   const paletteCatalogDisplayOptions: PaletteDisplayOptions = {
     colorOnly: false,
@@ -209,7 +210,14 @@
       let palette = paletteCatalog.value.get(brand);
       if (palette === undefined) {
         const content = await readTextFile(await path.join(paletteCatalogDirPath, `${brand}.json`));
-        palette = JSON.parse(content) as PaletteItemBase[];
+        palette = (
+          JSON.parse(content) as {
+            brand: string;
+            number: string;
+            name: string;
+            color: string;
+          }[]
+        ).map((pi) => new PaletteItem({ ...pi, color: new Color(pi.color) }));
         paletteCatalog.value.set(brand, palette);
       }
       loadingPalette.value = false;
@@ -229,11 +237,4 @@
       }
     }
   });
-
-  interface PaletteItemBase {
-    brand: string;
-    number: string;
-    name: string;
-    color: string;
-  }
 </script>

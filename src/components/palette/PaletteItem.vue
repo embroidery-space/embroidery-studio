@@ -3,9 +3,9 @@
     v-tooltip="{ value: paletteItemTitle(paletteItem), showDelay: 200 }"
     class="h-8 w-full px-2 py-1"
     :style="{
-      backgroundColor: `#${paletteItem.color}`,
-      color: `${textColor} !important`,
-      boxShadow: selected ? `inset 0 0 0 2px #${paletteItem.color}, inset 0 0 0 4px ${textColor}` : '',
+      backgroundColor,
+      color: `${foregroundColor} !important`,
+      boxShadow: selected ? `inset 0 0 0 2px ${backgroundColor}, inset 0 0 0 4px ${foregroundColor}` : '',
     }"
   >
     <p v-show="!displayOptions.colorOnly" class="overflow-hidden text-ellipsis whitespace-nowrap">
@@ -28,5 +28,6 @@
 
   const { paletteItem, displayOptions, selected } = defineProps<PaletteItemProps>();
 
-  const textColor = computed(() => contrastColor(paletteItem.color));
+  const backgroundColor = computed(() => paletteItem.color.toHex());
+  const foregroundColor = computed(() => contrastColor(paletteItem.color));
 </script>
