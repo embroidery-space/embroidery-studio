@@ -210,6 +210,22 @@ impl Stitches<FullStitch> {
 
     conflicts
   }
+
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<FullStitch> {
+    let mut conflicts = Vec::new();
+    for fullstitch in std::mem::take(&mut self.inner).into_iter() {
+      if fullstitch.x < x.into()
+        || fullstitch.x >= (x + width).into()
+        || fullstitch.y < y.into()
+        || fullstitch.y >= (y + height).into()
+      {
+        conflicts.push(fullstitch);
+      } else {
+        self.inner.insert(fullstitch);
+      }
+    }
+    conflicts
+  }
 }
 
 impl Stitches<PartStitch> {
@@ -362,6 +378,58 @@ impl Stitches<PartStitch> {
     };
     self.remove(&half).inspect(|&half| conflicts.push(half));
 
+    conflicts
+  }
+
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<PartStitch> {
+    let mut conflicts = Vec::new();
+    for fullstitch in std::mem::take(&mut self.inner).into_iter() {
+      if fullstitch.x < x.into()
+        || fullstitch.x >= (x + width).into()
+        || fullstitch.y < y.into()
+        || fullstitch.y >= (y + height).into()
+      {
+        conflicts.push(fullstitch);
+      } else {
+        self.inner.insert(fullstitch);
+      }
+    }
+    conflicts
+  }
+}
+
+impl Stitches<Line> {
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<Line> {
+    let mut conflicts = Vec::new();
+    for line in std::mem::take(&mut self.inner).into_iter() {
+      if line.x.0 < x.into()
+        || line.x.1 < x.into()
+        || line.x.0 > (x + width).into()
+        || line.x.1 > (x + width).into()
+        || line.y.0 < y.into()
+        || line.y.1 < y.into()
+        || line.y.0 > (y + height).into()
+        || line.y.1 > (y + height).into()
+      {
+        conflicts.push(line);
+      } else {
+        self.inner.insert(line);
+      }
+    }
+    conflicts
+  }
+}
+
+impl Stitches<Node> {
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<Node> {
+    let mut conflicts = Vec::new();
+    for node in std::mem::take(&mut self.inner).into_iter() {
+      if node.x < x.into() || node.x >= (x + width).into() || node.y < y.into() || node.y >= (y + height).into() {
+        conflicts.push(node);
+      } else {
+        self.inner.insert(node);
+      }
+    }
     conflicts
   }
 }
