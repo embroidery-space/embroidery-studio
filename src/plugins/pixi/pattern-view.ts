@@ -39,13 +39,13 @@ export class PatternView {
   // Simple stitches (fulls, petites, halves and quarters) are rendered using particles.
   // It allows us to render a large number of stitches very efficiently.
   // This is especially important because they are the most common stitches.
-  #fullstitches = new ObjectedMap<FullStitch, Particle | undefined>();
-  #partstitches = new ObjectedMap<PartStitch, Particle | undefined>();
+  #fullstitches: ObjectedMap<FullStitch, Particle | undefined>;
+  #partstitches: ObjectedMap<PartStitch, Particle | undefined>;
 
   // Complex stitches (back and straight stitches, french knots, beads and special stitches) are rendered using graphics and sprites.
   // They are more complex and require more control over their rendering.
-  #lines = new ObjectedMap<LineStitch, StitchGraphics | undefined>();
-  #nodes = new ObjectedMap<NodeStitch, StitchSprite | undefined>();
+  #lines: ObjectedMap<LineStitch, StitchGraphics | undefined>;
+  #nodes: ObjectedMap<NodeStitch, StitchSprite | undefined>;
 
   #specialstitches: SpecialStitch[];
   #specialStitchModels: SpecialStitchModel[];
@@ -82,9 +82,16 @@ export class PatternView {
 
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.
+    this.#fullstitches = ObjectedMap.withCapacity(pattern.fullstitches.length);
     for (const fullstitch of pattern.fullstitches) this.#fullstitches.set(fullstitch, undefined);
+
+    this.#partstitches = ObjectedMap.withCapacity(pattern.partstitches.length);
     for (const partstitch of pattern.partstitches) this.#partstitches.set(partstitch, undefined);
+
+    this.#lines = ObjectedMap.withCapacity(pattern.lines.length);
     for (const line of pattern.lines) this.#lines.set(line, undefined);
+
+    this.#nodes = ObjectedMap.withCapacity(pattern.nodes.length);
     for (const node of pattern.nodes) this.#nodes.set(node, undefined);
 
     this.#specialstitches = pattern.specialstitches;
