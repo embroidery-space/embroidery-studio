@@ -40,38 +40,38 @@
     </Fieldset>
 
     <Fieldset legend="Size">
-      <div>
-        <label class="flex items-center gap-2">
-          <RadioButton v-model="fabricSizeOption" value="final-size" />
-          Specify the final size:
-        </label>
+      <div class="mx-8 my-4 flex items-center gap-2">
+        <FloatLabel variant="on">
+          <InputNumber
+            id="size-width"
+            v-model="fabricSizeFinal.width"
+            :allow-empty="false"
+            :min="0.1"
+            :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
+            :input-style="{ background }"
+          />
+          <label for="size-width" :style="{ background }">Width</label>
+        </FloatLabel>
 
-        <div class="mx-8 my-4 flex items-center gap-2">
-          <FloatLabel variant="on">
-            <InputNumber
-              id="size-width"
-              v-model="fabricSizeFinal.width"
-              :allow-empty="false"
-              :min="0.1"
-              :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
-              :input-style="{ background }"
-            />
-            <label for="size-width" :style="{ background }">Width</label>
-          </FloatLabel>
+        by
 
-          by
+        <FloatLabel variant="on">
+          <InputNumber
+            id="size-height"
+            v-model="fabricSizeFinal.height"
+            :allow-empty="false"
+            :min="0.1"
+            :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
+            :input-style="{ background }"
+          />
+          <label for="size-height" :style="{ background }">Height</label>
+        </FloatLabel>
 
-          <FloatLabel variant="on">
-            <InputNumber
-              id="size-height"
-              v-model="fabricSizeFinal.height"
-              :allow-empty="false"
-              :min="0.1"
-              :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
-              :input-style="{ background }"
-            />
-            <label for="size-height" :style="{ background }">Height</label>
-          </FloatLabel>
+        <div class="flex flex-col gap-2">
+          <label class="flex items-center gap-2">
+            <RadioButton v-model="fabricSizeMeasurement" value="stitches" />
+            stitches
+          </label>
 
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="inches" />
@@ -82,41 +82,6 @@
             <RadioButton v-model="fabricSizeMeasurement" value="mm" />
             mm
           </label>
-        </div>
-      </div>
-
-      <div>
-        <label class="flex items-center gap-2">
-          <RadioButton v-model="fabricSizeOption" value="stitches" />
-          Specify the size in stitches:
-        </label>
-
-        <div class="mx-8 my-4 flex items-center gap-2">
-          <FloatLabel variant="on">
-            <InputNumber
-              id="size-width"
-              v-model="fabricSizeStitches.width"
-              :allow-empty="false"
-              :min="1"
-              :input-style="{ background }"
-            />
-            <label for="size-width" :style="{ background }">Width</label>
-          </FloatLabel>
-
-          by
-
-          <FloatLabel variant="on">
-            <InputNumber
-              id="size-height"
-              v-model="fabricSizeStitches.height"
-              :allow-empty="false"
-              :min="1"
-              :input-style="{ background }"
-            />
-            <label for="size-height" :style="{ background }">Height</label>
-          </FloatLabel>
-
-          stitches
         </div>
       </div>
 
@@ -157,7 +122,7 @@
             :style="{
               backgroundColor: `#${option.color}`,
               boxShadow: selected
-                ? `inset 0 0 0 2px #${option.color}, inset 0 0 0 4px ${contrastColor(option.color)}`
+                ? `inset 0 0 0 2px #${option.color}, inset 0 0 0 4px ${contrastColor(new Color(option.color))}`
                 : '',
             }"
           ></div>
@@ -178,10 +143,11 @@
 <script setup lang="ts">
   import { path } from "@tauri-apps/api";
   import { readTextFile } from "@tauri-apps/plugin-fs";
-  import { computed, inject, onMounted, reactive, ref, watch, type Ref } from "vue";
+  import { inject, onMounted, reactive, ref, watch, type Ref } from "vue";
   import { dt } from "@primevue/themes";
   import { Checkbox, Fieldset, FloatLabel, InputNumber, Listbox, RadioButton, Select } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
+  import { Color } from "pixi.js";
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
   import { contrastColor } from "#/utils/color";
@@ -199,41 +165,64 @@
 
   const squareStitches = ref(true);
 
-  const fabricSizeOption = ref<"final-size" | "stitches">("stitches");
-  const fabricSizeMeasurement = ref<"inches" | "mm">("inches");
-  const fabricSizeFinal = reactive({ width: 4.29, height: 5.71 }); // 60x80 stitches in inches
-  const fabricSizeStitches = reactive({ width: fabric.width, height: fabric.height });
+  const fabricSizeMeasurement = ref<"stitches" | "inches" | "mm">("stitches");
+  const fabricSizeFinal = reactive({ width: fabric.width, height: fabric.height });
 
-  const fabricSize = computed(() => {
-    const width = fabricSizeMeasurement.value === "inches" ? fabricSizeFinal.width : mm2inches(fabricSizeFinal.width);
-    const height =
-      fabricSizeMeasurement.value === "inches" ? fabricSizeFinal.height : mm2inches(fabricSizeFinal.height);
-    return { width, height };
-  });
-
-  const patternSize = computed(() => {
-    if (fabricSizeOption.value === "final-size") {
-      return {
-        width: size2stitches(fabricSize.value.width, fabric.spi[0]),
-        height: size2stitches(fabricSize.value.height, fabric.spi[1]),
-      };
-    } else {
-      return {
-        width: fabricSizeStitches.width,
-        height: fabricSizeStitches.height,
-      };
+  watch(fabricSizeMeasurement, (newMeasurement, oldMeasurement) => {
+    const { width, height } = fabricSizeFinal;
+    switch (newMeasurement) {
+      case "stitches": {
+        if (oldMeasurement === "inches") {
+          fabricSizeFinal.width = size2stitches(width, fabric.spi[0]);
+          fabricSizeFinal.height = size2stitches(height, fabric.spi[1]);
+        } else {
+          fabricSizeFinal.width = size2stitches(mm2inches(width), fabric.spi[0]);
+          fabricSizeFinal.height = size2stitches(mm2inches(height), fabric.spi[1]);
+        }
+        break;
+      }
+      case "inches": {
+        if (oldMeasurement === "stitches") {
+          fabricSizeFinal.width = stitches2inches(width, fabric.spi[0]);
+          fabricSizeFinal.height = stitches2inches(height, fabric.spi[1]);
+        } else {
+          fabricSizeFinal.width = mm2inches(width);
+          fabricSizeFinal.height = mm2inches(height);
+        }
+        break;
+      }
+      case "mm": {
+        if (oldMeasurement === "stitches") {
+          fabricSizeFinal.width = stitches2mm(width, fabric.spi[0]);
+          fabricSizeFinal.height = stitches2mm(height, fabric.spi[1]);
+        } else {
+          fabricSizeFinal.width = inches2mm(width);
+          fabricSizeFinal.height = inches2mm(height);
+        }
+        break;
+      }
     }
   });
 
-  watch(patternSize, (size) => {
-    fabric.width = size.width;
-    fabric.height = size.height;
-  });
-
-  watch(fabricSizeMeasurement, (measurement) => {
-    const { width, height } = fabricSizeFinal;
-    fabricSizeFinal.width = measurement === "inches" ? mm2inches(width) : inches2mm(width);
-    fabricSizeFinal.height = measurement === "inches" ? mm2inches(height) : inches2mm(height);
+  watch(fabricSizeFinal, (size) => {
+    const { width, height } = size;
+    switch (fabricSizeMeasurement.value) {
+      case "stitches": {
+        fabric.width = width;
+        fabric.height = height;
+        break;
+      }
+      case "inches": {
+        fabric.width = size2stitches(width, fabric.spi[0]);
+        fabric.height = size2stitches(height, fabric.spi[1]);
+        break;
+      }
+      case "mm": {
+        fabric.width = size2stitches(mm2inches(width), fabric.spi[0]);
+        fabric.height = size2stitches(mm2inches(height), fabric.spi[1]);
+        break;
+      }
+    }
   });
 
   const fabricColors = ref<{ name: string; color: string }[]>([]);

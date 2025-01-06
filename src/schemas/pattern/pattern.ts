@@ -104,7 +104,7 @@ export class PaletteItem {
   name: string;
 
   @field({
-    serialize: (color, writer) => writer.string(color.toHex().substring(1)),
+    serialize: (color, writer) => writer.string((color as Color).toHex().substring(1).toUpperCase()),
     deserialize: (reader) => new Color(reader.string()),
   })
   color: Color;

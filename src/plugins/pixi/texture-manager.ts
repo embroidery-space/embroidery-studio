@@ -2,7 +2,7 @@ import { Graphics, Matrix, RenderTexture, type Renderer, type TextureSourceOptio
 import { TEXTURE_STROKE } from "./constants";
 import { ObjectedMap } from "#/utils/map";
 import { mm2px } from "#/utils/measurement";
-import { FullStitchKind, NodeStitchKind, PartStitchKind, type Bead } from "#/schemas/pattern";
+import { Bead, FullStitchKind, NodeStitchKind, PartStitchKind } from "#/schemas/pattern";
 
 const DEFAULT_RENDER_TEXTURE_OPTIONS: Partial<TextureSourceOptions> = {
   resolution: window.devicePixelRatio,
@@ -84,9 +84,9 @@ export class TextureManager {
     };
   }
 
-  getNodeTexture(kind: NodeStitchKind, bead: Bead = { length: 1.5, diameter: 2.5 }) {
+  getNodeTexture(kind: NodeStitchKind, bead = new Bead({ length: 1.5, diameter: 2.5 })) {
     if (kind === NodeStitchKind.FrenchKnot) return this.#frenchKnot;
-    const texture = this.#beads.get(bead!);
+    const texture = this.#beads.get(bead);
     if (texture) return texture;
     return this.#beads.set(bead, this.#createBeadTexture(bead));
   }
