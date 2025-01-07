@@ -34,7 +34,7 @@ pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
     .truncate(true)
     .open(&patproj.file_path)?;
   let mut zip = zip::ZipWriter::new(file);
-  let options = zip::write::SimpleFileOptions::default();
+  let options = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Zstd);
 
   zip.start_file("pattern", options)?;
   zip.write_all(&borsh::to_vec(&patproj.pattern).unwrap())?;
