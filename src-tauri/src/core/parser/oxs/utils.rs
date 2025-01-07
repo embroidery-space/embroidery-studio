@@ -1,39 +1,37 @@
 use std::collections::HashMap;
-use std::str::FromStr;
 
 use anyhow::Result;
 use quick_xml::events::attributes::Attributes;
 
 #[derive(Debug)]
 pub enum OxsVersion {
-  V1_0,
+  V1,
+  Unknown(String),
 }
 
-impl FromStr for OxsVersion {
-  type Err = anyhow::Error;
-
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
+impl From<&str> for OxsVersion {
+  fn from(s: &str) -> Self {
     match s {
-      "1.0" => Ok(OxsVersion::V1_0),
-      _ => anyhow::bail!("Unsupported OXS version: {s}"),
+      "1.0" | "1.1" => OxsVersion::V1,
+      _ => OxsVersion::Unknown(s.to_owned()),
     }
   }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[allow(clippy::enum_variant_names)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Software {
   UrsaSoftware,
   EmbroideryStudio,
+  Unknown(String),
 }
 
-impl FromStr for Software {
-  type Err = anyhow::Error;
-
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
+impl From<&str> for Software {
+  fn from(s: &str) -> Self {
     match s {
-      "Ursa Software" => Ok(Software::UrsaSoftware),
-      "Embroidery Studio" => Ok(Software::EmbroideryStudio),
-      _ => anyhow::bail!("Unsupported software: {s}"),
+      "Ursa Software" | "MiniStitch by Ursa Software" => Software::UrsaSoftware,
+      "Embroidery Studio" => Software::EmbroideryStudio,
+      _ => Software::Unknown(s.to_owned()),
     }
   }
 }

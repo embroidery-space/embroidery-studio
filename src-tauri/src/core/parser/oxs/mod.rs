@@ -1,5 +1,5 @@
 mod utils;
-mod v1_0;
+mod v1;
 
 #[allow(clippy::module_inception)]
 mod oxs;

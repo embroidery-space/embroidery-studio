@@ -12,7 +12,7 @@ use crate::core::pattern::print::PrintSettings;
 use crate::core::pattern::*;
 
 pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Result<PatternProject> {
-  log::trace!("OXS version is 1.0 in the {software:?} edition");
+  log::trace!("OXS version is 1.x in the {software:?} edition");
 
   let mut buf = Vec::new();
   let mut reader = Reader::from_file(&file_path)?;
@@ -40,7 +40,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
           }
           b"palette" => {
             if let Some(palette_size) = palette_size {
-              let (fabric, palette) = read_palette(&mut reader, software, palette_size)?;
+              let (fabric, palette) = read_palette(&mut reader, software.clone(), palette_size)?;
               pattern.fabric = Fabric {
                 name: fabric.name,
                 color: fabric.color,
@@ -125,11 +125,11 @@ fn read_pattern_properties(attributes: &MapAttributes) -> Result<(u16, u16, Patt
   let pattern_height = attributes.get("chartheight").unwrap().parse()?;
 
   let info = PatternInfo {
-    title: attributes.get("charttitle").unwrap().to_owned(),
-    author: attributes.get("author").unwrap().to_owned(),
+    title: attributes.get("charttitle").unwrap_or(&String::new()).to_owned(),
+    author: attributes.get("author").unwrap_or(&String::new()).to_owned(),
     company: attributes.get("company").unwrap_or(&String::new()).to_owned(),
-    copyright: attributes.get("copyright").unwrap().to_owned(),
-    description: attributes.get("instructions").unwrap().to_owned(),
+    copyright: attributes.get("copyright").unwrap_or(&String::new()).to_owned(),
+    description: attributes.get("instructions").unwrap_or(&String::new()).to_owned(),
   };
 
   let spi = (

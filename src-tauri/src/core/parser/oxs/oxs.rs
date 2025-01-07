@@ -2,7 +2,7 @@ use anyhow::{bail, Result};
 use quick_xml::events::Event;
 
 use super::utils::{process_attributes, OxsVersion, Software};
-use super::v1_0;
+use super::v1;
 use crate::core::pattern::PatternProject;
 
 pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
@@ -15,8 +15,8 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
       Ok(Event::Empty(ref e)) => {
         if e.name().as_ref() == b"properties" {
           let attributes = process_attributes(e.attributes())?;
-          let oxs_version: OxsVersion = attributes.get("oxsversion").unwrap().parse()?;
-          let software: Software = attributes.get("software").unwrap().parse()?;
+          let oxs_version: OxsVersion = attributes.get("oxsversion").unwrap().as_str().into();
+          let software: Software = attributes.get("software").unwrap().as_str().into();
           break (oxs_version, software);
         }
       }
@@ -30,14 +30,14 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
     buf.clear();
   };
 
-  let pattern_project = match oxs_version {
-    OxsVersion::V1_0 => v1_0::parse_pattern(file_path, software)?,
-  };
+  if let OxsVersion::Unknown(uv) = oxs_version {
+    log::warn!("Unknown OXS version: {uv}");
+  }
 
-  Ok(pattern_project)
+  v1::parse_pattern(file_path, software)
 }
 
 pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
   log::info!("Saving the OXS pattern");
-  v1_0::save_pattern(patproj)
+  v1::save_pattern(patproj)
 }
