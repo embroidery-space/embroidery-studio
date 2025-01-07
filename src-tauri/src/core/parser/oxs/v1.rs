@@ -84,7 +84,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
   })
 }
 
-pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
+pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<()> {
   let file = std::fs::OpenOptions::new()
     .create(true)
     .write(true)
@@ -107,6 +107,7 @@ pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
       &pattern.info,
       pattern.fabric.spi,
       pattern.palette.len(),
+      package_info,
     )?;
     write_palette(writer, &pattern.palette, &pattern.fabric)?;
     write_fullstitches(writer, &pattern.fullstitches)?;
@@ -149,13 +150,14 @@ fn write_pattern_properties<W: io::Write>(
   info: &PatternInfo,
   spi: StitchesPerInch,
   palette_size: usize,
+  package_info: &tauri::PackageInfo,
 ) -> io::Result<()> {
   writer
     .create_element("properties")
     .with_attributes([
       ("oxsversion", "1.0"),
-      ("software", "Embroidery Studio"),
-      // ("software_version", "0.0.0"),
+      ("software", package_info.name.as_str()),
+      ("software_version", package_info.version.to_string().as_str()),
       ("chartwidth", pattern_width.to_string().as_str()),
       ("chartheight", pattern_height.to_string().as_str()),
       ("charttitle", info.title.as_str()),

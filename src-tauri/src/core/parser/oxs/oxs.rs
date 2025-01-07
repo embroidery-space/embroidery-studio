@@ -37,7 +37,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   v1::parse_pattern(file_path, software)
 }
 
-pub fn save_pattern(patproj: &PatternProject) -> Result<()> {
+pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<()> {
   log::info!("Saving the OXS pattern");
-  v1::save_pattern(patproj)
+  v1::save_pattern(patproj, package_info)
 }
