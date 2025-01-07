@@ -19,18 +19,19 @@ impl From<&str> for OxsVersion {
 }
 
 #[allow(clippy::enum_variant_names)]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub enum Software {
-  UrsaSoftware,
+  #[default]
   EmbroideryStudio,
+  UrsaSoftware,
   Unknown(String),
 }
 
 impl From<&str> for Software {
   fn from(s: &str) -> Self {
     match s {
-      "Ursa Software" | "MiniStitch by Ursa Software" => Software::UrsaSoftware,
       "Embroidery Studio" => Software::EmbroideryStudio,
+      "Ursa Software" | "MiniStitch by Ursa Software" => Software::UrsaSoftware,
       _ => Software::Unknown(s.to_owned()),
     }
   }

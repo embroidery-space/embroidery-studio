@@ -86,7 +86,7 @@ pub fn save_pattern<R: tauri::Runtime>(
   match PatternFormat::try_from(patproj.file_path.extension())? {
     PatternFormat::Xsd => Err(anyhow::anyhow!("The XSD format is not supported for saving.")),
     PatternFormat::Oxs => parser::oxs::save_pattern(patproj, app_handle.package_info()),
-    PatternFormat::EmbProj => parser::embproj::save_pattern(patproj),
+    PatternFormat::EmbProj => parser::embproj::save_pattern(patproj, app_handle.package_info()),
   }?;
 
   log::trace!("Pattern saved");

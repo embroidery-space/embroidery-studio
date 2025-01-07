@@ -7,16 +7,12 @@ use quick_xml::events::{BytesDecl, Event};
 use quick_xml::{Reader, Writer};
 
 use super::utils::*;
-use crate::core::pattern::display::DisplaySettings;
-use crate::core::pattern::print::PrintSettings;
 use crate::core::pattern::*;
 
-pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Result<PatternProject> {
+pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Result<Pattern> {
   log::trace!("OXS version is 1.x in the {software:?} edition");
 
-  let mut buf = Vec::new();
   let mut reader = Reader::from_file(&file_path)?;
-
   reader.config_mut().expand_empty_elements = true;
   reader.config_mut().check_end_names = true;
   reader.config_mut().trim_text(true);
@@ -24,6 +20,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
   let mut pattern = Pattern::default();
   let mut palette_size = None;
 
+  let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf) {
       Ok(Event::Start(ref e)) => {
@@ -76,30 +73,37 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
     buf.clear();
   }
 
-  Ok(PatternProject {
-    file_path,
-    display_settings: DisplaySettings::new(pattern.palette.len()),
-    print_settings: PrintSettings::default(),
-    pattern,
-  })
+  Ok(pattern)
 }
 
-pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<()> {
-  let file = std::fs::OpenOptions::new()
+pub fn save_pattern(file_path: std::path::PathBuf, pattern: &Pattern, package_info: &tauri::PackageInfo) -> Result<()> {
+  let mut file = std::fs::OpenOptions::new()
     .create(true)
     .write(true)
     .truncate(true)
-    .open(&patproj.file_path)?;
+    .open(file_path)?;
+  save_pattern_inner(&mut file, pattern, package_info)
+}
 
+pub fn save_pattern_to_vec(pattern: &Pattern, package_info: &tauri::PackageInfo) -> Result<Vec<u8>> {
+  let mut buf = Vec::with_capacity(1024 * 128); // 128 KB is a good default size for most patterns.
+  save_pattern_inner(&mut buf, pattern, package_info)?;
+  Ok(buf)
+}
+
+fn save_pattern_inner<W: io::Write>(
+  writer: &mut W,
+  pattern: &Pattern,
+  package_info: &tauri::PackageInfo,
+) -> Result<()> {
   // In the development mode, we want to have a pretty-printed XML file for easy debugging.
   #[cfg(debug_assertions)]
-  let mut writer = Writer::new_with_indent(file, b' ', 2);
+  let mut writer = Writer::new_with_indent(writer, b' ', 2);
   #[cfg(not(debug_assertions))]
-  let mut writer = Writer::new(file);
+  let mut writer = Writer::new(writer);
 
   writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None)))?;
   writer.create_element("chart").write_inner_content(|writer| {
-    let pattern = &patproj.pattern;
     write_pattern_properties(
       writer,
       pattern.fabric.width,
