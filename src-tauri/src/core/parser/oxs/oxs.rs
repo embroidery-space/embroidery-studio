@@ -1,7 +1,7 @@
 use std::io;
 
 use anyhow::{bail, Result};
-use quick_xml::events::{BytesDecl, Event};
+use quick_xml::events::{BytesDecl, BytesStart, Event};
 use quick_xml::{Reader, Writer};
 
 use super::utils::{process_attributes, OxsVersion, Software};
@@ -54,12 +54,12 @@ pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo)
 }
 
 pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize) -> Result<DisplaySettings> {
+  let mut display_settings = DisplaySettings::new(palette_size);
+
   let mut reader = Reader::from_file(&file_path)?;
   reader.config_mut().expand_empty_elements = true;
   reader.config_mut().check_end_names = true;
   reader.config_mut().trim_text(true);
-
-  let mut display_settings = DisplaySettings::new(palette_size);
 
   let mut buf = Vec::new();
   loop {
@@ -91,12 +91,11 @@ pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize
 }
 
 pub fn save_display_settings_to_vec(display_settings: &DisplaySettings) -> Result<Vec<u8>> {
-  let buf = Vec::new();
   // In the development mode, we want to have a pretty-printed XML file for easy debugging.
   #[cfg(debug_assertions)]
-  let mut writer = Writer::new_with_indent(buf, b' ', 2);
+  let mut writer = Writer::new_with_indent(Vec::new(), b' ', 2);
   #[cfg(not(debug_assertions))]
-  let mut writer = Writer::new(buf);
+  let mut writer = Writer::new(Vec::new());
 
   writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None)))?;
   writer
@@ -110,39 +109,24 @@ pub fn save_display_settings_to_vec(display_settings: &DisplaySettings) -> Resul
 }
 
 fn read_grid<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Grid> {
-  let mut buf = Vec::new();
+  fn parse_grid_line(event: &BytesStart<'_>) -> Result<GridLineStyle> {
+    let attributes = process_attributes(event.attributes())?;
+    Ok(GridLineStyle {
+      color: attributes.get("color").unwrap().as_str().to_string(),
+      thickness: attributes.get("thickness").unwrap().as_str().parse()?,
+    })
+  }
+
   let mut grid = Grid::default();
+
+  let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
       Event::Start(ref e) => match e.name().as_ref() {
-        b"minor_screen_lines" => {
-          let attributes = process_attributes(e.attributes())?;
-          grid.minor_screen_lines = GridLineStyle {
-            color: attributes.get("color").unwrap().as_str().to_string(),
-            thickness: attributes.get("thickness").unwrap().as_str().parse()?,
-          }
-        }
-        b"major_screen_lines" => {
-          let attributes = process_attributes(e.attributes())?;
-          grid.major_screen_lines = GridLineStyle {
-            color: attributes.get("color").unwrap().as_str().to_string(),
-            thickness: attributes.get("thickness").unwrap().as_str().parse()?,
-          }
-        }
-        b"minor_printer_lines" => {
-          let attributes = process_attributes(e.attributes())?;
-          grid.minor_printer_lines = GridLineStyle {
-            color: attributes.get("color").unwrap().as_str().to_string(),
-            thickness: attributes.get("thickness").unwrap().as_str().parse()?,
-          }
-        }
-        b"major_printer_lines" => {
-          let attributes = process_attributes(e.attributes())?;
-          grid.major_printer_lines = GridLineStyle {
-            color: attributes.get("color").unwrap().as_str().to_string(),
-            thickness: attributes.get("thickness").unwrap().as_str().parse()?,
-          }
-        }
+        b"minor_screen_lines" => grid.minor_screen_lines = parse_grid_line(e)?,
+        b"major_screen_lines" => grid.major_screen_lines = parse_grid_line(e)?,
+        b"minor_printer_lines" => grid.minor_printer_lines = parse_grid_line(e)?,
+        b"major_printer_lines" => grid.major_printer_lines = parse_grid_line(e)?,
         _ => {}
       },
       Event::End(ref e) if e.name().as_ref() == b"grid" => break,
@@ -150,10 +134,22 @@ fn read_grid<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Grid> {
     }
     buf.clear();
   }
+
   Ok(grid)
 }
 
 fn write_grid<W: io::Write>(writer: &mut Writer<W>, grid: &Grid) -> io::Result<()> {
+  fn write_grid_line<W: io::Write>(writer: &mut Writer<W>, element: &str, line: &GridLineStyle) -> io::Result<()> {
+    writer
+      .create_element(element)
+      .with_attributes([
+        ("color", line.color.as_str()),
+        ("thickness", line.thickness.to_string().as_str()),
+      ])
+      .write_empty()?;
+    Ok(())
+  }
+
   writer
     .create_element("grid")
     .with_attributes([(
@@ -161,35 +157,12 @@ fn write_grid<W: io::Write>(writer: &mut Writer<W>, grid: &Grid) -> io::Result<(
       grid.major_line_every_stitches.to_string().as_str(),
     )])
     .write_inner_content(|writer| {
-      writer
-        .create_element("minor_screen_lines")
-        .with_attributes([
-          ("color", grid.minor_screen_lines.color.as_str()),
-          ("thickness", grid.minor_screen_lines.thickness.to_string().as_str()),
-        ])
-        .write_empty()?;
-      writer
-        .create_element("major_screen_lines")
-        .with_attributes([
-          ("color", grid.major_screen_lines.color.as_str()),
-          ("thickness", grid.major_screen_lines.thickness.to_string().as_str()),
-        ])
-        .write_empty()?;
-      writer
-        .create_element("minor_printer_lines")
-        .with_attributes([
-          ("color", grid.minor_printer_lines.color.as_str()),
-          ("thickness", grid.minor_printer_lines.thickness.to_string().as_str()),
-        ])
-        .write_empty()?;
-      writer
-        .create_element("major_printer_lines")
-        .with_attributes([
-          ("color", grid.major_printer_lines.color.as_str()),
-          ("thickness", grid.major_printer_lines.thickness.to_string().as_str()),
-        ])
-        .write_empty()?;
+      write_grid_line(writer, "minor_screen_lines", &grid.minor_screen_lines)?;
+      write_grid_line(writer, "major_screen_lines", &grid.major_screen_lines)?;
+      write_grid_line(writer, "minor_printer_lines", &grid.minor_printer_lines)?;
+      write_grid_line(writer, "major_printer_lines", &grid.major_printer_lines)?;
       Ok(())
     })?;
+
   Ok(())
 }
