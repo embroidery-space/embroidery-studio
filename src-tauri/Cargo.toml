@@ -13,7 +13,7 @@ tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
 # Tauri
-tauri = { version = "2.1.1", features = ["test"] }
+tauri = { version = "2.2.0", features = ["test"] }
 tauri-plugin-dialog = "2.0.5"
 tauri-plugin-fs = "2.0.3"
 tauri-plugin-log = "2.0.4"
