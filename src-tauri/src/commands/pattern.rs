@@ -42,6 +42,8 @@ pub fn create_pattern<R: tauri::Runtime>(
   app_handle: tauri::AppHandle<R>,
   patterns: tauri::State<PatternsState>,
 ) -> CommandResult<Vec<u8>> {
+  // println!("Name {}", app_handle.package_info().name);
+  // println!("Version {}", app_handle.package_info().version.to_string());
   if let tauri::ipc::InvokeBody::Raw(data) = request.body() {
     log::trace!("Creating new pattern");
 
@@ -68,7 +70,11 @@ pub fn create_pattern<R: tauri::Runtime>(
 }
 
 #[tauri::command]
-pub fn save_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<PatternsState>) -> CommandResult<()> {
+pub fn save_pattern<R: tauri::Runtime>(
+  request: tauri::ipc::Request<'_>,
+  app_handle: tauri::AppHandle<R>,
+  patterns: tauri::State<PatternsState>,
+) -> CommandResult<()> {
   log::trace!("Saving pattern");
 
   let pattern_key = request.headers().get("patternKey").unwrap().to_str().unwrap().into();
@@ -79,8 +85,8 @@ pub fn save_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<Pat
   patproj.file_path = file_path;
   match PatternFormat::try_from(patproj.file_path.extension())? {
     PatternFormat::Xsd => Err(anyhow::anyhow!("The XSD format is not supported for saving.")),
-    PatternFormat::Oxs => parser::oxs::save_pattern(patproj),
-    PatternFormat::EmbProj => parser::embproj::save_pattern(patproj),
+    PatternFormat::Oxs => parser::oxs::save_pattern(patproj, app_handle.package_info()),
+    PatternFormat::EmbProj => parser::embproj::save_pattern(patproj, app_handle.package_info()),
   }?;
 
   log::trace!("Pattern saved");

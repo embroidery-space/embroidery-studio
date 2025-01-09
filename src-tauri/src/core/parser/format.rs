@@ -12,7 +12,7 @@ pub enum PatternFormat {
   Oxs,
 
   /// Stands for `Embroidery Project`.
-  /// It is a ZIP archive with a pack of binary files.
+  /// It is a ZIP archive with a pack of XML files.
   /// This format is not recommended for other applications.
   #[default]
   EmbProj,

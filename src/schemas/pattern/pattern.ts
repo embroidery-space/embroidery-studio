@@ -91,6 +91,10 @@ export class Bead {
     this.length = data.length;
     this.diameter = data.diameter;
   }
+
+  static default() {
+    return new Bead({ length: 2.5, diameter: 1.5 });
+  }
 }
 
 export class PaletteItem {

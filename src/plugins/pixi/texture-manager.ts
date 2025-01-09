@@ -84,7 +84,7 @@ export class TextureManager {
     };
   }
 
-  getNodeTexture(kind: NodeStitchKind, bead = new Bead({ length: 1.5, diameter: 2.5 })) {
+  getNodeTexture(kind: NodeStitchKind, bead = Bead.default()) {
     if (kind === NodeStitchKind.FrenchKnot) return this.#frenchKnot;
     const texture = this.#beads.get(bead);
     if (texture) return texture;
@@ -100,8 +100,8 @@ export class TextureManager {
   }
 
   #createBeadTexture(bead: Bead) {
-    const width = mm2px(bead.length) * 10;
-    const height = mm2px(bead.diameter) * 10;
+    const width = mm2px(bead.diameter) * 10;
+    const height = mm2px(bead.length) * 10;
     const rt = RenderTexture.create(Object.assign({ width, height }, this.#textureSourceOptions));
     const shape = new Graphics()
       .roundRect(1, 2, width - 2, height - 4, (width - 2) * 0.4)

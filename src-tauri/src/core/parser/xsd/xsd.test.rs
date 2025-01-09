@@ -51,7 +51,7 @@ fn reads_palette() {
       name: String::from("Frosted Aquamarine"),
       color: String::from("A6D3D9"),
       blends: None,
-      bead: Some(Bead { length: 1.5, diameter: 2.5 }),
+      bead: Some(Bead { length: 2.5, diameter: 1.5 }),
       strands: Some(PaletteItemStitchStrands::default()),
     },
     PaletteItem {

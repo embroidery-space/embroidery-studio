@@ -222,8 +222,8 @@ fn read_palette_item<R: Read + Seek>(reader: &mut R) -> Result<PaletteItem> {
   let is_bead = reader.read_u32::<LittleEndian>()? == 1;
   let bead = if is_bead {
     Some(Bead {
-      diameter: reader.read_u16::<LittleEndian>()? as f32 / 10.0,
       length: reader.read_u16::<LittleEndian>()? as f32 / 10.0,
+      diameter: reader.read_u16::<LittleEndian>()? as f32 / 10.0,
     })
   } else {
     // Prevent reading a trash data.
