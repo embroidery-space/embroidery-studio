@@ -31,7 +31,11 @@ export const usePatternsStore = defineStore("pattern-project", () => {
       filters: [
         {
           name: "Cross-Stitch Pattern",
-          extensions: ["xsd", "oxs", "xml", "embproj"],
+          extensions: ["xsd", "oxs", "embproj"],
+        },
+        {
+          name: "All Files",
+          extensions: ["*"],
         },
       ],
     });
