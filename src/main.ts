@@ -3,10 +3,10 @@ import { createPinia } from "pinia";
 import piniaPluginPersistedState from "pinia-plugin-persistedstate";
 import { PrimeVue } from "@primevue/core";
 import { Tooltip, ConfirmationService, DialogService } from "primevue";
-import Aura from "@primevue/themes/aura";
 
 import "primeicons/primeicons.css";
 import "./assets/styles.css";
+import { NordTheme } from "./assets/theme";
 
 import App from "./App.vue";
 
@@ -17,7 +17,7 @@ const app = createApp(App);
 app.use(pinia);
 app.use(PrimeVue, {
   theme: {
-    preset: Aura,
+    preset: NordTheme,
     options: {
       cssLayer: {
         name: "primevue",
