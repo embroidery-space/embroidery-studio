@@ -1,4 +1,5 @@
 import { semantic } from "./semantic";
+import { toolbar } from "./toolbar";
 
 /**
  * A Nord Theme based on the [Nord Palette] and [Aura Theme] with customizations.
@@ -19,4 +20,7 @@ export const NordTheme = {
     // Color palettes are omitted because they are not intended to be used.
   },
   semantic,
+  components: {
+    toolbar,
+  },
 };

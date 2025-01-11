@@ -224,7 +224,7 @@ export const semantic = {
       },
     },
     dark: {
-      surface: { 0: "#eceff4", 50: "#e4e7ec", 100: "#d5d9e1", 200: "#b5bcca", 300: "#8893aa", 400: "#4c566a", 500: "#434c5e", 600: "#3b4252", 700: "#2e3440", 800: "#2b303b", 900: "#22272f", 950: "#171b21" }, // prettier-ignore
+      surface: { 50: "#e4e7ec", 100: "#d5d9e1", 200: "#b5bcca", 300: "#8893aa", 400: "#4c566a", 500: "#434c5e", 600: "#3b4252", 700: "#2e3440", 800: "#2b303b", 900: "#22272f", 950: "#171b21" }, // prettier-ignore
       primary: {
         color: "{primary.500}",
         contrastColor: "{surface.700}",
@@ -234,8 +234,8 @@ export const semantic = {
       highlight: {
         background: "color-mix(in srgb, {primary.500}, transparent 84%)",
         focusBackground: "color-mix(in srgb, {primary.500}, transparent 76%)",
-        color: "rgba(236, 239, 244, 0.87)",
-        focusColor: "rgba(236, 239, 244, 0.87)",
+        color: "rgba(236, 239, 244, 0.87)", // {text.color}
+        focusColor: "rgba(236, 239, 244, 0.87)", // {text.color}
       },
       mask: {
         background: "rgba(0,0,0,0.6)",
@@ -251,7 +251,7 @@ export const semantic = {
         hoverBorderColor: "{surface.500}",
         focusBorderColor: "{primary.color}",
         invalidBorderColor: "{red.300}",
-        color: "{surface.0}",
+        color: "{text.color}",
         disabledColor: "{surface.400}",
         placeholderColor: "{surface.400}",
         invalidPlaceholderColor: "{red.400}",
@@ -263,15 +263,15 @@ export const semantic = {
         shadow: "0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgba(18, 18, 23, 0.05)",
       },
       text: {
-        color: "{surface.0}",
-        hoverColor: "{surface.0}",
+        color: "#eceff4",
+        hoverColor: "#e5e9f0",
         mutedColor: "{surface.400}",
         hoverMutedColor: "{surface.300}",
       },
       content: {
-        background: "{surface.900}",
-        hoverBackground: "{surface.800}",
-        borderColor: "{surface.700}",
+        background: "{surface.700}",
+        hoverBackground: "{surface.600}",
+        borderColor: "{surface.500}",
         color: "{text.color}",
         hoverColor: "{text.hover.color}",
       },
