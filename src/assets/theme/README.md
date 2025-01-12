@@ -118,7 +118,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Menubar`     |         |       |
 | `MegaMenu`    |         |       |
 | `PanelMenu`   |         |       |
-| `TieredMenu`  |         |       |
+| `TieredMenu`  | ✅      |       |
 
 ### Chart
 

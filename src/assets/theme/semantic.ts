@@ -345,15 +345,15 @@ export const semantic = {
       },
       navigation: {
         item: {
-          focusBackground: "{surface.800}",
-          activeBackground: "{surface.800}",
+          focusBackground: "{primary.color}",
+          activeBackground: "{primary.color}",
           color: "{text.color}",
-          focusColor: "{text.hover.color}",
-          activeColor: "{text.hover.color}",
+          focusColor: "{text.contrast.color}",
+          activeColor: "{text.contrast.color}",
           icon: {
-            color: "{surface.500}",
-            focusColor: "{surface.400}",
-            activeColor: "{surface.400}",
+            color: "{text.color}",
+            focusColor: "{text.contrast.color}",
+            activeColor: "{text.contrast.color}",
           },
         },
         submenuLabel: {
@@ -361,9 +361,9 @@ export const semantic = {
           color: "{text.muted.color}",
         },
         submenuIcon: {
-          color: "{surface.500}",
-          focusColor: "{surface.400}",
-          activeColor: "{surface.400}",
+          color: "{text.color}",
+          focusColor: "{text.contrast.color}",
+          activeColor: "{text.contrast.color}",
         },
       },
     },

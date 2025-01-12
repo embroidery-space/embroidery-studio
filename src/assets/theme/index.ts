@@ -1,6 +1,7 @@
 import { semantic } from "./semantic";
 import { button } from "./button";
 import { toolbar } from "./toolbar";
+import { tieredmenu } from "./tieredmenu";
 
 /**
  * A Nord Theme based on the [Nord Palette] and [Aura Theme] with customizations.
@@ -24,5 +25,6 @@ export const NordTheme = {
   components: {
     button,
     toolbar,
+    tieredmenu,
   },
 };
