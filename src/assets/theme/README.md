@@ -48,11 +48,11 @@ Here is a list of the available PrimeVue components and which ones are used in t
 
 ### Button
 
-| Component     | Is Used | Notes |
-| ------------- | ------- | ----- |
-| `Button`      |         |       |
-| `SpeedDial`   |         |       |
-| `SplitButton` |         |       |
+| Component     | Is Used | Notes                            |
+| ------------- | ------- | -------------------------------- |
+| `Button`      | ✅      | Plain button styles are removed. |
+| `SpeedDial`   |         |                                  |
+| `SplitButton` |         |                                  |
 
 ### Data
 

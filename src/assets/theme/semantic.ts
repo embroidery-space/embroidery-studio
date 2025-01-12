@@ -17,16 +17,16 @@ export const semantic = {
   iconSize: "1rem",
   anchorGutter: "2px",
   formField: {
-    paddingX: "0.75rem",
+    paddingX: "0.625rem",
     paddingY: "0.5rem",
     sm: {
       fontSize: "0.875rem",
-      paddingX: "0.625rem",
+      paddingX: "0.5rem",
       paddingY: "0.375rem",
     },
     lg: {
       fontSize: "1.125rem",
-      paddingX: "0.875rem",
+      paddingX: "0.75rem",
       paddingY: "0.625rem",
     },
     borderRadius: "{border.radius.md}",
@@ -231,6 +231,36 @@ export const semantic = {
         hoverColor: "{primary.400}",
         activeColor: "{primary.300}",
       },
+      danger: {
+        color: "{danger.500}",
+        contrastColor: "{surface.700}",
+        hoverColor: "{danger.400}",
+        activeColor: "{danger.300}",
+      },
+      warn: {
+        color: "{warn.500}",
+        contrastColor: "{surface.700}",
+        hoverColor: "{warn.400}",
+        activeColor: "{warn.300}",
+      },
+      success: {
+        color: "{success.500}",
+        contrastColor: "{surface.700}",
+        hoverColor: "{success.400}",
+        activeColor: "{success.300}",
+      },
+      info: {
+        color: "{info.500}",
+        contrastColor: "{surface.700}",
+        hoverColor: "{info.400}",
+        activeColor: "{info.300}",
+      },
+      help: {
+        color: "{help.500}",
+        contrastColor: "{surface.700}",
+        hoverColor: "{help.400}",
+        activeColor: "{help.300}",
+      },
       highlight: {
         background: "color-mix(in srgb, {primary.500}, transparent 84%)",
         focusBackground: "color-mix(in srgb, {primary.500}, transparent 76%)",
@@ -264,7 +294,9 @@ export const semantic = {
       },
       text: {
         color: "#eceff4",
+        contrastColor: "{surface.700}",
         hoverColor: "#e5e9f0",
+        activeColor: "#d8dee9",
         mutedColor: "{surface.400}",
         hoverMutedColor: "{surface.300}",
       },

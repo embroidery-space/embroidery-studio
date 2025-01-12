@@ -1,4 +1,5 @@
 import { semantic } from "./semantic";
+import { button } from "./button";
 import { toolbar } from "./toolbar";
 
 /**
@@ -21,6 +22,7 @@ export const NordTheme = {
   },
   semantic,
   components: {
+    button,
     toolbar,
   },
 };
