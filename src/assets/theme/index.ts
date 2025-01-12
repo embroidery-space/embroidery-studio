@@ -1,5 +1,6 @@
 import { semantic } from "./semantic";
 import { button } from "./button";
+import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
 import { tieredmenu } from "./tieredmenu";
 
@@ -24,6 +25,7 @@ export const NordTheme = {
   semantic,
   components: {
     button,
+    splitter,
     toolbar,
     tieredmenu,
   },
