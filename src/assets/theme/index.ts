@@ -3,6 +3,7 @@ import { button } from "./button";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
 import { tieredmenu } from "./tieredmenu";
+import { listbox } from "./listbox";
 
 /**
  * A Nord Theme based on the [Nord Palette] and [Aura Theme] with customizations.
@@ -28,5 +29,6 @@ export const NordTheme = {
     splitter,
     toolbar,
     tieredmenu,
+    listbox,
   },
 };
