@@ -13,7 +13,7 @@ tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
 # Tauri
-tauri = { version = "2.2.0", features = ["test"] }
+tauri = { version = "2.2.2", features = ["test"] }
 tauri-plugin-dialog = "2.0.5"
 tauri-plugin-fs = "2.0.3"
 tauri-plugin-log = "2.0.4"
@@ -31,8 +31,8 @@ zip-extract = { version = "0.2.1", features = ["zstd", "time"], default-features
 
 # Serialization
 serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.134"
-borsh = { version = "1.5.2", features = ["derive"] }
+serde_json = "1.0.135"
+borsh = { version = "1.5.4", features = ["derive"] }
 base64 = "0.22.1"
 
 # Error handling
