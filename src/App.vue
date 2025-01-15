@@ -6,7 +6,6 @@
     <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0">
       <template #start>
         <MainMenu />
-        <StitchToolSelector />
       </template>
 
       <template v-if="appStateStore.state.openedPatterns?.length" #center>
@@ -30,12 +29,20 @@
 
     <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0">
       <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
-        <Suspense>
-          <PalettePanel
-            @add-palette-item="patternProjectStore.addPaletteItem"
-            @remove-palette-item="patternProjectStore.removePaletteItem"
-          />
-        </Suspense>
+        <div class="flex h-full flex-col">
+          <div class="flex gap-x-2 border-b px-2 py-1" :style="{ borderColor: dt('content.border.color') }">
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="fullstitches" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="partstitches" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="lines" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="nodes" />
+          </div>
+          <Suspense>
+            <PalettePanel
+              @add-palette-item="patternProjectStore.addPaletteItem"
+              @remove-palette-item="patternProjectStore.removePaletteItem"
+            />
+          </Suspense>
+        </div>
       </SplitterPanel>
 
       <SplitterPanel :size="85">
@@ -71,20 +78,48 @@
     Toolbar,
     DynamicDialog,
   } from "primevue";
+  import { dt } from "@primevue/themes";
   import MainMenu from "./components/toolbar/MainMenu.vue";
   import CanvasPanel from "./components/CanvasPanel.vue";
   import PalettePanel from "./components/palette/PalettePanel.vue";
   import PatternSelector from "./components/toolbar/PatternSelector.vue";
-  import StitchToolSelector from "./components/toolbar/StitchToolSelector.vue";
   import WindowControls from "./components/toolbar/WindowControls.vue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
+  import ToolSelector from "./components/toolbar/ToolSelector.vue";
+  import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "./schemas/pattern";
+
+  import FullStitchIcon from "./assets/icons/stitches/full-stitch.svg?raw";
+  import PetiteStitchIcon from "./assets/icons/stitches/petite-stitch.svg?raw";
+  import HalfStitchIcon from "./assets/icons/stitches/half-stitch.svg?raw";
+  import QuarterStitchIcon from "./assets/icons/stitches/quarter-stitch.svg?raw";
+  import BackStitchIcon from "./assets/icons/stitches/back-stitch.svg?raw";
+  import StraightStitchIcon from "./assets/icons/stitches/straight-stitch.svg?raw";
+  import FrenchKnotIcon from "./assets/icons/stitches/french-knot.svg?raw";
+  import BeadIcon from "./assets/icons/stitches/bead.svg?raw";
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
   const patternProjectStore = usePatternsStore();
   const { pattern, loading } = storeToRefs(patternProjectStore);
+
+  const fullstitches = [
+    { icon: FullStitchIcon, label: "Full Stitch", value: FullStitchKind.Full },
+    { icon: PetiteStitchIcon, label: "Petite Stitch", value: FullStitchKind.Petite },
+  ];
+  const partstitches = [
+    { icon: HalfStitchIcon, label: "Half Stitch", value: PartStitchKind.Half },
+    { icon: QuarterStitchIcon, label: "Quarter Stitch", value: PartStitchKind.Quarter },
+  ];
+  const lines = [
+    { icon: BackStitchIcon, label: "Back Stitch", value: LineStitchKind.Back },
+    { icon: StraightStitchIcon, label: "Straight Stitch", value: LineStitchKind.Straight },
+  ];
+  const nodes = [
+    { icon: FrenchKnotIcon, label: "French Knot", value: NodeStitchKind.FrenchKnot },
+    { icon: BeadIcon, label: "Bead", value: NodeStitchKind.Bead },
+  ];
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);

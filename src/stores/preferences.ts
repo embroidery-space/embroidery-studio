@@ -4,14 +4,11 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 
 export type Theme = "light" | "dark" | "system";
 
-export interface Preferences {
-  theme: Theme;
-}
-
 export const usePreferencesStore = defineStore(
   "embroidery-studio-preferences",
   () => {
     const theme = ref<Theme>("system");
+    const usePaletteItemColorForStitchTool = ref(true);
 
     /**
      * Sets the application theme.
@@ -24,7 +21,7 @@ export const usePreferencesStore = defineStore(
       theme.value = newTheme;
     }
 
-    return { theme, setTheme };
+    return { theme, setTheme, usePaletteItemColorForStitchTool };
   },
   { persist: { storage: localStorage } },
 );

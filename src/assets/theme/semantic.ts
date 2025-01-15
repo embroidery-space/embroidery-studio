@@ -310,17 +310,17 @@ export const semantic = {
       overlay: {
         select: {
           background: "{surface.900}",
-          borderColor: "{surface.700}",
+          borderColor: "{content.border.color}",
           color: "{text.color}",
         },
         popover: {
           background: "{surface.900}",
-          borderColor: "{surface.700}",
+          borderColor: "{content.border.color}",
           color: "{text.color}",
         },
         modal: {
           background: "{surface.900}",
-          borderColor: "{surface.700}",
+          borderColor: "{content.border.color}",
           color: "{text.color}",
         },
       },
