@@ -39,7 +39,8 @@
         "minWidth": 1024,
         "minHeight": 768,
         "maximized": true,
-        "decorations": false
+        "decorations": false,
+        "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection,ElasticOverscroll"
       }
     ]
   }
