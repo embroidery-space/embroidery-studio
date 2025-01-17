@@ -47,7 +47,7 @@
           }
         "
       >
-        <span class="size-6" v-html="item.icon" />
+        <span class="mr-2 size-6" v-html="item.icon" />
         <span>{{ item.label }}</span>
       </a>
     </template>
