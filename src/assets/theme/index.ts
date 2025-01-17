@@ -1,3 +1,7 @@
+// TODO: remove `definePreset` once we fully customize the theme.
+import { definePreset } from "@primevue/themes";
+import Aura from "@primevue/themes/aura";
+
 import { semantic } from "./semantic";
 import { button } from "./button";
 import { splitter } from "./splitter";
@@ -11,7 +15,7 @@ import { listbox } from "./listbox";
  * [Nord Palette]: https://nordtheme.com/docs/colors-and-palettes
  * [Aura Theme]: https://github.com/primefaces/primevue/tree/master/packages/themes/src/presets/aura
  */
-export const NordTheme = {
+export const NordTheme = definePreset(Aura, {
   primitive: {
     borderRadius: {
       none: "0",
@@ -31,4 +35,4 @@ export const NordTheme = {
     tieredmenu,
     listbox,
   },
-};
+});
