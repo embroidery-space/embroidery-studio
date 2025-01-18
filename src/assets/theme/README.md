@@ -32,9 +32,9 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `IconField`     |         |       |
 | `InputGroup`    |         |       |
 | `InputMask`     |         |       |
-| `InputNumber`   |         |       |
+| `InputNumber`   | ✅      |       |
 | `InputOtp`      |         |       |
-| `InputText`     |         |       |
+| `InputText`     | ✅      |       |
 | `KeyFilter`     |         |       |
 | `Knob`          |         |       |
 | `Listbox`       | ✅      |       |
