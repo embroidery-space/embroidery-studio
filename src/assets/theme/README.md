@@ -81,7 +81,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Card`        |         |       |
 | `Deferred`    |         |       |
 | `Divider`     |         |       |
-| `FieldSet`    |         |       |
+| `FieldSet`    | ✅      |       |
 | `Panel`       |         |       |
 | `ScrollPanel` |         |       |
 | `Splitter`    | ✅      |       |

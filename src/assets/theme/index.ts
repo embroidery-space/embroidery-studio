@@ -4,6 +4,7 @@ import Aura from "@primevue/themes/aura";
 
 import { semantic } from "./semantic";
 import { button } from "./button";
+import { fieldset } from "./fieldset";
 import { dialog } from "./dialog";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
@@ -32,6 +33,7 @@ export const NordTheme = definePreset(Aura, {
   components: {
     button,
     dialog,
+    fieldset,
     splitter,
     toolbar,
     tieredmenu,

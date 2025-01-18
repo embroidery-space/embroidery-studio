@@ -319,7 +319,7 @@ export const semantic = {
           color: "{text.color}",
         },
         modal: {
-          background: "{surface.900}",
+          background: "{content.background}",
           borderColor: "{content.border.color}",
           color: "{text.color}",
         },
