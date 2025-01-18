@@ -42,7 +42,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Password`      |         |       |
 | `RadioButton`   |         |       |
 | `Rating`        |         |       |
-| `Select`        |         |       |
+| `Select`        | ✅      |       |
 | `SelectButton`  |         |       |
 | `Slider`        |         |       |
 | `Textarea`      |         |       |

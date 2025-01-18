@@ -4,11 +4,12 @@ import Aura from "@primevue/themes/aura";
 
 import { semantic } from "./semantic";
 import { button } from "./button";
+import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
 import { inputnumber } from "./inputnumber";
 import { inputtext } from "./inputtext";
-import { dialog } from "./dialog";
+import { select } from "./select";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
 import { tieredmenu } from "./tieredmenu";
@@ -40,6 +41,7 @@ export const NordTheme = definePreset(Aura, {
     floatlabel,
     inputnumber,
     inputtext,
+    select,
     splitter,
     toolbar,
     tieredmenu,
