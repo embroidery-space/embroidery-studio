@@ -27,7 +27,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `ColorPicker`   |         |       |
 | `DatePicker`    |         |       |
 | `Editor`        |         |       |
-| `FloatLabel`    |         |       |
+| `FloatLabel`    | ✅      |       |
 | `IftaLabel`     |         |       |
 | `IconField`     |         |       |
 | `InputGroup`    |         |       |
