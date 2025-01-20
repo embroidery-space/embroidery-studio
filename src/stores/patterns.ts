@@ -192,6 +192,12 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   });
 
   const keys = useMagicKeys();
+
+  whenever(keys["Ctrl+KeyO"]!, loadPattern);
+  whenever(keys["Ctrl+KeyN"]!, createPattern);
+  whenever(keys["Ctrl+KeyS"]!, savePattern);
+  whenever(keys["Ctrl+KeyW"]!, closePattern);
+
   whenever(keys["Ctrl+KeyZ"]!, async () => {
     if (!pattern.value) return;
     await HistoryApi.undo(pattern.value.key);

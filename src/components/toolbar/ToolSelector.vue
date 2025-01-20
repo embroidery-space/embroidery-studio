@@ -81,7 +81,7 @@
 
   const color = computed(() => {
     const palindex = appStateStore.state.selectedPaletteItemIndex;
-    if (!preferencesStore.usePaletteItemColorForStitchTool || !patternsStore.pattern || palindex === null) return;
+    if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === null) return;
     return patternsStore.pattern.palette[palindex]!.color;
   });
 

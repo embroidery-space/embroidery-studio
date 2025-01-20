@@ -1,14 +1,18 @@
-import { ref } from "vue";
+import { setTheme as setAppTheme } from "@tauri-apps/api/app";
+import { defineAsyncComponent, ref } from "vue";
 import { defineStore } from "pinia";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useDialog } from "primevue";
 
 export type Theme = "light" | "dark" | "system";
 
 export const usePreferencesStore = defineStore(
   "embroidery-studio-preferences",
   () => {
+    const dialog = useDialog();
+    const AppPreferences = defineAsyncComponent(() => import("#/components/dialogs/AppPreferences.vue"));
+
     const theme = ref<Theme>("system");
-    const usePaletteItemColorForStitchTool = ref(true);
+    const usePaletteItemColorForStitchTools = ref(true);
 
     /**
      * Sets the application theme.
@@ -17,11 +21,21 @@ export const usePreferencesStore = defineStore(
      * @returns A promise that resolves when the theme has been set.
      */
     async function setTheme(newTheme: Theme) {
-      await getCurrentWindow().setTheme(newTheme === "system" ? null : newTheme);
+      await setAppTheme(newTheme === "system" ? null : newTheme);
       theme.value = newTheme;
     }
 
-    return { theme, setTheme, usePaletteItemColorForStitchTool };
+    function openPreferences() {
+      dialog.open(AppPreferences, {
+        props: {
+          header: "Preferences",
+          modal: true,
+          dismissableMask: true,
+        },
+      });
+    }
+
+    return { theme, setTheme, usePaletteItemColorForStitchTools, openPreferences };
   },
   { persist: { storage: localStorage } },
 );
