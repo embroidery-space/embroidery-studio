@@ -4,6 +4,7 @@ import Aura from "@primevue/themes/aura";
 
 import { semantic } from "./semantic";
 import { button } from "./button";
+import { radiobutton } from "./radiobutton";
 import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
@@ -36,6 +37,7 @@ export const NordTheme = definePreset(Aura, {
   semantic,
   components: {
     button,
+    radiobutton,
     dialog,
     fieldset,
     floatlabel,
