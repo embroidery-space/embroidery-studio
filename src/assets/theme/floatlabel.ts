@@ -10,7 +10,7 @@ export const floatlabel = {
     fontWeight: "400",
     active: { fontSize: "0.75rem", fontWeight: "400" },
   },
-  over: { active: { top: "-1.25rem" } },
+  over: { active: { top: "-1rem" } },
   in: {
     input: { paddingTop: "1.5rem", paddingBottom: "{form.field.padding.y}" },
     active: { top: "{form.field.padding.y}" },

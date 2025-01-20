@@ -8,7 +8,6 @@ import { radiobutton } from "./radiobutton";
 import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
-import { inputnumber } from "./inputnumber";
 import { inputtext } from "./inputtext";
 import { select } from "./select";
 import { splitter } from "./splitter";
@@ -41,7 +40,6 @@ export const NordTheme = definePreset(Aura, {
     dialog,
     fieldset,
     floatlabel,
-    inputnumber,
     inputtext,
     select,
     splitter,

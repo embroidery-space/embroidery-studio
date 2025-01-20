@@ -1,71 +1,48 @@
 <template>
   <div class="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2">
-    <Fieldset legend="Count" pt:content:class="grid grid-flow-col grid-cols-2 grid-rows-2 gap-4">
-      <FloatLabel variant="on">
-        <InputNumber
-          id="stitches-horizontally"
+    <Fieldset legend="Count & Kind" pt:content:class="flex flex-col gap-6 pt-3">
+      <FloatLabel variant="over">
+        <Select
+          id="count"
           v-model="fabric.spi[0]"
-          :show-buttons="true"
-          :allow-empty="false"
-          :min="1"
-          :input-style="{ background }"
-          @value-change="
-            (value) => {
-              if (squareStitches) fabric.spi[1] = value;
-            }
-          "
+          editable
+          :options="fabricCounts"
+          @value-change="(value) => (fabric.spi[1] = value)"
         />
-        <label for="stitches-horizontally" :style="{ background }">Horizontally</label>
+        <label for="count">Count</label>
       </FloatLabel>
 
-      <FloatLabel variant="on">
-        <InputNumber
-          id="stitches-vertically"
-          v-model="fabric.spi[1]"
-          :disabled="squareStitches"
-          :show-buttons="true"
-          :allow-empty="false"
-          :min="1"
-          :input-style="{ background }"
-        />
-        <label for="stitches-vertically" :style="{ background }">Vertically</label>
+      <FloatLabel variant="over">
+        <Select id="kind" v-model="fabric.kind" editable :options="fabricKinds" />
+        <label for="kind">Kind</label>
       </FloatLabel>
-
-      <label class="flex items-center gap-2">
-        <!-- TODO: add support for non-square stitches. -->
-        <!-- Currently, we are not supporting non-square stitches. -->
-        <Checkbox v-model="squareStitches" binary :disabled="true" />
-        Square stitches
-      </label>
     </Fieldset>
 
     <Fieldset legend="Size">
-      <div class="mx-8 my-4 flex items-center gap-2">
-        <FloatLabel variant="on">
-          <InputNumber
-            id="size-width"
-            v-model="fabricSizeFinal.width"
-            :allow-empty="false"
-            :min="0.1"
-            :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
-            :input-style="{ background }"
-          />
-          <label for="size-width" :style="{ background }">Width</label>
-        </FloatLabel>
+      <div class="flex gap-4 py-3">
+        <div class="flex flex-col gap-6">
+          <FloatLabel variant="over">
+            <InputNumber
+              id="size-width"
+              v-model="fabricSizeFinal.width"
+              :allow-empty="false"
+              :min="0.1"
+              :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
+            />
+            <label for="size-width">Width</label>
+          </FloatLabel>
 
-        by
-
-        <FloatLabel variant="on">
-          <InputNumber
-            id="size-height"
-            v-model="fabricSizeFinal.height"
-            :allow-empty="false"
-            :min="0.1"
-            :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
-            :input-style="{ background }"
-          />
-          <label for="size-height" :style="{ background }">Height</label>
-        </FloatLabel>
+          <FloatLabel variant="over">
+            <InputNumber
+              id="size-height"
+              v-model="fabricSizeFinal.height"
+              :allow-empty="false"
+              :min="0.1"
+              :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
+            />
+            <label for="size-height">Height</label>
+          </FloatLabel>
+        </div>
 
         <div class="flex flex-col gap-2">
           <label class="flex items-center gap-2">
@@ -95,15 +72,13 @@
       </p>
     </Fieldset>
 
-    <Fieldset legend="Color">
+    <Fieldset legend="Color" class="row-start-1 row-end-3">
       <Listbox
         :model-value="{ name: fabric.name, color: fabric.color }"
         :options="fabricColors"
         scroll-height="100%"
         empty-message="No fabric colors found"
-        :dt="{ list: { header: { padding: '4px 8px' } } }"
-        pt:root:class="flex flex-col h-full rounded-none border-0"
-        :pt:root:style="{ background }"
+        pt:root:class="flex flex-col h-full p-1"
         pt:list-container:class="grow"
         pt:list:class="grid gap-1"
         :pt:list:style="{ gridTemplateColumns: `repeat(8, minmax(0px, 1fr))` }"
@@ -129,11 +104,7 @@
         </template>
       </Listbox>
 
-      <p>Selected color: {{ fabric.name }}</p>
-    </Fieldset>
-
-    <Fieldset legend="Kind">
-      <Select v-model="fabric.kind" editable :options="fabricKinds" :pt:root:style="{ background }" />
+      <p class="mt-2">Selected color: {{ fabric.name }}</p>
     </Fieldset>
   </div>
 
@@ -144,17 +115,13 @@
   import { path } from "@tauri-apps/api";
   import { readTextFile } from "@tauri-apps/plugin-fs";
   import { inject, onMounted, reactive, ref, watch, type Ref } from "vue";
-  import { dt } from "@primevue/themes";
-  import { Checkbox, Fieldset, FloatLabel, InputNumber, Listbox, RadioButton, Select } from "primevue";
+  import { Fieldset, FloatLabel, InputNumber, Listbox, RadioButton, Select } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
   import { Color } from "pixi.js";
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
   import { contrastColor } from "#/utils/color";
   import { Fabric } from "#/schemas/pattern";
-
-  // Is used to set the background color of the input fields.
-  const background = dt("dialog.background");
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
 
@@ -163,7 +130,7 @@
   // Copy the data from the dialog reference to a reactive object.
   const fabric = reactive<Fabric>(new Fabric(Object.assign({}, DEFAULT_FABRIC, dialogRef.value.data?.fabric)));
 
-  const squareStitches = ref(true);
+  const fabricCounts = ref([14, 16, 18, 20]);
 
   const fabricSizeMeasurement = ref<"stitches" | "inches" | "mm">("stitches");
   const fabricSizeFinal = reactive({ width: fabric.width, height: fabric.height });
