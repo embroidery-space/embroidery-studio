@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2">
-    <Fieldset legend="Count & Kind" pt:content:class="flex flex-col gap-6 pt-3">
+    <Fieldset :legend="$t('fabric-properties-count-and-kind')" pt:content:class="flex flex-col gap-6 pt-3">
       <FloatLabel variant="over">
         <Select
           id="count"
@@ -9,16 +9,23 @@
           :options="fabricCounts"
           @value-change="(value) => (fabric.spi[1] = value)"
         />
-        <label for="count">Count</label>
+        <label for="count">{{ $t("fabric-properties-count") }}</label>
       </FloatLabel>
 
       <FloatLabel variant="over">
-        <Select id="kind" v-model="fabric.kind" editable :options="fabricKinds" />
-        <label for="kind">Kind</label>
+        <Select
+          id="kind"
+          v-model="fabric.kind"
+          editable
+          option-label="label"
+          option-value="value"
+          :options="fabricKinds"
+        />
+        <label for="kind">{{ $t("fabric-properties-kind") }}</label>
       </FloatLabel>
     </Fieldset>
 
-    <Fieldset legend="Size">
+    <Fieldset :legend="$t('size')">
       <div class="flex gap-4 py-3">
         <div class="flex flex-col gap-6">
           <FloatLabel variant="over">
@@ -29,7 +36,7 @@
               :min="0.1"
               :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
             />
-            <label for="size-width">Width</label>
+            <label for="size-width">{{ $t("width") }}</label>
           </FloatLabel>
 
           <FloatLabel variant="over">
@@ -40,44 +47,47 @@
               :min="0.1"
               :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
             />
-            <label for="size-height">Height</label>
+            <label for="size-height">{{ $t("height") }}</label>
           </FloatLabel>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="stitches" />
-            stitches
+            {{ $t("measurement-stitches") }}
           </label>
 
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="inches" />
-            inches
+            {{ $t("measurement-inches") }}
           </label>
 
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="mm" />
-            mm
+            {{ $t("measurement-mm") }}
           </label>
         </div>
       </div>
 
       <p>
-        Size (WxH):
-        {{ fabric.width }}x{{ fabric.height }} stitches, {{ stitches2inches(fabric.width, fabric.spi[0]) }}x{{
-          stitches2inches(fabric.height, fabric.spi[1])
+        {{
+          $t("fabric-properties-total-size", {
+            width: fabricSizeFinal.width,
+            height: fabricSizeFinal.height,
+            widthInches: stitches2inches(fabricSizeFinal.width, fabric.spi[0]),
+            heightInches: stitches2inches(fabricSizeFinal.height, fabric.spi[1]),
+            widthMm: stitches2mm(fabricSizeFinal.width, fabric.spi[0]),
+            heightMm: stitches2mm(fabricSizeFinal.height, fabric.spi[1]),
+          })
         }}
-        inches ({{ stitches2mm(fabric.width, fabric.spi[0]) }}x{{ stitches2mm(fabric.height, fabric.spi[1]) }}
-        mm)
       </p>
     </Fieldset>
 
-    <Fieldset legend="Color" class="row-start-1 row-end-3">
+    <Fieldset :legend="$t('color')" class="row-start-1 row-end-3">
       <Listbox
         :model-value="{ name: fabric.name, color: fabric.color }"
         :options="fabricColors"
         scroll-height="100%"
-        empty-message="No fabric colors found"
         pt:root:class="flex flex-col h-full p-1"
         pt:list-container:class="grow"
         pt:list:class="grid gap-1"
@@ -104,7 +114,7 @@
         </template>
       </Listbox>
 
-      <p class="mt-2">Selected color: {{ fabric.name }}</p>
+      <p class="mt-2">{{ $t("fabric-properties-selected-color", { color: fabric.name }) }}</p>
     </Fieldset>
   </div>
 
@@ -115,6 +125,7 @@
   import { path } from "@tauri-apps/api";
   import { readTextFile } from "@tauri-apps/plugin-fs";
   import { inject, onMounted, reactive, ref, watch, type Ref } from "vue";
+  import { useFluent } from "fluent-vue";
   import { Fieldset, FloatLabel, InputNumber, Listbox, RadioButton, Select } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
   import { Color } from "pixi.js";
@@ -124,6 +135,7 @@
   import { Fabric } from "#/schemas/pattern";
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
+  const fluent = useFluent();
 
   const DEFAULT_FABRIC: Fabric = { width: 60, height: 80, name: "White", color: "FFFFFF", kind: "Aida", spi: [14, 14] };
 
@@ -193,7 +205,11 @@
   });
 
   const fabricColors = ref<{ name: string; color: string }[]>([]);
-  const fabricKinds = ref(["Aida", "Evenweave", "Linen"]);
+  const fabricKinds = ref([
+    { label: fluent.$t("fabric-properties-kind-aida"), value: "Aida" },
+    { label: fluent.$t("fabric-properties-kind-evenweave"), value: "Evenweave" },
+    { label: fluent.$t("fabric-properties-kind-linen"), value: "Linen" },
+  ]);
 
   onMounted(async () => {
     fabricColors.value = JSON.parse(await readTextFile(await path.resolveResource("resources/fabric-colors.json")));

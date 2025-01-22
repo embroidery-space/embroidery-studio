@@ -2,6 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { defineAsyncComponent, ref, shallowRef, triggerRef } from "vue";
 import { useMagicKeys, whenever } from "@vueuse/core";
+import { useFluent } from "fluent-vue";
 import { useDialog } from "primevue";
 import { defineStore } from "pinia";
 import { deserialize } from "@dao-xyz/borsh";
@@ -15,6 +16,7 @@ import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 export const usePatternsStore = defineStore("pattern-project", () => {
   const appWindow = getCurrentWindow();
 
+  const fluent = useFluent();
   const dialog = useDialog();
   const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
   const GridProperties = defineAsyncComponent(() => import("#/components/dialogs/GridProperties.vue"));
@@ -56,7 +58,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   function createPattern() {
     dialog.open(FabricProperties, {
       props: {
-        header: "Fabric Properties",
+        header: fluent.$t("fabric-properties-title"),
         modal: true,
       },
       onClose: async (options) => {
@@ -110,7 +112,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(FabricProperties, {
       props: {
-        header: "Fabric Properties",
+        header: fluent.$t("fabric-properties-title"),
         modal: true,
       },
       data: { fabric: pattern.value.fabric },
@@ -130,7 +132,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(GridProperties, {
       props: {
-        header: "Grid Properties",
+        header: fluent.$t("grid-properties-title"),
         modal: true,
       },
       data: { grid: pattern.value.grid },
