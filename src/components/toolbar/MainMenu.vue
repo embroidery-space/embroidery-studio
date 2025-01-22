@@ -14,7 +14,6 @@
 
 <script setup lang="ts">
   import { ref, useTemplateRef } from "vue";
-  import { useMagicKeys, whenever } from "@vueuse/core";
   import { Button, TieredMenu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { usePreferencesStore } from "#/stores/preferences";
@@ -26,12 +25,6 @@
   const { pattern } = storeToRefs(patternProjectStore);
 
   const menu = useTemplateRef("menu");
-
-  const keys = useMagicKeys();
-  whenever(keys["Ctrl+KeyO"]!, patternProjectStore.loadPattern);
-  whenever(keys["Ctrl+KeyN"]!, patternProjectStore.createPattern);
-  whenever(keys["Ctrl+KeyS"]!, patternProjectStore.savePattern);
-  whenever(keys["Ctrl+KeyW"]!, patternProjectStore.closePattern);
 
   const fileOptions: MenuItem = {
     label: "File",
@@ -77,29 +70,7 @@
   const preferencesOptions: MenuItem = {
     label: "Preferences",
     icon: "pi pi-cog",
-    items: [
-      {
-        label: "Theme",
-        icon: "pi pi-palette",
-        items: [
-          {
-            label: "Light",
-            icon: "pi pi-sun",
-            command: () => preferencesStore.setTheme("light"),
-          },
-          {
-            label: "Dark",
-            icon: "pi pi-moon",
-            command: () => preferencesStore.setTheme("dark"),
-          },
-          {
-            label: "System",
-            icon: "pi pi-desktop",
-            command: () => preferencesStore.setTheme("system"),
-          },
-        ],
-      },
-    ],
+    command: preferencesStore.openPreferences,
   };
   const menuOptions = ref<MenuItem[]>([fileOptions, editOptions, preferencesOptions]);
 </script>
