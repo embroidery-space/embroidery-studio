@@ -1,17 +1,19 @@
 <template>
   <div class="flex items-center gap-2">
-    Show major stitches every
-    <InputNumber
-      v-model="grid.majorLineEveryStitches"
-      show-buttons
-      :allow-empty="false"
-      :min="1"
-      :input-style="{ background }"
-    />
-    stitches.
+    <i18n path="grid-properties-major-lines-frequency">
+      <template #stitches>
+        <InputNumber
+          v-model="grid.majorLineEveryStitches"
+          show-buttons
+          :allow-empty="false"
+          :min="1"
+          :input-style="{ background }"
+        />
+      </template>
+    </i18n>
   </div>
 
-  <Fieldset legend="Minor Lines" pt:content:class="flex items-center gap-4">
+  <Fieldset :legend="$t('grid-properties-minor-lines')" pt:content:class="flex items-center gap-4">
     <FloatLabel variant="on">
       <InputNumber
         id="minor-thickness"
@@ -22,16 +24,16 @@
         :step="0.01"
         :input-style="{ background }"
       />
-      <label for="minor-thickness" :style="{ background }">Thickness</label>
+      <label for="minor-thickness" :style="{ background }">{{ $t("thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
-      Color:
+      {{ $t("color") }}:
       <ColorPicker v-model="grid.minorScreenLines.color" format="hex" />
     </label>
   </Fieldset>
 
-  <Fieldset legend="Major Lines" pt:content:class="flex items-center gap-4">
+  <Fieldset :legend="$t('grid-properties-major-lines')" pt:content:class="flex items-center gap-4">
     <FloatLabel variant="on">
       <InputNumber
         id="major-thickness"
@@ -42,11 +44,11 @@
         :step="0.01"
         :input-style="{ background }"
       />
-      <label for="major-thickness" :style="{ background }">Thickness</label>
+      <label for="major-thickness" :style="{ background }">{{ $t("thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
-      Color:
+      {{ $t("color") }}:
       <ColorPicker v-model="grid.majorScreenLines.color" format="hex" />
     </label>
   </Fieldset>
