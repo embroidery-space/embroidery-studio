@@ -49,3 +49,4 @@ ordered-float = { version = "4.6.0", features = ["borsh"] }
 dyn-clone = "1.0.17"
 nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = ["borsh"] }
 tempfile = "3.15.0"
+font-kit = "0.14.2"

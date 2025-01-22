@@ -6,8 +6,8 @@ export const dialog = {
     borderRadius: "{overlay.modal.border.radius}",
     shadow: "{overlay.modal.shadow}",
   },
-  header: { padding: "{overlay.modal.padding}", gap: "0.5rem" },
+  header: { padding: "{overlay.modal.padding} {overlay.modal.padding} 0 {overlay.modal.padding}", gap: "0.5rem" },
   title: { fontSize: "1.25rem", fontWeight: "600" },
-  content: { padding: "0 {overlay.modal.padding} {overlay.modal.padding} {overlay.modal.padding}" },
+  content: { padding: "{overlay.modal.padding}" },
   footer: { padding: "0 {overlay.modal.padding} {overlay.modal.padding} {overlay.modal.padding}", gap: "0.5rem" },
 };
