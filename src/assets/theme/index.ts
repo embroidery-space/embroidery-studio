@@ -10,6 +10,7 @@ import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
 import { inputtext } from "./inputtext";
+import { menubar } from "./menubar";
 import { select } from "./select";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
@@ -43,6 +44,7 @@ export const NordTheme = definePreset(Aura, {
     fieldset,
     floatlabel,
     inputtext,
+    menubar,
     select,
     splitter,
     toolbar,

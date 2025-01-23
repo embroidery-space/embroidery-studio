@@ -63,10 +63,10 @@ export const semantic = {
   navigation: {
     list: {
       padding: "0.25rem 0.25rem",
-      gap: "2px",
+      gap: "0.125rem",
     },
     item: {
-      padding: "0.5rem 0.75rem",
+      padding: "0.375rem 0.5rem",
       borderRadius: "{border.radius.sm}",
       gap: "0.5rem",
     },
