@@ -48,7 +48,7 @@
         "
       >
         <span class="mr-2 size-6" v-html="item.icon" />
-        <span>{{ item.label }}</span>
+        <span>{{ typeof item.label === "function" ? item.label() : item.label }}</span>
       </a>
     </template>
   </Menu>
@@ -57,17 +57,14 @@
 <script setup lang="ts">
   import { ref, computed, useTemplateRef, type MaybeRefOrGetter } from "vue";
   import { Button, Menu } from "primevue";
+  import type { MenuItem } from "primevue/menuitem";
   import { dt } from "@primevue/themes";
   import { useAppStateStore } from "#/stores/state";
   import { usePreferencesStore } from "#/stores/preferences";
   import { usePatternsStore } from "#/stores/patterns";
   import { unrefElement, useEventListener } from "@vueuse/core";
 
-  interface ToolOption {
-    icon: string;
-    label: string;
-    value: unknown;
-  }
+  type ToolOption = Omit<MenuItem, "command"> & { value: unknown };
 
   const props = defineProps<{ modelValue: unknown; options: ToolOption[] }>();
   const emit = defineEmits(["update:modelValue"]);

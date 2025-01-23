@@ -43,7 +43,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { defineAsyncComponent, onMounted } from "vue";
+  import { defineAsyncComponent, onMounted, ref } from "vue";
+  import { useFluent } from "fluent-vue";
   import { storeToRefs } from "pinia";
   import { BlockUI, Panel, ConfirmDialog, ProgressSpinner, Splitter, SplitterPanel, DynamicDialog } from "primevue";
   import { dt } from "@primevue/themes";
@@ -71,22 +72,24 @@
   const patternProjectStore = usePatternsStore();
   const { pattern, loading } = storeToRefs(patternProjectStore);
 
-  const fullstitches = [
-    { icon: FullStitchIcon, label: "Full Stitch", value: FullStitchKind.Full },
-    { icon: PetiteStitchIcon, label: "Petite Stitch", value: FullStitchKind.Petite },
-  ];
-  const partstitches = [
-    { icon: HalfStitchIcon, label: "Half Stitch", value: PartStitchKind.Half },
-    { icon: QuarterStitchIcon, label: "Quarter Stitch", value: PartStitchKind.Quarter },
-  ];
-  const lines = [
-    { icon: BackStitchIcon, label: "Back Stitch", value: LineStitchKind.Back },
-    { icon: StraightStitchIcon, label: "Straight Stitch", value: LineStitchKind.Straight },
-  ];
-  const nodes = [
-    { icon: FrenchKnotIcon, label: "French Knot", value: NodeStitchKind.FrenchKnot },
-    { icon: BeadIcon, label: "Bead", value: NodeStitchKind.Bead },
-  ];
+  const fluent = useFluent();
+
+  const fullstitches = ref([
+    { icon: FullStitchIcon, label: () => fluent.$t("full-stitch"), value: FullStitchKind.Full },
+    { icon: PetiteStitchIcon, label: () => fluent.$t("petite-stitch"), value: FullStitchKind.Petite },
+  ]);
+  const partstitches = ref([
+    { icon: HalfStitchIcon, label: () => fluent.$t("half-stitch"), value: PartStitchKind.Half },
+    { icon: QuarterStitchIcon, label: () => fluent.$t("quarter-stitch"), value: PartStitchKind.Quarter },
+  ]);
+  const lines = ref([
+    { icon: BackStitchIcon, label: () => fluent.$t("back-stitch"), value: LineStitchKind.Back },
+    { icon: StraightStitchIcon, label: () => fluent.$t("straight-stitch"), value: LineStitchKind.Straight },
+  ]);
+  const nodes = ref([
+    { icon: FrenchKnotIcon, label: () => fluent.$t("french-knot"), value: NodeStitchKind.FrenchKnot },
+    { icon: BeadIcon, label: () => fluent.$t("bead"), value: NodeStitchKind.Bead },
+  ]);
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);
