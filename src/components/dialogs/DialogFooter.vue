@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full items-center justify-end gap-2">
-    <Button severity="secondary" size="small" :label="$t('btn-cancel')" @click="() => dialogRef.close()" />
-    <Button severity="success" size="small" :label="$t('btn-save')" @click="() => props.save()" />
+    <Button severity="secondary" size="small" :label="$t('cancel')" @click="() => dialogRef.close()" />
+    <Button severity="success" size="small" :label="$t('save')" @click="() => props.save()" />
   </div>
 </template>
 

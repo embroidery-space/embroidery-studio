@@ -16,13 +16,13 @@
       text
       severity="contrast"
       class="absolute bottom-0 right-0 z-auto rounded-sm border-none p-0"
-      @click="toggleMenu"
+      @click.stop="toggleMenu"
     >
       <i class="pi pi-angle-down translate-x-0.5 translate-y-0.5 -rotate-45 text-xs"></i>
     </Button>
   </div>
 
-  <TieredMenu
+  <Menu
     ref="menu"
     :model="
       options.map((option) => ({
@@ -43,7 +43,7 @@
           () => {
             currentOption = item as ToolOption;
             emit('update:modelValue', item.value);
-            menu?.hide();
+            menu!.hide();
           }
         "
       >
@@ -51,12 +51,12 @@
         <span>{{ item.label }}</span>
       </a>
     </template>
-  </TieredMenu>
+  </Menu>
 </template>
 
 <script setup lang="ts">
   import { ref, computed, useTemplateRef, type MaybeRefOrGetter } from "vue";
-  import { Button, TieredMenu } from "primevue";
+  import { Button, Menu } from "primevue";
   import { dt } from "@primevue/themes";
   import { useAppStateStore } from "#/stores/state";
   import { usePreferencesStore } from "#/stores/preferences";
@@ -121,6 +121,6 @@
     // This is a workaround to attach the menu to the right element (the main button element)
     // and to avoid issues that the `event.currentTarget` is `null` because it is used outside the event handler.
     const event = { ...e, currentTarget: buttonElement.value };
-    menu.value?.toggle(event);
+    menu.value!.toggle(event);
   }
 </script>

@@ -6,3 +6,13 @@ height = Висота
 
 color = Колір
 thickness = Товщина
+
+file = Файл
+pattern = Схема
+
+open = Відкрити
+create = Створити
+save = Зберегти
+close = Закрити
+
+cancel = Скасувати

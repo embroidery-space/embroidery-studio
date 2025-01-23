@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import { createFluentVue } from "fluent-vue";
 import { createPinia } from "pinia";
 import piniaPluginPersistedState from "pinia-plugin-persistedstate";
 import { PrimeVue } from "@primevue/core";
@@ -9,13 +8,11 @@ import "primeicons/primeicons.css";
 import "./assets/styles.css";
 import { NordTheme } from "./assets/theme";
 
+import { fluent } from "./fluent";
 import App from "./App.vue";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedState);
-
-// Use empty bundles as we will load them in the preferences store dynamically.
-const fluent = createFluentVue({ bundles: [], componentTag: false });
 
 const app = createApp(App);
 app.use(pinia);

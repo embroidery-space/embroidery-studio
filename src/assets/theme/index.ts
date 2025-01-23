@@ -10,11 +10,11 @@ import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
 import { inputtext } from "./inputtext";
+import { menu } from "./menu";
 import { menubar } from "./menubar";
 import { select } from "./select";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
-import { tieredmenu } from "./tieredmenu";
 import { listbox } from "./listbox";
 
 /**
@@ -44,11 +44,11 @@ export const NordTheme = definePreset(Aura, {
     fieldset,
     floatlabel,
     inputtext,
+    menu,
     menubar,
     select,
     splitter,
     toolbar,
-    tieredmenu,
     listbox,
   },
 });

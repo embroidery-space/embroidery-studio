@@ -3,30 +3,7 @@
   <DynamicDialog />
   <BlockUI :blocked="loading" full-screen />
   <div class="flex h-full flex-col">
-    <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0">
-      <template #start>
-        <MainMenu />
-      </template>
-
-      <template v-if="appStateStore.state.openedPatterns?.length" #center>
-        <PatternSelector
-          @switch="
-            (patternPath) => {
-              patternProjectStore.openPattern(patternPath);
-              // TODO: Store the selected palette item per opened pattern.
-              appStateStore.state.selectedPaletteItemIndex = null;
-            }
-          "
-        />
-      </template>
-
-      <template #end>
-        <Suspense>
-          <WindowControls />
-        </Suspense>
-      </template>
-    </Toolbar>
-
+    <AppHeader />
     <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0">
       <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
         <div class="flex h-full flex-col">
@@ -66,28 +43,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted } from "vue";
+  import { defineAsyncComponent, onMounted } from "vue";
   import { storeToRefs } from "pinia";
-  import {
-    BlockUI,
-    Panel,
-    ConfirmDialog,
-    ProgressSpinner,
-    Splitter,
-    SplitterPanel,
-    Toolbar,
-    DynamicDialog,
-  } from "primevue";
+  import { BlockUI, Panel, ConfirmDialog, ProgressSpinner, Splitter, SplitterPanel, DynamicDialog } from "primevue";
   import { dt } from "@primevue/themes";
-  import MainMenu from "./components/toolbar/MainMenu.vue";
   import CanvasPanel from "./components/CanvasPanel.vue";
   import PalettePanel from "./components/palette/PalettePanel.vue";
-  import PatternSelector from "./components/toolbar/PatternSelector.vue";
-  import WindowControls from "./components/toolbar/WindowControls.vue";
+  import ToolSelector from "./components/toolbar/ToolSelector.vue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
-  import ToolSelector from "./components/toolbar/ToolSelector.vue";
   import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "./schemas/pattern";
 
   import FullStitchIcon from "./assets/icons/stitches/full-stitch.svg?raw";
@@ -98,6 +63,8 @@
   import StraightStitchIcon from "./assets/icons/stitches/straight-stitch.svg?raw";
   import FrenchKnotIcon from "./assets/icons/stitches/french-knot.svg?raw";
   import BeadIcon from "./assets/icons/stitches/bead.svg?raw";
+
+  const AppHeader = defineAsyncComponent(() => import("./components/AppHeader.vue"));
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();

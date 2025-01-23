@@ -6,3 +6,13 @@ height = Height
 
 color = Color
 thickness = Thickness
+
+file = File
+pattern = Pattern
+
+open = Open
+create = Create
+save = Save
+close = Close
+
+cancel = Cancel

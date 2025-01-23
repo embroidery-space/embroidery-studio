@@ -114,11 +114,11 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Breadcrumb`  |         |       |
 | `ContextMenu` |         |       |
 | `Dock`        |         |       |
-| `Menu`        |         |       |
+| `Menu`        | ✅      |       |
 | `Menubar`     | ✅      |       |
 | `MegaMenu`    |         |       |
 | `PanelMenu`   |         |       |
-| `TieredMenu`  | ✅      |       |
+| `TieredMenu`  |         |       |
 
 ### Chart
 
