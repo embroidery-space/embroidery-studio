@@ -1,4 +1,5 @@
-import { path, app } from "@tauri-apps/api";
+import { resolveResource, sep } from "@tauri-apps/api/path";
+import { setTheme as setAppTheme } from "@tauri-apps/api/app";
 import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
 import { defineAsyncComponent, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
@@ -40,10 +41,11 @@ export const usePreferencesStore = defineStore(
       async (code) => {
         const bundle = new FluentBundle(code);
 
-        const localesDirPath = await path.resolveResource(`resources/locales/${code}`);
+        const localesDirPath = await resolveResource(`resources/locales/${code}`);
         for (const entry of await readDir(localesDirPath)) {
           if (entry.isFile && entry.name.endsWith(".ftl")) {
-            const content = await readTextFile(await path.join(localesDirPath, entry.name));
+            const resourceFilePath = [localesDirPath, entry.name].join(sep());
+            const content = await readTextFile(resourceFilePath);
             bundle.addResource(new FluentResource(content));
           }
         }
@@ -62,7 +64,7 @@ export const usePreferencesStore = defineStore(
      * @returns A promise that resolves when the theme has been set.
      */
     async function setTheme(newTheme: Theme) {
-      await app.setTheme(newTheme === "system" ? null : newTheme);
+      await setAppTheme(newTheme === "system" ? null : newTheme);
       theme.value = newTheme;
     }
 
