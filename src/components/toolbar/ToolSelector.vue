@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 
 <template>
-  <div class="relative">
+  <div ref="container" class="relative">
     <Button
       ref="button"
       :text="!selected"
@@ -16,7 +16,7 @@
       text
       severity="contrast"
       class="absolute bottom-0 right-0 z-auto rounded-sm border-none p-0"
-      @click.stop="toggleMenu"
+      @click="toggleMenu"
     >
       <i class="pi pi-angle-down translate-x-0.5 translate-y-0.5 -rotate-45 text-xs"></i>
     </Button>
@@ -56,13 +56,13 @@
 
 <script setup lang="ts">
   import { ref, computed, useTemplateRef, type MaybeRefOrGetter } from "vue";
+  import { unrefElement, useEventListener } from "@vueuse/core";
   import { Button, Menu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { dt } from "@primevue/themes";
   import { useAppStateStore } from "#/stores/state";
   import { usePreferencesStore } from "#/stores/preferences";
   import { usePatternsStore } from "#/stores/patterns";
-  import { unrefElement, useEventListener } from "@vueuse/core";
 
   type ToolOption = Omit<MenuItem, "command"> & { value: unknown };
 
@@ -83,8 +83,10 @@
   });
 
   const menu = useTemplateRef("menu");
-  const buttonRef = useTemplateRef("button") as MaybeRefOrGetter; // Suppress the error by casting to `MaybeRefOrGetter`.
-  const buttonElement = computed(() => unrefElement(buttonRef));
+  // Suppress the error by casting to `MaybeRefOrGetter`.
+  const buttonRef = useTemplateRef("button") as MaybeRefOrGetter;
+  const containerRef = useTemplateRef("container") as MaybeRefOrGetter;
+  const containerElement = computed(() => unrefElement(containerRef));
 
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let hasLongPressed = false;
@@ -115,9 +117,15 @@
   }
 
   function toggleMenu(e: Event) {
-    // This is a workaround to attach the menu to the right element (the main button element)
+    // This is a workaround to attach the menu to the element
     // and to avoid issues that the `event.currentTarget` is `null` because it is used outside the event handler.
-    const event = { ...e, currentTarget: buttonElement.value };
+    const event = { ...e, currentTarget: containerElement.value };
     menu.value!.toggle(event);
   }
+
+  useEventListener(document, ["pointerdown", "contextmenu"], (e) => {
+    // Hide the menu when right-clicking or long pressing outside the button element.
+    // This behavior is similar to the internal `bindOutsideClickListener` function in the `Menu` component.
+    if ((e.button === 0 || e.button === 2) && !containerElement.value.contains(e.target)) menu.value!.hide();
+  });
 </script>
