@@ -13,6 +13,9 @@ pattern = Pattern
 open = Open
 create = Create
 save = Save
+save-as = Save As
 close = Close
+
+export = Export
 
 cancel = Cancel

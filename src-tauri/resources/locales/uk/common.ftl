@@ -13,6 +13,9 @@ pattern = Схема
 open = Відкрити
 create = Створити
 save = Зберегти
+save-as = Зберегти як
 close = Закрити
+
+export = Експортувати
 
 cancel = Скасувати

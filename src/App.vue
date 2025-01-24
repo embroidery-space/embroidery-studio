@@ -4,7 +4,7 @@
   <BlockUI :blocked="loading" full-screen />
   <div class="flex h-full flex-col">
     <AppHeader />
-    <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0">
+    <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
       <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
         <div class="flex h-full flex-col">
           <div class="flex gap-x-2 border-b px-2 py-1" :style="{ borderColor: dt('content.border.color') }">
