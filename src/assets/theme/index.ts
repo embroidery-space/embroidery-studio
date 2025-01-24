@@ -5,11 +5,13 @@ import Aura from "@primevue/themes/aura";
 import { semantic } from "./semantic";
 import { button } from "./button";
 import { checkbox } from "./checkbox";
+import { colorpicker } from "./colorpicker";
 import { radiobutton } from "./radiobutton";
 import { dialog } from "./dialog";
 import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
 import { inputtext } from "./inputtext";
+import { inputnumber } from "./inputnumber";
 import { menu } from "./menu";
 import { menubar } from "./menubar";
 import { select } from "./select";
@@ -39,11 +41,13 @@ export const NordTheme = definePreset(Aura, {
   components: {
     button,
     checkbox,
+    colorpicker,
     radiobutton,
     dialog,
     fieldset,
     floatlabel,
     inputtext,
+    inputnumber,
     menu,
     menubar,
     select,

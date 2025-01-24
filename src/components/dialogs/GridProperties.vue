@@ -1,20 +1,19 @@
 <template>
   <div class="flex items-center gap-2">
-    <i18n path="grid-properties-major-lines-frequency">
-      <template #stitches>
-        <InputNumber
-          v-model="grid.majorLineEveryStitches"
-          show-buttons
-          :allow-empty="false"
-          :min="1"
-          :input-style="{ background }"
-        />
-      </template>
-    </i18n>
+    <FloatLabel variant="over">
+      <InputNumber
+        id="major-lines-interval"
+        v-model="grid.majorLinesInterval"
+        show-buttons
+        :allow-empty="false"
+        :min="1"
+      />
+      <label for="major-lines-interval">{{ $t("grid-properties-major-lines-interval") }}</label>
+    </FloatLabel>
   </div>
 
-  <Fieldset :legend="$t('grid-properties-minor-lines')" pt:content:class="flex items-center gap-4">
-    <FloatLabel variant="on">
+  <Fieldset :legend="$t('grid-properties-minor-lines')" pt:content:class="flex items-center gap-4 pt-3">
+    <FloatLabel variant="over">
       <InputNumber
         id="minor-thickness"
         v-model="grid.minorScreenLines.thickness"
@@ -22,9 +21,8 @@
         :allow-empty="false"
         :min="0.001"
         :step="0.01"
-        :input-style="{ background }"
       />
-      <label for="minor-thickness" :style="{ background }">{{ $t("thickness") }}</label>
+      <label for="minor-thickness">{{ $t("thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
@@ -33,8 +31,8 @@
     </label>
   </Fieldset>
 
-  <Fieldset :legend="$t('grid-properties-major-lines')" pt:content:class="flex items-center gap-4">
-    <FloatLabel variant="on">
+  <Fieldset :legend="$t('grid-properties-major-lines')" pt:content:class="flex items-center gap-4 pt-3">
+    <FloatLabel variant="over">
       <InputNumber
         id="major-thickness"
         v-model="grid.majorScreenLines.thickness"
@@ -42,9 +40,8 @@
         :allow-empty="false"
         :min="0.001"
         :step="0.01"
-        :input-style="{ background }"
       />
-      <label for="major-thickness" :style="{ background }">{{ $t("thickness") }}</label>
+      <label for="major-thickness">{{ $t("thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
@@ -58,14 +55,10 @@
 
 <script setup lang="ts">
   import { inject, reactive, type Ref } from "vue";
-  import { dt } from "@primevue/themes";
   import { ColorPicker, Fieldset, FloatLabel, InputNumber } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
   import DialogFooter from "./DialogFooter.vue";
   import { Grid } from "#/schemas/pattern";
-
-  // Is used to set the background color of the input fields.
-  const background = dt("dialog.background");
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
 

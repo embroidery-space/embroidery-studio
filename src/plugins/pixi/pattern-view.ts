@@ -159,7 +159,7 @@ export class PatternView {
       this.#stages.grid.stroke({ width: thickness, color });
     }
     {
-      const interval = this.grid.majorLineEveryStitches;
+      const interval = this.grid.majorLinesInterval;
 
       // Draw horizontal major lines.
       for (let i = 0; i <= Math.ceil(height / interval); i++) {

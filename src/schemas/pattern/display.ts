@@ -206,7 +206,7 @@ export class GridLineStyle {
 
 export class Grid {
   @field({ type: "u16" })
-  majorLineEveryStitches: number;
+  majorLinesInterval: number;
 
   @field({ type: GridLineStyle })
   minorScreenLines: GridLineStyle;
@@ -221,7 +221,7 @@ export class Grid {
   majorPrinterLines: GridLineStyle;
 
   constructor(data: Grid) {
-    this.majorLineEveryStitches = data.majorLineEveryStitches;
+    this.majorLinesInterval = data.majorLinesInterval;
     this.minorScreenLines = data.minorScreenLines;
     this.majorScreenLines = data.majorScreenLines;
     this.minorPrinterLines = data.minorPrinterLines;
