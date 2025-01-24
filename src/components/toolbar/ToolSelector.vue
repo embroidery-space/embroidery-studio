@@ -3,7 +3,7 @@
 <template>
   <div ref="container" class="relative">
     <Button
-      ref="button"
+      ref="tool-button"
       :text="!selected"
       severity="secondary"
       class="border-none p-1.5"
@@ -22,21 +22,8 @@
     </Button>
   </div>
 
-  <Menu
-    ref="menu"
-    :model="
-      options.map((option) => ({
-        ...option,
-        command: () => {
-          currentOption = option;
-          emit('update:modelValue', option.value);
-        },
-      }))
-    "
-    pt:root:class="min-w-fit"
-    popup
-  >
-    <template #item="{ item }">
+  <Menu ref="menu" :model="options" pt:root:class="min-w-fit" popup>
+    <template #item="{ label, item }">
       <a
         class="flex items-center p-1"
         @pointerup="
@@ -48,7 +35,7 @@
         "
       >
         <span class="mr-2 size-6" v-html="item.icon" />
-        <span>{{ typeof item.label === "function" ? item.label() : item.label }}</span>
+        <span>{{ label }}</span>
       </a>
     </template>
   </Menu>
@@ -73,7 +60,9 @@
   const preferencesStore = usePreferencesStore();
   const patternsStore = usePatternsStore();
 
-  const currentOption = ref<ToolOption>(props.options[0]!);
+  const currentOption = ref<ToolOption>(
+    props.options.find(({ value }) => value === props.modelValue) ?? props.options[0]!,
+  );
   const selected = computed(() => props.modelValue === currentOption.value.value);
 
   const color = computed(() => {
@@ -82,23 +71,23 @@
     return patternsStore.pattern.palette[palindex]!.color;
   });
 
-  const menu = useTemplateRef("menu");
   // Suppress the error by casting to `MaybeRefOrGetter`.
-  const buttonRef = useTemplateRef("button") as MaybeRefOrGetter;
-  const containerRef = useTemplateRef("container") as MaybeRefOrGetter;
-  const containerElement = computed(() => unrefElement(containerRef));
+  const menu = useTemplateRef("menu");
+  const toolButton = useTemplateRef("tool-button") as MaybeRefOrGetter;
+  const container = useTemplateRef("container") as MaybeRefOrGetter;
+  const containerElement = computed(() => unrefElement(container));
 
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let hasLongPressed = false;
 
-  useEventListener(buttonRef, "pointerdown", (e) => {
+  useEventListener(toolButton, "pointerdown", (e) => {
     clearLongPress();
     timeout = setTimeout(() => {
       hasLongPressed = true;
       longPressHandler(e, hasLongPressed);
     }, 500);
   });
-  useEventListener(buttonRef, "pointerup", (e) => {
+  useEventListener(toolButton, "pointerup", (e) => {
     longPressHandler(e, hasLongPressed);
     clearLongPress();
   });
@@ -124,8 +113,10 @@
   }
 
   useEventListener(document, ["pointerdown", "contextmenu"], (e) => {
+    // @ts-expect-error `container` is an internal property not exposed in the type definition.
+    if (menu.value.container && menu.value.container.contains(e.target)) return;
     // Hide the menu when right-clicking or long pressing outside the button element.
     // This behavior is similar to the internal `bindOutsideClickListener` function in the `Menu` component.
-    if ((e.button === 0 || e.button === 2) && !containerElement.value.contains(e.target)) menu.value!.hide();
+    if (!containerElement.value.contains(e.target)) menu.value!.hide();
   });
 </script>
