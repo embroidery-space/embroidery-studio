@@ -109,8 +109,8 @@ export const usePatternsStore = defineStore("pattern-project", () => {
       loading.value = true;
       await PatternApi.closePattern(pattern.value.key);
       appStateStore.removeCurrentPattern();
-      if (!appStateStore.state.currentPattern) pattern.value = undefined;
-      else await openPattern(appStateStore.state.currentPattern.key);
+      if (!appStateStore.currentPattern) pattern.value = undefined;
+      else await openPattern(appStateStore.currentPattern.key);
     } finally {
       loading.value = false;
     }

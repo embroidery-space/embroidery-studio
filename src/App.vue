@@ -8,10 +8,10 @@
       <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
         <div class="flex h-full flex-col">
           <div class="flex gap-x-2 border-b px-2 py-1" :style="{ borderColor: dt('content.border.color') }">
-            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="fullstitches" />
-            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="partstitches" />
-            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="lines" />
-            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="nodes" />
+            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="fullstitches" />
+            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="partstitches" />
+            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="lines" />
+            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="nodes" />
           </div>
           <Suspense>
             <PalettePanel
@@ -93,7 +93,7 @@
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);
-    const currentPattern = appStateStore.state.currentPattern;
+    const currentPattern = appStateStore.currentPattern;
     if (currentPattern) await patternProjectStore.openPattern(currentPattern.key);
   });
 </script>

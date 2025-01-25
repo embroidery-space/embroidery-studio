@@ -1,7 +1,7 @@
 <template>
   <div class="relative h-full">
     <Listbox
-      v-model="appState.state.selectedPaletteItemIndex"
+      v-model="appStateStore.selectedPaletteItemIndex"
       :options="pattern?.palette.map((pi) => pi.palitem)"
       :option-value="(pi) => pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
       scroll-height="100%"
@@ -183,7 +183,7 @@
 
   const emit = defineEmits<PalettePanelEmits>();
 
-  const appState = useAppStateStore();
+  const appStateStore = useAppStateStore();
   const patternProjectStore = usePatternsStore();
   const { pattern } = storeToRefs(patternProjectStore);
 

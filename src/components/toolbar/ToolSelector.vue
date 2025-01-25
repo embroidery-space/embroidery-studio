@@ -66,7 +66,7 @@
   const selected = computed(() => props.modelValue === currentOption.value.value);
 
   const color = computed(() => {
-    const palindex = appStateStore.state.selectedPaletteItemIndex;
+    const palindex = appStateStore.selectedPaletteItemIndex;
     if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === null) return;
     return patternsStore.pattern.palette[palindex]!.color;
   });

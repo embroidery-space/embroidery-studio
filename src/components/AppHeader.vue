@@ -4,12 +4,12 @@
       <Menubar :model="menuOptions" class="rounded-none border-0" />
     </template>
 
-    <template v-if="appStateStore.state.openedPatterns?.length" #center>
+    <template v-if="appStateStore.openedPatterns?.length" #center>
       <PatternSelector
         @switch="
           (patternPath) => {
             patternsStore.openPattern(patternPath);
-            appStateStore.state.selectedPaletteItemIndex = null;
+            appStateStore.selectedPaletteItemIndex = null;
           }
         "
       />
