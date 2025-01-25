@@ -3,39 +3,23 @@
   <DynamicDialog />
   <BlockUI :blocked="loading" full-screen />
   <div class="flex h-full flex-col">
-    <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0">
-      <template #start>
-        <MainMenu />
-        <StitchToolSelector />
-      </template>
-
-      <template v-if="appStateStore.state.openedPatterns?.length" #center>
-        <PatternSelector
-          @switch="
-            (patternPath) => {
-              patternProjectStore.openPattern(patternPath);
-              // TODO: Store the selected palette item per opened pattern.
-              appStateStore.state.selectedPaletteItemIndex = null;
-            }
-          "
-        />
-      </template>
-
-      <template #end>
-        <Suspense>
-          <WindowControls />
-        </Suspense>
-      </template>
-    </Toolbar>
-
-    <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0">
+    <AppHeader />
+    <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
       <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
-        <Suspense>
-          <PalettePanel
-            @add-palette-item="patternProjectStore.addPaletteItem"
-            @remove-palette-item="patternProjectStore.removePaletteItem"
-          />
-        </Suspense>
+        <div class="flex h-full flex-col">
+          <div class="flex gap-x-2 border-b px-2 py-1" :style="{ borderColor: dt('content.border.color') }">
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="fullstitches" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="partstitches" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="lines" />
+            <ToolSelector v-model="appStateStore.state.selectedStitchTool" :options="nodes" />
+          </div>
+          <Suspense>
+            <PalettePanel
+              @add-palette-item="patternProjectStore.addPaletteItem"
+              @remove-palette-item="patternProjectStore.removePaletteItem"
+            />
+          </Suspense>
+        </div>
       </SplitterPanel>
 
       <SplitterPanel :size="85">
@@ -59,32 +43,53 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted } from "vue";
+  import { defineAsyncComponent, onMounted, ref } from "vue";
+  import { useFluent } from "fluent-vue";
   import { storeToRefs } from "pinia";
-  import {
-    BlockUI,
-    Panel,
-    ConfirmDialog,
-    ProgressSpinner,
-    Splitter,
-    SplitterPanel,
-    Toolbar,
-    DynamicDialog,
-  } from "primevue";
-  import MainMenu from "./components/toolbar/MainMenu.vue";
+  import { BlockUI, Panel, ConfirmDialog, ProgressSpinner, Splitter, SplitterPanel, DynamicDialog } from "primevue";
+  import { dt } from "@primevue/themes";
   import CanvasPanel from "./components/CanvasPanel.vue";
   import PalettePanel from "./components/palette/PalettePanel.vue";
-  import PatternSelector from "./components/toolbar/PatternSelector.vue";
-  import StitchToolSelector from "./components/toolbar/StitchToolSelector.vue";
-  import WindowControls from "./components/toolbar/WindowControls.vue";
+  import ToolSelector from "./components/toolbar/ToolSelector.vue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
+  import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "./schemas/pattern";
+
+  import FullStitchIcon from "./assets/icons/stitches/full-stitch.svg?raw";
+  import PetiteStitchIcon from "./assets/icons/stitches/petite-stitch.svg?raw";
+  import HalfStitchIcon from "./assets/icons/stitches/half-stitch.svg?raw";
+  import QuarterStitchIcon from "./assets/icons/stitches/quarter-stitch.svg?raw";
+  import BackStitchIcon from "./assets/icons/stitches/back-stitch.svg?raw";
+  import StraightStitchIcon from "./assets/icons/stitches/straight-stitch.svg?raw";
+  import FrenchKnotIcon from "./assets/icons/stitches/french-knot.svg?raw";
+  import BeadIcon from "./assets/icons/stitches/bead.svg?raw";
+
+  const AppHeader = defineAsyncComponent(() => import("./components/AppHeader.vue"));
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
   const patternProjectStore = usePatternsStore();
   const { pattern, loading } = storeToRefs(patternProjectStore);
+
+  const fluent = useFluent();
+
+  const fullstitches = ref([
+    { icon: FullStitchIcon, label: () => fluent.$t("full-stitch"), value: FullStitchKind.Full },
+    { icon: PetiteStitchIcon, label: () => fluent.$t("petite-stitch"), value: FullStitchKind.Petite },
+  ]);
+  const partstitches = ref([
+    { icon: HalfStitchIcon, label: () => fluent.$t("half-stitch"), value: PartStitchKind.Half },
+    { icon: QuarterStitchIcon, label: () => fluent.$t("quarter-stitch"), value: PartStitchKind.Quarter },
+  ]);
+  const lines = ref([
+    { icon: BackStitchIcon, label: () => fluent.$t("back-stitch"), value: LineStitchKind.Back },
+    { icon: StraightStitchIcon, label: () => fluent.$t("straight-stitch"), value: LineStitchKind.Straight },
+  ]);
+  const nodes = ref([
+    { icon: FrenchKnotIcon, label: () => fluent.$t("french-knot"), value: NodeStitchKind.FrenchKnot },
+    { icon: BeadIcon, label: () => fluent.$t("bead"), value: NodeStitchKind.Bead },
+  ]);
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);

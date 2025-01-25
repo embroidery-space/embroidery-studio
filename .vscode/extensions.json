@@ -1,11 +1,13 @@
 {
   "recommendations": [
+    "editorconfig.editorconfig",
     "vue.volar",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "rust-lang.rust-analyzer",
     "tauri-apps.tauri-vscode",
     "bradlc.vscode-tailwindcss",
-    "csstools.postcss"
+    "csstools.postcss",
+    "macabeus.vscode-fluent"
   ]
 }

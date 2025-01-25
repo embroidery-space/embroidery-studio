@@ -71,7 +71,7 @@ pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize
           b"grid" => {
             let attributes = process_attributes(e.attributes())?;
             display_settings.grid = Grid {
-              major_line_every_stitches: attributes.get("major_line_every_stitches").unwrap().parse()?,
+              major_lines_interval: attributes.get("major_lines_interval").unwrap().parse()?,
               ..read_grid(&mut reader)?
             }
           }
@@ -152,10 +152,7 @@ fn write_grid<W: io::Write>(writer: &mut Writer<W>, grid: &Grid) -> io::Result<(
 
   writer
     .create_element("grid")
-    .with_attributes([(
-      "major_line_every_stitches",
-      grid.major_line_every_stitches.to_string().as_str(),
-    )])
+    .with_attributes([("major_lines_interval", grid.major_lines_interval.to_string().as_str())])
     .write_inner_content(|writer| {
       write_grid_line(writer, "minor_screen_lines", &grid.minor_screen_lines)?;
       write_grid_line(writer, "major_screen_lines", &grid.major_screen_lines)?;

@@ -8,7 +8,7 @@
     "core:window:allow-minimize",
     "core:window:allow-toggle-maximize",
     "core:window:allow-close",
-    "core:window:allow-set-theme",
+    "core:app:allow-set-app-theme",
     "dialog:allow-open",
     "dialog:allow-save",
     {

@@ -1,7 +1,8 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { open, save } from "@tauri-apps/plugin-dialog";
+import { open, save, type DialogFilter } from "@tauri-apps/plugin-dialog";
 import { defineAsyncComponent, ref, shallowRef, triggerRef } from "vue";
 import { useMagicKeys, whenever } from "@vueuse/core";
+import { useFluent } from "fluent-vue";
 import { useDialog } from "primevue";
 import { defineStore } from "pinia";
 import { deserialize } from "@dao-xyz/borsh";
@@ -12,9 +13,15 @@ import { PatternView } from "#/plugins/pixi";
 import { AddedPaletteItemData, deserializeStitch, deserializeStitches } from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
+const SAVE_AS_FILTERS: DialogFilter[] = [
+  { name: "Embroidery Project", extensions: ["embproj"] },
+  { name: "Open Cross-Stitch", extensions: ["oxs", "xml"] },
+];
+
 export const usePatternsStore = defineStore("pattern-project", () => {
   const appWindow = getCurrentWindow();
 
+  const fluent = useFluent();
   const dialog = useDialog();
   const FabricProperties = defineAsyncComponent(() => import("#/components/dialogs/FabricProperties.vue"));
   const GridProperties = defineAsyncComponent(() => import("#/components/dialogs/GridProperties.vue"));
@@ -29,14 +36,8 @@ export const usePatternsStore = defineStore("pattern-project", () => {
       defaultPath: await PathApi.getAppDocumentDir(),
       multiple: false,
       filters: [
-        {
-          name: "Cross-Stitch Pattern",
-          extensions: ["xsd", "oxs", "embproj"],
-        },
-        {
-          name: "All Files",
-          extensions: ["*"],
-        },
+        { name: "Cross-Stitch Patterns", extensions: ["xsd", "oxs", "xml", "embproj"] },
+        { name: "All Files", extensions: ["*"] },
       ],
     });
     if (path === null || Array.isArray(path)) return;
@@ -56,7 +57,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   function createPattern() {
     dialog.open(FabricProperties, {
       props: {
-        header: "Fabric Properties",
+        header: fluent.$t("fabric-properties-title"),
         modal: true,
       },
       onClose: async (options) => {
@@ -73,18 +74,27 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     });
   }
 
-  async function savePattern() {
+  async function savePattern(as = false) {
     if (!pattern.value) return;
     try {
-      const path = await save({
-        defaultPath: await PatternApi.getPatternFilePath(pattern.value.key),
-        filters: [
-          {
-            name: "Cross-Stitch Pattern",
-            extensions: ["oxs", "embproj"],
-          },
-        ],
-      });
+      let path = await PatternApi.getPatternFilePath(pattern.value.key);
+      if (as) {
+        const selectedPath = await save({ defaultPath: path, filters: SAVE_AS_FILTERS });
+        if (selectedPath === null) return;
+        path = selectedPath;
+      }
+      loading.value = true;
+      await PatternApi.savePattern(pattern.value.key, path);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function exportPattern(ext: string) {
+    if (!pattern.value) return;
+    try {
+      const defaultPath = (await PatternApi.getPatternFilePath(pattern.value.key)).replace(/\.[^.]+$/, `.${ext}`);
+      const path = await save({ defaultPath, filters: SAVE_AS_FILTERS.filter((f) => f.extensions.includes(ext)) });
       if (path === null) return;
       loading.value = true;
       await PatternApi.savePattern(pattern.value.key, path);
@@ -110,7 +120,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(FabricProperties, {
       props: {
-        header: "Fabric Properties",
+        header: fluent.$t("fabric-properties-title"),
         modal: true,
       },
       data: { fabric: pattern.value.fabric },
@@ -130,7 +140,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(GridProperties, {
       props: {
-        header: "Grid Properties",
+        header: fluent.$t("grid-properties-title"),
         modal: true,
       },
       data: { grid: pattern.value.grid },
@@ -192,6 +202,13 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   });
 
   const keys = useMagicKeys();
+
+  whenever(keys["Ctrl+KeyO"]!, loadPattern);
+  whenever(keys["Ctrl+KeyN"]!, createPattern);
+  whenever(keys["Ctrl+KeyS"]!, () => savePattern());
+  whenever(keys["Ctrl+Shift+KeyS"]!, () => savePattern(true));
+  whenever(keys["Ctrl+KeyW"]!, closePattern);
+
   whenever(keys["Ctrl+KeyZ"]!, async () => {
     if (!pattern.value) return;
     await HistoryApi.undo(pattern.value.key);
@@ -208,6 +225,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     openPattern,
     createPattern,
     savePattern,
+    exportPattern,
     closePattern,
     updateFabric,
     updateGrid,

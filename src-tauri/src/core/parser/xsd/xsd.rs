@@ -508,7 +508,7 @@ fn read_grid_settings<R: Read + Seek>(reader: &mut R) -> Result<Grid> {
     Ok(GridLineStyle { color, thickness })
   }
 
-  let major_line_every_stitches = reader.read_u16::<LittleEndian>()?;
+  let major_lines_interval = reader.read_u16::<LittleEndian>()?;
   reader.seek_relative(2)?;
   let minor_screen_lines = read_grid_line_style(reader)?;
   let major_screen_lines = read_grid_line_style(reader)?;
@@ -517,7 +517,7 @@ fn read_grid_settings<R: Read + Seek>(reader: &mut R) -> Result<Grid> {
   reader.seek_relative(12)?;
 
   Ok(Grid {
-    major_line_every_stitches,
+    major_lines_interval,
     minor_screen_lines,
     major_screen_lines,
     minor_printer_lines,

@@ -1,14 +1,14 @@
 <template>
   <canvas
     ref="canvas"
-    v-element-size="useThrottleFn((size: CanvasSize) => patternCanvas.resize(size), 500)"
+    v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
     class="size-full"
   ></canvas>
 </template>
 
 <script lang="ts" setup>
   import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
-  import { useThrottleFn } from "@vueuse/core";
+  import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
