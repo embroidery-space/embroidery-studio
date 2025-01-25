@@ -15,8 +15,8 @@
           </div>
           <Suspense>
             <PalettePanel
-              @add-palette-item="patternProjectStore.addPaletteItem"
-              @remove-palette-item="patternProjectStore.removePaletteItem"
+              @add-palette-item="patternsStore.addPaletteItem"
+              @remove-palette-item="patternsStore.removePaletteItem"
             />
           </Suspense>
         </div>
@@ -69,8 +69,8 @@
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
-  const patternProjectStore = usePatternsStore();
-  const { pattern, loading } = storeToRefs(patternProjectStore);
+  const patternsStore = usePatternsStore();
+  const { pattern, loading } = storeToRefs(patternsStore);
 
   const fluent = useFluent();
 
@@ -94,6 +94,6 @@
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);
     const currentPattern = appStateStore.currentPattern;
-    if (currentPattern) await patternProjectStore.openPattern(currentPattern.key);
+    if (currentPattern) await patternsStore.openPattern(currentPattern.key);
   });
 </script>

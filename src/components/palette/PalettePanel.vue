@@ -184,8 +184,8 @@
   const emit = defineEmits<PalettePanelEmits>();
 
   const appStateStore = useAppStateStore();
-  const patternProjectStore = usePatternsStore();
-  const { pattern } = storeToRefs(patternProjectStore);
+  const patternsStore = usePatternsStore();
+  const { pattern } = storeToRefs(patternsStore);
 
   const paletteDisplayOptions = reactive<PaletteDisplayOptions>({ ...DEFAULT_PALETTE_DISPLAY_OPTIONS });
   const paletteSettingsPopover = useTemplateRef("paletteSettingsPopover");
