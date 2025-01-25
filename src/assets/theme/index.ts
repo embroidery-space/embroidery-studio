@@ -2,22 +2,34 @@
 import { definePreset } from "@primevue/themes";
 import Aura from "@primevue/themes/aura";
 
+// Common options.
 import { semantic } from "./semantic";
-import { button } from "./button";
+
+// Form components.
 import { checkbox } from "./checkbox";
 import { colorpicker } from "./colorpicker";
-import { radiobutton } from "./radiobutton";
-import { dialog } from "./dialog";
-import { fieldset } from "./fieldset";
 import { floatlabel } from "./floatlabel";
-import { inputtext } from "./inputtext";
 import { inputnumber } from "./inputnumber";
-import { menu } from "./menu";
-import { menubar } from "./menubar";
+import { inputtext } from "./inputtext";
+import { listbox } from "./listbox";
+import { radiobutton } from "./radiobutton";
 import { select } from "./select";
+
+// Button components.
+import { button } from "./button";
+
+// Panel components.
+import { fieldset } from "./fieldset";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
-import { listbox } from "./listbox";
+
+// Overlay components.
+import { dialog } from "./dialog";
+import { tooltip } from "./tooltip";
+
+// Menu components.
+import { menu } from "./menu";
+import { menubar } from "./menubar";
 
 /**
  * A Nord Theme based on the [Nord Palette] and [Aura Theme] with customizations.
@@ -26,33 +38,34 @@ import { listbox } from "./listbox";
  * [Aura Theme]: https://github.com/primefaces/primevue/tree/master/packages/themes/src/presets/aura
  */
 export const NordTheme = definePreset(Aura, {
-  primitive: {
-    borderRadius: {
-      none: "0",
-      xs: "2px",
-      sm: "4px",
-      md: "6px",
-      lg: "8px",
-      xl: "12px",
-    },
-    // Color palettes are omitted because they are not intended to be used.
-  },
+  // Color palettes are omitted because they are not intended to be used.
+  primitive: { borderRadius: { none: "0", xs: "2px", sm: "4px", md: "6px", lg: "8px", xl: "12px" } },
   semantic,
+  directives: { tooltip },
   components: {
-    button,
+    // Form components.
     checkbox,
     colorpicker,
-    radiobutton,
-    dialog,
-    fieldset,
     floatlabel,
-    inputtext,
     inputnumber,
-    menu,
-    menubar,
+    inputtext,
+    listbox,
+    radiobutton,
     select,
+
+    // Button components.
+    button,
+
+    // Panel components.
+    fieldset,
     splitter,
     toolbar,
-    listbox,
+
+    // Overlay components.
+    dialog,
+
+    // Menu components.
+    menu,
+    menubar,
   },
 });

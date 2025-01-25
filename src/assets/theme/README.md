@@ -23,8 +23,8 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | --------------- | ------- | ----- |
 | `AutoComplete`  |         |       |
 | `CascadeSelect` |         |       |
-| `Checkbox`      |         |       |
-| `ColorPicker`   |         |       |
+| `Checkbox`      | ✅      |       |
+| `ColorPicker`   | ✅      |       |
 | `DatePicker`    |         |       |
 | `Editor`        |         |       |
 | `FloatLabel`    | ✅      |       |
@@ -32,7 +32,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `IconField`     |         |       |
 | `InputGroup`    |         |       |
 | `InputMask`     |         |       |
-| `InputNumber`   |         |       |
+| `InputNumber`   | ✅      |       |
 | `InputOtp`      |         |       |
 | `InputText`     | ✅      |       |
 | `KeyFilter`     |         |       |
@@ -97,9 +97,9 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `ConfirmPopup`  |         |       |
 | `Dialog`        | ✅      |       |
 | `Drawer`        |         |       |
-| `DynamicDialog` |         |       |
+| `DynamicDialog` | ✅      |       |
 | `Popover`       |         |       |
-| `Tooltip`       |         |       |
+| `Tooltip`       | ✅      |       |
 
 ### File
 

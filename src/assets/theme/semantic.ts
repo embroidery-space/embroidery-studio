@@ -42,41 +42,17 @@ export const semantic = {
   list: {
     padding: "0.25rem 0.25rem",
     gap: "2px",
-    header: {
-      padding: "0.5rem 1rem 0.25rem 1rem",
-    },
-    option: {
-      padding: "0.5rem 0.75rem",
-      borderRadius: "{border.radius.sm}",
-    },
-    optionGroup: {
-      padding: "0.5rem 0.75rem",
-      fontWeight: "600",
-    },
+    header: { padding: "0.5rem 1rem 0.25rem 1rem" },
+    option: { padding: "0.5rem 0.75rem", borderRadius: "{border.radius.sm}" },
+    optionGroup: { padding: "0.5rem 0.75rem", fontWeight: "600" },
   },
-  content: {
-    borderRadius: "{border.radius.md}",
-  },
-  mask: {
-    transitionDuration: "0.15s",
-  },
+  content: { borderRadius: "{border.radius.md}" },
+  mask: { transitionDuration: "0.15s" },
   navigation: {
-    list: {
-      padding: "0.25rem 0.25rem",
-      gap: "0.125rem",
-    },
-    item: {
-      padding: "0.375rem 0.5rem",
-      borderRadius: "{border.radius.sm}",
-      gap: "0.5rem",
-    },
-    submenuLabel: {
-      padding: "0.5rem 0.75rem",
-      fontWeight: "600",
-    },
-    submenuIcon: {
-      size: "0.875rem",
-    },
+    list: { padding: "0.25rem 0.25rem", gap: "0.125rem" },
+    item: { padding: "0.375rem 0.5rem", borderRadius: "{border.radius.sm}", gap: "0.5rem" },
+    submenuLabel: { padding: "0.5rem 0.75rem", fontWeight: "600" },
+    submenuIcon: { size: "0.875rem" },
   },
   overlay: {
     select: {
