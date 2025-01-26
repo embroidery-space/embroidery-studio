@@ -84,36 +84,18 @@
     </Fieldset>
 
     <Fieldset :legend="$t('color')" class="row-start-1 row-end-3">
-      <Listbox
-        :model-value="{ name: fabric.name, color: fabric.color }"
+      <PaletteList
+        :model-value="{ name: fabric.name, color: fabric.color.toHex().substring(1).toUpperCase() }"
         :options="fabricColors"
-        scroll-height="100%"
-        pt:root:class="flex flex-col h-full p-1"
-        pt:list-container:class="grow"
-        pt:list:class="grid gap-1"
-        :pt:list:style="{ gridTemplateColumns: `repeat(8, minmax(0px, 1fr))` }"
-        pt:option:class="p-0"
-        @value-change="
+        :display-options="fabricColorsDisplayOptions"
+        fluid-options
+        @update:model-value="
           ({ name, color }) => {
             fabric.name = name;
-            fabric.color = color;
+            fabric.color = new Color(color);
           }
         "
-      >
-        <template #option="{ option, selected }">
-          <div
-            v-tooltip="{ value: option.name, showDelay: 200 }"
-            class="h-8 w-full"
-            :style="{
-              backgroundColor: `#${option.color}`,
-              boxShadow: selected
-                ? `inset 0 0 0 2px #${option.color}, inset 0 0 0 4px ${contrastColor(new Color(option.color))}`
-                : '',
-            }"
-          ></div>
-        </template>
-      </Listbox>
-
+      />
       <p class="mt-2">{{ $t("fabric-properties-selected-color", { color: fabric.name }) }}</p>
     </Fieldset>
   </div>
@@ -126,21 +108,20 @@
   import { readTextFile } from "@tauri-apps/plugin-fs";
   import { inject, onMounted, reactive, ref, watch, type Ref } from "vue";
   import { useFluent } from "fluent-vue";
-  import { Fieldset, FloatLabel, InputNumber, Listbox, RadioButton, Select } from "primevue";
+  import { Fieldset, FloatLabel, InputNumber, RadioButton, Select } from "primevue";
   import type { DynamicDialogInstance } from "primevue/dynamicdialogoptions";
   import { Color } from "pixi.js";
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
-  import { contrastColor } from "#/utils/color";
   import { Fabric } from "#/schemas/pattern";
+  import PaletteList from "../palette/PaletteList.vue";
+  import type { PaletteDisplayOptions } from "#/utils/paletteItem";
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
   const fluent = useFluent();
 
-  const DEFAULT_FABRIC: Fabric = { width: 60, height: 80, name: "White", color: "FFFFFF", kind: "Aida", spi: [14, 14] };
-
   // Copy the data from the dialog reference to a reactive object.
-  const fabric = reactive<Fabric>(new Fabric(Object.assign({}, DEFAULT_FABRIC, dialogRef.value.data?.fabric)));
+  const fabric = reactive<Fabric>(new Fabric(Object.assign({}, Fabric.default(), dialogRef.value.data?.fabric)));
 
   const fabricCounts = ref([14, 16, 18, 20]);
 
@@ -204,14 +185,23 @@
     }
   });
 
-  const fabricColors = ref<{ name: string; color: string }[]>([]);
   const fabricKinds = ref([
     { label: fluent.$t("fabric-properties-kind-aida"), value: "Aida" },
     { label: fluent.$t("fabric-properties-kind-evenweave"), value: "Evenweave" },
     { label: fluent.$t("fabric-properties-kind-linen"), value: "Linen" },
   ]);
+  const fabricColors = ref<{ name: string; color: string }[]>([]);
+  const fabricColorsDisplayOptions: PaletteDisplayOptions = {
+    colorOnly: true,
+    showBrand: false,
+    showNumber: false,
+    showName: false,
+    columnsNumber: 8,
+  };
 
   onMounted(async () => {
-    fabricColors.value = JSON.parse(await readTextFile(await path.resolveResource("resources/fabric-colors.json")));
+    const fabricColorsPath = await path.resolveResource("resources/fabric-colors.json");
+    const content = await readTextFile(fabricColorsPath);
+    fabricColors.value = JSON.parse(content);
   });
 </script>

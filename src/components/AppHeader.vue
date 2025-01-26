@@ -9,7 +9,7 @@
         @switch="
           (patternPath) => {
             patternsStore.openPattern(patternPath);
-            appStateStore.selectedPaletteItemIndex = null;
+            appStateStore.selectedPaletteItemIndices = [];
           }
         "
       />

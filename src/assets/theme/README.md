@@ -112,7 +112,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | Component     | Is Used | Notes |
 | ------------- | ------- | ----- |
 | `Breadcrumb`  |         |       |
-| `ContextMenu` |         |       |
+| `ContextMenu` | ✅      |       |
 | `Dock`        |         |       |
 | `Menu`        | ✅      |       |
 | `Menubar`     | ✅      |       |

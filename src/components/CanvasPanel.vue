@@ -40,8 +40,8 @@
   let prevStitchState: Stitch | undefined;
   patternCanvas.addEventListener(EventType.AddStitch, async (e) => {
     const tool = appStateStore.selectedStitchTool;
-    const palindex = appStateStore.selectedPaletteItemIndex;
-    if (palindex === null) return;
+    const palindex = appStateStore.selectedPaletteItemIndices[0];
+    if (palindex === undefined) return;
 
     // A start point is needed to draw the lines.
     // An end point is needed to draw all the other kinds of stitches (in addition to lines).

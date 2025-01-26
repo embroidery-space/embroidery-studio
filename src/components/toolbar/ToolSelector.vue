@@ -4,6 +4,10 @@
   <div ref="container" class="relative">
     <Button
       ref="tool-button"
+      v-tooltip="{
+        value: typeof currentOption.label === 'function' ? currentOption.label() : currentOption.label,
+        showDelay: 200,
+      }"
       :text="!selected"
       severity="secondary"
       class="border-none p-1.5"
@@ -66,8 +70,8 @@
   const selected = computed(() => props.modelValue === currentOption.value.value);
 
   const color = computed(() => {
-    const palindex = appStateStore.selectedPaletteItemIndex;
-    if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === null) return;
+    const palindex = appStateStore.selectedPaletteItemIndices[0];
+    if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === undefined) return;
     return patternsStore.pattern.palette[palindex]!.color;
   });
 

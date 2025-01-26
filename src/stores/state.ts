@@ -11,7 +11,7 @@ export const useAppStateStore = defineStore(
   "embroidery-studio-state",
   () => {
     const selectedStitchTool = ref<StitchKind>(FullStitchKind.Full);
-    const selectedPaletteItemIndex = ref<number | null>(null);
+    const selectedPaletteItemIndices = ref<number[]>([]);
     const openedPatterns = ref<OpenedPattern[]>([]);
     const currentPattern = ref<OpenedPattern | undefined>(undefined);
 
@@ -38,7 +38,7 @@ export const useAppStateStore = defineStore(
 
     return {
       selectedStitchTool,
-      selectedPaletteItemIndex,
+      selectedPaletteItemIndices,
       openedPatterns,
       currentPattern,
       addOpenedPattern,

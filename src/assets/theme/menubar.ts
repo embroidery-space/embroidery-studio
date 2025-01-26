@@ -30,7 +30,7 @@ export const menubar = {
   submenu: {
     padding: "{navigation.list.padding}",
     gap: "{navigation.list.gap}",
-    background: "{content.background}",
+    background: "{content.hover.background}",
     borderColor: "{content.border.color}",
     borderRadius: "{content.border.radius}",
     shadow: "{overlay.navigation.shadow}",

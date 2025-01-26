@@ -5,21 +5,8 @@
   <div class="flex h-full flex-col">
     <AppHeader />
     <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
-      <SplitterPanel :min-size="6" :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
-        <div class="flex h-full flex-col">
-          <div class="flex gap-x-2 border-b px-2 py-1" :style="{ borderColor: dt('content.border.color') }">
-            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="fullstitches" />
-            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="partstitches" />
-            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="lines" />
-            <ToolSelector v-model="appStateStore.selectedStitchTool" :options="nodes" />
-          </div>
-          <Suspense>
-            <PalettePanel
-              @add-palette-item="patternsStore.addPaletteItem"
-              @remove-palette-item="patternsStore.removePaletteItem"
-            />
-          </Suspense>
-        </div>
+      <SplitterPanel :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
+        <Suspense><PalettePanel /></Suspense>
       </SplitterPanel>
 
       <SplitterPanel :size="85">
@@ -43,53 +30,22 @@
 </template>
 
 <script lang="ts" setup>
-  import { defineAsyncComponent, onMounted, ref } from "vue";
-  import { useFluent } from "fluent-vue";
+  import { defineAsyncComponent, onMounted } from "vue";
   import { storeToRefs } from "pinia";
   import { BlockUI, Panel, ConfirmDialog, ProgressSpinner, Splitter, SplitterPanel, DynamicDialog } from "primevue";
-  import { dt } from "@primevue/themes";
-  import CanvasPanel from "./components/CanvasPanel.vue";
-  import PalettePanel from "./components/palette/PalettePanel.vue";
-  import ToolSelector from "./components/toolbar/ToolSelector.vue";
+
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
-  import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "./schemas/pattern";
-
-  import FullStitchIcon from "./assets/icons/stitches/full-stitch.svg?raw";
-  import PetiteStitchIcon from "./assets/icons/stitches/petite-stitch.svg?raw";
-  import HalfStitchIcon from "./assets/icons/stitches/half-stitch.svg?raw";
-  import QuarterStitchIcon from "./assets/icons/stitches/quarter-stitch.svg?raw";
-  import BackStitchIcon from "./assets/icons/stitches/back-stitch.svg?raw";
-  import StraightStitchIcon from "./assets/icons/stitches/straight-stitch.svg?raw";
-  import FrenchKnotIcon from "./assets/icons/stitches/french-knot.svg?raw";
-  import BeadIcon from "./assets/icons/stitches/bead.svg?raw";
+  import CanvasPanel from "./components/CanvasPanel.vue";
 
   const AppHeader = defineAsyncComponent(() => import("./components/AppHeader.vue"));
+  const PalettePanel = defineAsyncComponent(() => import("./components/PalettePanel.vue"));
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
   const patternsStore = usePatternsStore();
   const { pattern, loading } = storeToRefs(patternsStore);
-
-  const fluent = useFluent();
-
-  const fullstitches = ref([
-    { icon: FullStitchIcon, label: () => fluent.$t("full-stitch"), value: FullStitchKind.Full },
-    { icon: PetiteStitchIcon, label: () => fluent.$t("petite-stitch"), value: FullStitchKind.Petite },
-  ]);
-  const partstitches = ref([
-    { icon: HalfStitchIcon, label: () => fluent.$t("half-stitch"), value: PartStitchKind.Half },
-    { icon: QuarterStitchIcon, label: () => fluent.$t("quarter-stitch"), value: PartStitchKind.Quarter },
-  ]);
-  const lines = ref([
-    { icon: BackStitchIcon, label: () => fluent.$t("back-stitch"), value: LineStitchKind.Back },
-    { icon: StraightStitchIcon, label: () => fluent.$t("straight-stitch"), value: LineStitchKind.Straight },
-  ]);
-  const nodes = ref([
-    { icon: FrenchKnotIcon, label: () => fluent.$t("french-knot"), value: NodeStitchKind.FrenchKnot },
-    { icon: BeadIcon, label: () => fluent.$t("bead"), value: NodeStitchKind.Bead },
-  ]);
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);

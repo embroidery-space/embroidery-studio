@@ -173,6 +173,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   appWindow.listen<number>("palette:remove_palette_item", ({ payload: palindex }) => {
     if (!pattern.value) return;
     pattern.value.removePaletteItem(palindex);
+    if (appStateStore.selectedPaletteItemIndices.includes(palindex)) appStateStore.selectedPaletteItemIndices = [];
     triggerRef(pattern);
   });
 

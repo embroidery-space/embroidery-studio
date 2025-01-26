@@ -25,19 +25,19 @@ export const DEFAULT_PALETTE_DISPLAY_OPTIONS: PaletteDisplayOptions = {
 /**
  * Composes a title for a palette item based on the provided display options.
  *
- * @param pi The palette item for which the title is composed.
+ * @param palitem The palette item for which the title is composed.
  * @param options The display options to customize the title.
  * @returns The composed title for the palette item.
  */
 export function paletteItemTitle(
-  pi: PaletteItem,
+  palitem: Partial<Pick<PaletteItem, "brand" | "blends" | "number" | "name">>,
   options: PaletteDisplayOptions = DEFAULT_PALETTE_DISPLAY_OPTIONS,
 ): string {
   const components = [];
-  if (options.showBrand) components.push(pi.brand);
-  if (pi.blends?.length) {
+  if (options.showBrand && palitem.brand) components.push(palitem.brand);
+  if (palitem.blends?.length) {
     components.push(
-      pi.blends
+      palitem.blends
         .map((blend) => blendTitle(blend, options))
         // Remove empty strings.
         .filter((v) => v.length)
@@ -45,11 +45,11 @@ export function paletteItemTitle(
     );
     return components.join(": ");
   }
-  if (options.showNumber) components.push(pi.number);
+  if (options.showNumber && palitem.number) components.push(palitem.number);
   // The name can be an empty string. For example, if the palette item is blend.
-  if (options.showName && pi.name.length) {
-    if (!components.length) return pi.name;
-    return [components.join(" "), pi.name].join(", ");
+  if (options.showName && palitem.name?.length) {
+    if (!components.length) return palitem.name;
+    return [components.join(" "), palitem.name].join(", ");
   }
   return components.join(" ");
 }

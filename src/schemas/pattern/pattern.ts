@@ -108,7 +108,7 @@ export class PaletteItem {
   name: string;
 
   @field({
-    serialize: (color, writer) => writer.string((color as Color).toHex().substring(1).toUpperCase()),
+    serialize: (color: Color, writer) => writer.string(color.toHex().substring(1).toUpperCase()),
     deserialize: (reader) => new Color(reader.string()),
   })
   color: Color;
@@ -150,8 +150,11 @@ export class Fabric {
   @field({ type: "string" })
   name: string;
 
-  @field({ type: "string" })
-  color: string;
+  @field({
+    serialize: (color: Color, writer) => writer.string(color.toHex().substring(1).toUpperCase()),
+    deserialize: (reader) => new Color(reader.string()),
+  })
+  color: Color;
 
   constructor(data: Fabric) {
     this.width = data.width;
@@ -160,6 +163,17 @@ export class Fabric {
     this.kind = data.kind;
     this.name = data.name;
     this.color = data.color;
+  }
+
+  static default() {
+    return new Fabric({
+      width: 60,
+      height: 80,
+      name: "White",
+      color: new Color("FFFFFF"),
+      kind: "Aida",
+      spi: [14, 14],
+    });
   }
 }
 

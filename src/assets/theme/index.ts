@@ -28,6 +28,7 @@ import { dialog } from "./dialog";
 import { tooltip } from "./tooltip";
 
 // Menu components.
+import { contextmenu } from "./contextmenu";
 import { menu } from "./menu";
 import { menubar } from "./menubar";
 
@@ -65,6 +66,7 @@ export const NordTheme = definePreset(Aura, {
     dialog,
 
     // Menu components.
+    contextmenu,
     menu,
     menubar,
   },
