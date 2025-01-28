@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chart>
+  <properties oxsversion="1.0" software="Embroidery Studio" software_version="0.3.0" chartwidth="7" chartheight="7" charttitle="" author="" company="" copyright="" instructions="" stitchesperinch="14" stitchesperinch_y="14" palettecount="7"/>
+  <palette>
+    <palette_item index="0" number="cloth" name="White" color="FFFFFF" kind="Aida"/>
+    <palette_item index="1" number="DMC 3837" name="Lavender-UL DK" color="875D9B" blendscount="0">
+    </palette_item>
+    <palette_item index="2" number="DMC 800" name="Delft Blue-Pale" color="AECFE4" blendscount="0">
+    </palette_item>
+    <palette_item index="3" number="DMC 307" name="Lemon" color="F6E311" blendscount="0">
+    </palette_item>
+    <palette_item index="4" number="DMC 702" name="Christmas Green" color="59A052" blendscount="0">
+    </palette_item>
+    <palette_item index="5" number="DMC 798" name="Delft Blue-DK" color="4C71B3" blendscount="0">
+    </palette_item>
+    <palette_item index="6" number="DMC 349" name="Coral-DK" color="C23131" blendscount="0">
+    </palette_item>
+    <palette_item index="7" number="DMC 720" name="Orange Spice-DK" color="DA6226" blendscount="0">
+    </palette_item>
+  </palette>
+  <fullstitches>
+    <stitch x="0" y="0" palindex="6"/>
+    <stitch x="1" y="0" palindex="7"/>
+    <stitch x="2" y="0" palindex="3"/>
+    <stitch x="3" y="0" palindex="4"/>
+    <stitch x="4" y="0" palindex="2"/>
+    <stitch x="5" y="0" palindex="5"/>
+    <stitch x="6" y="0" palindex="1"/>
+    <stitch x="0" y="1" palindex="6"/>
+    <stitch x="1" y="1" palindex="7"/>
+    <stitch x="2" y="1" palindex="3"/>
+    <stitch x="3" y="1" palindex="4"/>
+    <stitch x="4" y="1" palindex="2"/>
+    <stitch x="5" y="1" palindex="5"/>
+    <stitch x="6" y="1" palindex="1"/>
+    <stitch x="0" y="2" palindex="6"/>
+    <stitch x="1" y="2" palindex="7"/>
+    <stitch x="2" y="2" palindex="3"/>
+    <stitch x="3" y="2" palindex="4"/>
+    <stitch x="4" y="2" palindex="2"/>
+    <stitch x="5" y="2" palindex="5"/>
+    <stitch x="6" y="2" palindex="1"/>
+    <stitch x="0" y="3" palindex="6"/>
+    <stitch x="1" y="3" palindex="7"/>
+    <stitch x="2" y="3" palindex="3"/>
+    <stitch x="3" y="3" palindex="4"/>
+    <stitch x="4" y="3" palindex="2"/>
+    <stitch x="5" y="3" palindex="5"/>
+    <stitch x="6" y="3" palindex="1"/>
+    <stitch x="0" y="4" palindex="6"/>
+    <stitch x="1" y="4" palindex="7"/>
+    <stitch x="2" y="4" palindex="3"/>
+    <stitch x="3" y="4" palindex="4"/>
+    <stitch x="4" y="4" palindex="2"/>
+    <stitch x="5" y="4" palindex="5"/>
+    <stitch x="6" y="4" palindex="1"/>
+    <stitch x="0" y="5" palindex="6"/>
+    <stitch x="1" y="5" palindex="7"/>
+    <stitch x="2" y="5" palindex="3"/>
+    <stitch x="3" y="5" palindex="4"/>
+    <stitch x="4" y="5" palindex="2"/>
+    <stitch x="5" y="5" palindex="5"/>
+    <stitch x="6" y="5" palindex="1"/>
+    <stitch x="0" y="6" palindex="6"/>
+    <stitch x="1" y="6" palindex="7"/>
+    <stitch x="2" y="6" palindex="3"/>
+    <stitch x="3" y="6" palindex="4"/>
+    <stitch x="4" y="6" palindex="2"/>
+    <stitch x="5" y="6" palindex="5"/>
+    <stitch x="6" y="6" palindex="1"/>
+  </fullstitches>
+  <partstitches>
+  </partstitches>
+  <backstitches>
+  </backstitches>
+  <ornaments_inc_knots_and_beads>
+  </ornaments_inc_knots_and_beads>
+  <special_stitch_models>
+  </special_stitch_models>
+</chart>

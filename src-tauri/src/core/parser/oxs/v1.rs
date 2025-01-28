@@ -420,59 +420,59 @@ fn write_partstitches<W: io::Write>(writer: &mut Writer<W>, partstitches: &Stitc
           }
           seen_quarters.insert((partstitch.x, partstitch.y));
 
-          let mut indices = (0, 0);
+          let mut palindexes = (0, 0);
 
           match partstitch.direction {
             PartStitchDirection::Forward => {
               if partstitch.is_on_bottom_left() {
-                indices.0 = partstitch.palindex + 1;
+                palindexes.0 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
                 x: NotNan::new(partstitch.x.floor()).unwrap(),
                 y: partstitch.y + 0.5,
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
-                indices.0 = partstitch.palindex + 1;
+                palindexes.0 = partstitch.palindex + 1;
               }
 
               if partstitch.is_on_top_right() {
-                indices.1 = partstitch.palindex + 1;
+                palindexes.1 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
                 x: partstitch.x + 0.5,
                 y: NotNan::new(partstitch.y.floor()).unwrap(),
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
-                indices.1 = partstitch.palindex + 1;
+                palindexes.1 = partstitch.palindex + 1;
               }
             }
 
             PartStitchDirection::Backward => {
               if partstitch.is_on_top_left() {
-                indices.0 = partstitch.palindex + 1;
+                palindexes.0 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
                 x: NotNan::new(partstitch.x.floor()).unwrap(),
                 y: NotNan::new(partstitch.y.floor()).unwrap(),
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
-                indices.0 = partstitch.palindex + 1;
+                palindexes.0 = partstitch.palindex + 1;
               }
 
               if partstitch.is_on_bottom_right() {
-                indices.1 = partstitch.palindex + 1;
+                palindexes.1 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
                 x: partstitch.x + 0.5,
                 y: partstitch.y + 0.5,
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
-                indices.1 = partstitch.palindex + 1;
+                palindexes.1 = partstitch.palindex + 1;
               }
             }
           };
 
-          indices
+          palindexes
         }
       };
 

@@ -65,58 +65,69 @@ impl<R: tauri::Runtime> Action<R> for AddPaletteItemAction {
 }
 
 #[derive(Clone)]
-pub struct RemovePaletteItemAction {
-  palitem: PaletteItem,
+pub struct RemovePaletteItemsAction {
+  palindexes: Vec<u8>,
   metadata: OnceLock<RemovePaletteItemActionMetadata>,
 }
 
 #[derive(Debug, Clone)]
 struct RemovePaletteItemActionMetadata {
-  palindex: usize,
-  symbols: Symbols,
-  formats: Formats,
+  palitems: Vec<PaletteItem>,
+  symbols: Vec<Symbols>,
+  formats: Vec<Formats>,
   conflicts: Vec<Stitch>,
 }
 
-impl RemovePaletteItemAction {
-  pub fn new(palitem: PaletteItem) -> Self {
+impl RemovePaletteItemsAction {
+  pub fn new(palindexes: Vec<u8>) -> Self {
+    let mut palindexes = palindexes.clone();
+    palindexes.sort();
     Self {
-      palitem,
+      palindexes,
       metadata: OnceLock::new(),
     }
   }
 }
 
-impl<R: tauri::Runtime> Action<R> for RemovePaletteItemAction {
+impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
   /// Remove the palette item from the pattern.
   ///
   /// **Emits:**
   /// - `palette:remove_palette_item` with the palette item index.
   /// - `stitches:remove_many` with the stitches that should be removed.
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
-    let palindex = patproj
-      .pattern
-      .palette
-      .iter()
-      .position(|item| item == &self.palitem)
-      .unwrap();
-    patproj.pattern.palette.remove(palindex);
-    let symbols = patproj.display_settings.symbols.remove(palindex);
-    let formats = patproj.display_settings.formats.remove(palindex);
-    let conflicts = patproj.pattern.remove_stitches_by_palindex(palindex as u8);
-    window.emit("palette:remove_palette_item", palindex)?;
+    let capacity = self.palindexes.len();
+    let mut palitems = Vec::with_capacity(capacity);
+    let mut symbols = Vec::with_capacity(capacity);
+    let mut formats = Vec::with_capacity(capacity);
+    for &palindex in self.palindexes.iter().rev() {
+      let palindex = palindex as usize;
+      palitems.push(patproj.pattern.palette.remove(palindex));
+      symbols.push(patproj.display_settings.symbols.remove(palindex));
+      formats.push(patproj.display_settings.formats.remove(palindex));
+    }
+    window.emit("palette:remove_palette_items", &self.palindexes)?;
+
+    // Reverse the vectors to restore the in the order of `palindexes`.
+    palitems.reverse();
+    symbols.reverse();
+    formats.reverse();
+
+    let conflicts = patproj.pattern.remove_stitches_by_palindexes(&self.palindexes);
     window.emit("stitches:remove_many", STANDARD.encode(borsh::to_vec(&conflicts)?))?;
+
     if self.metadata.get().is_none() {
       self
         .metadata
         .set(RemovePaletteItemActionMetadata {
-          palindex,
+          palitems,
           symbols,
           formats,
           conflicts,
         })
         .unwrap();
     }
+
     Ok(())
   }
 
@@ -127,31 +138,39 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemAction {
   /// - `stitches:add_many` with the stitches that should be restored.
   fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
     let metadata = self.metadata.get().unwrap();
-    patproj.pattern.palette.insert(metadata.palindex, self.palitem.clone());
-    patproj
-      .display_settings
-      .symbols
-      .insert(metadata.palindex, metadata.symbols.clone());
-    patproj
-      .display_settings
-      .formats
-      .insert(metadata.palindex, metadata.formats.clone());
-    patproj
-      .pattern
-      .restore_stitches(metadata.conflicts.clone(), metadata.palindex as u8);
-    window.emit(
-      "palette:add_palette_item",
-      STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
-        palitem: self.palitem.clone(),
-        palindex: metadata.palindex as u8,
-        symbols: metadata.symbols.clone(),
-        formats: metadata.formats.clone(),
-      })?),
-    )?;
+    for (index, &palindex) in self.palindexes.iter().enumerate() {
+      let palindex = palindex as usize;
+
+      let palitem = metadata.palitems.get(index).unwrap().clone();
+      patproj.pattern.palette.insert(palindex, palitem.clone());
+
+      let symbols = metadata.symbols.get(index).unwrap().clone();
+      patproj.display_settings.symbols.insert(palindex, symbols.clone());
+
+      let formats = metadata.formats.get(index).unwrap().clone();
+      patproj.display_settings.formats.insert(palindex, formats.clone());
+
+      window.emit(
+        "palette:add_palette_item",
+        STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
+          palindex: palindex as u8,
+          palitem,
+          symbols,
+          formats,
+        })?),
+      )?;
+    }
+
+    patproj.pattern.restore_stitches(
+      metadata.conflicts.clone(),
+      &self.palindexes,
+      patproj.pattern.palette.len() as u8,
+    );
     window.emit(
       "stitches:add_many",
       STANDARD.encode(borsh::to_vec(&metadata.conflicts)?),
     )?;
+
     Ok(())
   }
 }

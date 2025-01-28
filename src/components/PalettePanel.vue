@@ -127,10 +127,8 @@
       label: "Delete",
       disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndices.length,
       command: () => {
-        const palitems = appStateStore.selectedPaletteItemIndices.map(
-          (i) => patternsStore.pattern!.palette[i]!.palitem,
-        );
-        for (const palitem of palitems) patternsStore.removePaletteItem(palitem);
+        // const palindexes = [...appStateStore.selectedPaletteItemIndices].sort();
+        patternsStore.removePaletteItem(appStateStore.selectedPaletteItemIndices);
       },
     },
     { separator: true },
@@ -173,7 +171,6 @@
 
   onMounted(async () => {
     for (const entry of await readDir(paletteCatalogDirPath)) {
-      // TODO: allow users to create custom palettes and put them under resources/palettes/<subfolder> or via symlinks.
       if (entry.isFile) {
         // The file name is the brand name.
         const brand = entry.name.split(".")[0]!;

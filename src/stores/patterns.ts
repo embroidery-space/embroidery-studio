@@ -166,14 +166,16 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     triggerRef(pattern);
   });
 
-  async function removePaletteItem(palitem: PaletteItem) {
+  async function removePaletteItem(paletteItemIndexes: number[]) {
     if (!pattern.value) return;
-    await PaletteApi.removePaletteItem(pattern.value.key, palitem);
+    await PaletteApi.removePaletteItems(pattern.value.key, paletteItemIndexes);
   }
-  appWindow.listen<number>("palette:remove_palette_item", ({ payload: palindex }) => {
+  appWindow.listen<number[]>("palette:remove_palette_items", ({ payload: palindexes }) => {
     if (!pattern.value) return;
-    pattern.value.removePaletteItem(palindex);
-    if (appStateStore.selectedPaletteItemIndices.includes(palindex)) appStateStore.selectedPaletteItemIndices = [];
+    for (const palindex of palindexes.reverse()) {
+      pattern.value.removePaletteItem(palindex);
+      if (appStateStore.selectedPaletteItemIndices.includes(palindex)) appStateStore.selectedPaletteItemIndices = [];
+    }
     triggerRef(pattern);
   });
 

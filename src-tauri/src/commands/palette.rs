@@ -1,4 +1,4 @@
-use crate::core::actions::{Action, AddPaletteItemAction, RemovePaletteItemAction};
+use crate::core::actions::{Action, AddPaletteItemAction, RemovePaletteItemsAction};
 use crate::error::CommandResult;
 use crate::state::{HistoryState, PatternsState};
 
@@ -30,25 +30,21 @@ pub fn add_palette_item<R: tauri::Runtime>(
 }
 
 #[tauri::command]
-pub fn remove_palette_item<R: tauri::Runtime>(
+pub fn remove_palette_items<R: tauri::Runtime>(
+  palette_item_indexes: Vec<u8>,
   request: tauri::ipc::Request<'_>,
   window: tauri::WebviewWindow<R>,
   history: tauri::State<HistoryState<R>>,
   patterns: tauri::State<PatternsState>,
 ) -> CommandResult<()> {
-  if let tauri::ipc::InvokeBody::Raw(data) = request.body() {
-    let pattern_key = request.headers().get("patternKey").unwrap().to_str().unwrap().into();
-    let palette_item = borsh::from_slice(data)?;
+  let pattern_key = request.headers().get("patternKey").unwrap().to_str().unwrap().into();
 
-    let mut patterns = patterns.write().unwrap();
-    let action = RemovePaletteItemAction::new(palette_item);
-    action.perform(&window, patterns.get_mut(&pattern_key).unwrap())?;
+  let mut patterns = patterns.write().unwrap();
+  let action = RemovePaletteItemsAction::new(palette_item_indexes);
+  action.perform(&window, patterns.get_mut(&pattern_key).unwrap())?;
 
-    let mut history = history.write().unwrap();
-    history.get_mut(&pattern_key).push(Box::new(action));
+  let mut history = history.write().unwrap();
+  history.get_mut(&pattern_key).push(Box::new(action));
 
-    Ok(())
-  } else {
-    Err(anyhow::anyhow!("Invalid request body").into())
-  }
+  Ok(())
 }

@@ -6,6 +6,6 @@ export function addPaletteItem(patternKey: PatternKey, paletteItem: PaletteItem)
   return invoke<void>("add_palette_item", serialize(paletteItem), { headers: { patternKey } });
 }
 
-export function removePaletteItem(patternKey: PatternKey, paletteItem: PaletteItem) {
-  return invoke<void>("remove_palette_item", serialize(paletteItem), { headers: { patternKey } });
+export function removePaletteItems(patternKey: PatternKey, paletteItemIndexes: number[]) {
+  return invoke<void>("remove_palette_items", { paletteItemIndexes }, { headers: { patternKey } });
 }
