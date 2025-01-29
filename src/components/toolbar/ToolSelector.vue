@@ -9,6 +9,7 @@
         showDelay: 200,
       }"
       :text="!selected"
+      :disabled="props.disabled"
       severity="secondary"
       class="border-none p-1.5"
       :style="{ color: selected && color ? color.toHex() : dt('text.muted.color') }"
@@ -18,6 +19,7 @@
 
     <Button
       text
+      :disabled="props.disabled"
       severity="contrast"
       class="absolute bottom-0 right-0 z-auto rounded-sm border-none p-0"
       @click="toggleMenu"
@@ -57,7 +59,7 @@
 
   type ToolOption = Omit<MenuItem, "command"> & { value: unknown };
 
-  const props = defineProps<{ modelValue: unknown; options: ToolOption[] }>();
+  const props = defineProps<{ modelValue: unknown; options: ToolOption[]; disabled?: boolean }>();
   const emit = defineEmits(["update:modelValue"]);
 
   const appStateStore = useAppStateStore();
@@ -67,10 +69,10 @@
   const currentOption = ref<ToolOption>(
     props.options.find(({ value }) => value === props.modelValue) ?? props.options[0]!,
   );
-  const selected = computed(() => props.modelValue === currentOption.value.value);
+  const selected = computed(() => props.modelValue === currentOption.value.value && !props.disabled);
 
   const color = computed(() => {
-    const palindex = appStateStore.selectedPaletteItemIndices[0];
+    const palindex = appStateStore.selectedPaletteItemIndexes[0];
     if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === undefined) return;
     return patternsStore.pattern.palette[palindex]!.color;
   });
@@ -85,6 +87,7 @@
   let hasLongPressed = false;
 
   useEventListener(toolButton, "pointerdown", (e) => {
+    if (props.disabled) return;
     clearLongPress();
     timeout = setTimeout(() => {
       hasLongPressed = true;
@@ -92,6 +95,7 @@
     }, 500);
   });
   useEventListener(toolButton, "pointerup", (e) => {
+    if (props.disabled) return;
     longPressHandler(e, hasLongPressed);
     clearLongPress();
   });

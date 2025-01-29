@@ -1,29 +1,80 @@
 <template>
-  <div class="flex h-full">
+  <div
+    class="flex h-full"
+    :class="{ 'border-2 border-primary': paletteIsBeingEdited }"
+    @keydown="
+      ({ key }) => {
+        if (key === 'Escape') paletteIsBeingEdited = false;
+      }
+    "
+  >
     <!-- Main Palette -->
     <PaletteList
-      v-model="appStateStore.selectedPaletteItemIndices"
+      :model-value="appStateStore.selectedPaletteItemIndexes"
       :options="patternsStore.pattern?.palette.map((pi) => pi.palitem)"
       :option-value="(pi) => patternsStore.pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
       :display-options="DEFAULT_PALETTE_DISPLAY_OPTIONS"
+      :disabled="paletteIsDisabled"
       mulitple
       meta-key-selection
       fluid-options
-      empty-message="No palette items found"
-      class="h-full flex-grow rounded-none border-0"
+      class="flex-grow rounded-none border-0"
       :class="{ 'border-r': showPaletteCatalog }"
+      :style="{ backgroundColor: dt('content.background') }"
+      :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
+      @update:model-value="handlePaletteItemsSelection"
       @contextmenu="(e: PointerEvent) => paletteContextMenu!.show(e)"
     >
       <template #header>
-        <div class="flex gap-x-2" @contextmenu.stop.prevent>
-          <ToolSelector v-model="appStateStore.selectedStitchTool" :options="fullstitches" />
-          <ToolSelector v-model="appStateStore.selectedStitchTool" :options="partstitches" />
-          <ToolSelector v-model="appStateStore.selectedStitchTool" :options="lines" />
-          <ToolSelector v-model="appStateStore.selectedStitchTool" :options="nodes" />
+        <div v-if="paletteIsBeingEdited" class="min-w-60">
+          <Button fluid size="small" :label="$t('save-changes')" @click="paletteIsBeingEdited = false" />
+        </div>
+        <div v-else class="flex gap-x-2" @contextmenu.stop.prevent>
+          <ToolSelector
+            v-model="appStateStore.selectedStitchTool"
+            :options="fullstitches"
+            :disabled="paletteIsDisabled"
+          />
+          <ToolSelector
+            v-model="appStateStore.selectedStitchTool"
+            :options="partstitches"
+            :disabled="paletteIsDisabled"
+          />
+          <ToolSelector
+            v-model="appStateStore.selectedStitchTool"
+            :options="linestitches"
+            :disabled="paletteIsDisabled"
+          />
+          <ToolSelector
+            v-model="appStateStore.selectedStitchTool"
+            :options="nodestitches"
+            :disabled="paletteIsDisabled"
+          />
+        </div>
+      </template>
+
+      <template #footer>
+        <div class="flex items-center justify-between">
+          <span> {{ $t("palette-title", { size: patternsStore.pattern?.palette.length ?? 0 }) }}</span>
+          <Button
+            v-tooltip="{
+              value: paletteIsBeingEdited ? $t('save-changes') : $t('palette-menu-option-edit-palette'),
+              showDelay: 200,
+            }"
+            text
+            :disabled="paletteIsDisabled"
+            :icon="`pi pi-${paletteIsBeingEdited ? 'check' : 'pencil'}`"
+            size="small"
+            severity="secondary"
+            @click="paletteIsBeingEdited = !paletteIsBeingEdited"
+          />
         </div>
       </template>
     </PaletteList>
-    <ContextMenu ref="palette-context-menu" :model="paletteContextMenuOptions" />
+    <ContextMenu
+      ref="palette-context-menu"
+      :model="paletteIsBeingEdited ? paletteEditingContextMenuOptions : paletteContextMenuOptions"
+    />
 
     <!-- Palette Catalog -->
     <PaletteList
@@ -33,8 +84,9 @@
       :option-value="(pi) => ({ brand: pi.brand, number: pi.number })"
       :display-options="paletteCatalogDisplayOptions"
       multiple
-      empty-message="No palette items found"
       class="min-w-min rounded-none border-0"
+      :style="{ backgroundColor: dt('content.background') }"
+      :list-style="`border-top: 1px solid ${dt('content.border.color')}`"
       @option-dblclick="
         ({ value: palitem }) => {
           if (
@@ -50,7 +102,6 @@
           v-model="selectedPaletteCatalogItem"
           :options="[...paletteCatalog.keys()]"
           :loading="loadingPalette"
-          placeholder="Select a Palette"
           size="small"
           class="w-full"
         />
@@ -73,10 +124,11 @@
 <script setup lang="ts">
   import { join, resolveResource } from "@tauri-apps/api/path";
   import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
-  import { computed, onMounted, ref, useTemplateRef } from "vue";
+  import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
   import { computedAsync } from "@vueuse/core";
   import { useFluent } from "fluent-vue";
-  import { ContextMenu, Select } from "primevue";
+  import { dt } from "@primevue/themes";
+  import { Button, ContextMenu, Select } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { dequal } from "dequal";
   import { Color } from "pixi.js";
@@ -110,34 +162,66 @@
     { icon: HalfStitchIcon, label: () => fluent.$t("half-stitch"), value: PartStitchKind.Half },
     { icon: QuarterStitchIcon, label: () => fluent.$t("quarter-stitch"), value: PartStitchKind.Quarter },
   ]);
-  const lines = ref([
+  const linestitches = ref([
     { icon: BackStitchIcon, label: () => fluent.$t("back-stitch"), value: LineStitchKind.Back },
     { icon: StraightStitchIcon, label: () => fluent.$t("straight-stitch"), value: LineStitchKind.Straight },
   ]);
-  const nodes = ref([
+  const nodestitches = ref([
     { icon: FrenchKnotIcon, label: () => fluent.$t("french-knot"), value: NodeStitchKind.FrenchKnot },
     { icon: BeadIcon, label: () => fluent.$t("bead"), value: NodeStitchKind.Bead },
   ]);
 
+  const paletteIsDisabled = computed(() => !patternsStore.pattern);
+  const paletteIsBeingEdited = ref(false);
   const paletteContextMenu = useTemplateRef("palette-context-menu");
   const paletteContextMenuOptions = computed<MenuItem[]>(() => [
-    { label: "Colors", command: () => (showPaletteCatalog.value = !showPaletteCatalog.value) },
+    {
+      label: fluent.$t("palette-menu-option-edit-palette"),
+      command: ({ originalEvent }) => {
+        paletteIsBeingEdited.value = true;
+        nextTick(() => paletteContextMenu.value!.show(originalEvent));
+      },
+    },
+  ]);
+  const paletteEditingContextMenuOptions = computed<MenuItem[]>(() => [
+    {
+      label: fluent.$t("palette-menu-option-colors"),
+      command: () => (showPaletteCatalog.value = !showPaletteCatalog.value),
+    },
     { separator: true },
     {
-      label: "Delete",
-      disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndices.length,
-      command: () => {
-        // const palindexes = [...appStateStore.selectedPaletteItemIndices].sort();
-        patternsStore.removePaletteItem(appStateStore.selectedPaletteItemIndices);
+      label: fluent.$t("palette-menu-option-delete-selected", {
+        selected: appStateStore.selectedPaletteItemIndexes.length,
+      }),
+      disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndexes.length,
+      command: () => patternsStore.removePaletteItem(appStateStore.selectedPaletteItemIndexes),
+    },
+    { separator: true },
+    {
+      label: fluent.$t("palette-menu-option-select-all"),
+      disabled: !patternsStore.pattern?.palette.length,
+      command: ({ originalEvent }) => {
+        appStateStore.selectedPaletteItemIndexes = patternsStore.pattern!.palette.map((_, i) => i);
+        nextTick(() => paletteContextMenu.value!.show(originalEvent));
       },
     },
     { separator: true },
-    {
-      label: "Select All",
-      disabled: !patternsStore.pattern?.palette.length,
-      command: () => (appStateStore.selectedPaletteItemIndices = patternsStore.pattern!.palette.map((_, i) => i)),
-    },
+    { label: fluent.$t("save-changes"), command: () => (paletteIsBeingEdited.value = false) },
   ]);
+
+  watch(paletteIsBeingEdited, (value) => {
+    patternsStore.blocked = value;
+    if (!value) {
+      handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
+      showPaletteCatalog.value = false;
+    }
+  });
+
+  function handlePaletteItemsSelection(palindexes: number[]) {
+    if (palindexes.length > 1 && !paletteIsBeingEdited.value) {
+      appStateStore.selectedPaletteItemIndexes = palindexes.slice(-1);
+    } else appStateStore.selectedPaletteItemIndexes = palindexes;
+  }
 
   const paletteCatalogDirPath = await resolveResource("resources/palettes");
   const showPaletteCatalog = ref(false);

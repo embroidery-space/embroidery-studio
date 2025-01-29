@@ -149,14 +149,14 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `AnimateOnScroll` |         |       |
 | `Avatar`          |         |       |
 | `Badge`           |         |       |
-| `BlockUI`         |         |       |
+| `BlockUI`         | ✅      |       |
 | `Chip`            |         |       |
 | `FocusTrap`       |         |       |
 | `Fluid`           |         |       |
 | `Inplace`         |         |       |
 | `MeterGroup`      |         |       |
 | `ProgressBar`     |         |       |
-| `ProgressSpinner` |         |       |
+| `ProgressSpinner` | ✅      |       |
 | `ScrollTop`       |         |       |
 | `Skeleton`        |         |       |
 | `Ripple`          |         |       |

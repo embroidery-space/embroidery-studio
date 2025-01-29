@@ -16,6 +16,8 @@ save = Зберегти
 save-as = Зберегти як
 close = Закрити
 
+save-changes = Зберегти зміни
+
 export = Експортувати
 
 cancel = Скасувати

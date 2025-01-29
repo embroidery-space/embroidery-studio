@@ -1,17 +1,15 @@
 <template>
   <ConfirmDialog />
   <DynamicDialog />
-  <BlockUI :blocked="loading" full-screen />
   <div class="flex h-full flex-col">
     <AppHeader />
-    <Splitter :gutter-size="2" class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
+    <Splitter class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
       <SplitterPanel :size="15" pt:root:class="overflow-y-clip overflow-x-visible">
         <Suspense><PalettePanel /></Suspense>
       </SplitterPanel>
 
       <SplitterPanel :size="85">
-        <ProgressSpinner v-if="loading" class="absolute left-1/2 top-1/2" />
-        <Suspense v-if="pattern"><CanvasPanel /></Suspense>
+        <Suspense v-if="patternsStore.pattern"><CanvasPanel /></Suspense>
         <div v-else class="relative flex h-full w-full items-center justify-center">
           <Panel header="No pattern loaded" class="w-3/12 border-0">
             <p class="m-0">Open a pattern or create a new one to get started.</p>
@@ -31,9 +29,7 @@
 
 <script lang="ts" setup>
   import { defineAsyncComponent, onMounted } from "vue";
-  import { storeToRefs } from "pinia";
-  import { BlockUI, Panel, ConfirmDialog, ProgressSpinner, Splitter, SplitterPanel, DynamicDialog } from "primevue";
-
+  import { Panel, ConfirmDialog, Splitter, SplitterPanel, DynamicDialog } from "primevue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
@@ -45,7 +41,6 @@
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
   const patternsStore = usePatternsStore();
-  const { pattern, loading } = storeToRefs(patternsStore);
 
   onMounted(async () => {
     await preferencesStore.setTheme(preferencesStore.theme);

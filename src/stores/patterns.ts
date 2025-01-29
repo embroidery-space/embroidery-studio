@@ -28,6 +28,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
 
   const appStateStore = useAppStateStore();
 
+  const blocked = ref(false);
   const loading = ref(false);
   const pattern = shallowRef<PatternView>();
 
@@ -174,7 +175,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     for (const palindex of palindexes.reverse()) {
       pattern.value.removePaletteItem(palindex);
-      if (appStateStore.selectedPaletteItemIndices.includes(palindex)) appStateStore.selectedPaletteItemIndices = [];
+      if (appStateStore.selectedPaletteItemIndexes.includes(palindex)) appStateStore.selectedPaletteItemIndexes = [];
     }
     triggerRef(pattern);
   });
@@ -222,6 +223,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   });
 
   return {
+    blocked,
     loading,
     pattern,
     loadPattern,

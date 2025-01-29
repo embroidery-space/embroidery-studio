@@ -1,9 +1,15 @@
 <template>
-  <canvas
-    ref="canvas"
-    v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
-    class="size-full"
-  ></canvas>
+  <BlockUI :blocked="patternsStore.loading || patternsStore.blocked" :auto-z-index="false" class="z-0 size-full">
+    <ProgressSpinner
+      v-if="patternsStore.loading"
+      class="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+    />
+    <canvas
+      ref="canvas"
+      v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
+      class="size-full"
+    ></canvas>
+  </BlockUI>
 </template>
 
 <script lang="ts" setup>
@@ -11,6 +17,7 @@
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
+  import { BlockUI, ProgressSpinner } from "primevue";
   import { Point } from "pixi.js";
   import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
@@ -40,7 +47,7 @@
   let prevStitchState: Stitch | undefined;
   patternCanvas.addEventListener(EventType.AddStitch, async (e) => {
     const tool = appStateStore.selectedStitchTool;
-    const palindex = appStateStore.selectedPaletteItemIndices[0];
+    const palindex = appStateStore.selectedPaletteItemIndexes[0];
     if (palindex === undefined) return;
 
     // A start point is needed to draw the lines.

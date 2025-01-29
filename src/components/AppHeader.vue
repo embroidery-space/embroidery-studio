@@ -5,14 +5,7 @@
     </template>
 
     <template v-if="appStateStore.openedPatterns?.length" #center>
-      <PatternSelector
-        @switch="
-          (patternPath) => {
-            patternsStore.openPattern(patternPath);
-            appStateStore.selectedPaletteItemIndices = [];
-          }
-        "
-      />
+      <PatternSelector @switch="(patternPath) => patternsStore.openPattern(patternPath)" />
     </template>
 
     <template #end>

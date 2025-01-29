@@ -16,6 +16,8 @@ save = Save
 save-as = Save As
 close = Close
 
+save-changes = Save Changes
+
 export = Export
 
 cancel = Cancel

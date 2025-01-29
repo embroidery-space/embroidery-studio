@@ -32,6 +32,10 @@ import { contextmenu } from "./contextmenu";
 import { menu } from "./menu";
 import { menubar } from "./menubar";
 
+// Misc components.
+import { blockui } from "./blockui";
+import { progressspinner } from "./progressspinner";
+
 /**
  * A Nord Theme based on the [Nord Palette] and [Aura Theme] with customizations.
  *
@@ -69,5 +73,9 @@ export const NordTheme = definePreset(Aura, {
     contextmenu,
     menu,
     menubar,
+
+    // Misc components.
+    blockui,
+    progressspinner,
   },
 });

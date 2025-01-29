@@ -11,7 +11,7 @@ export const useAppStateStore = defineStore(
   "embroidery-studio-state",
   () => {
     const selectedStitchTool = ref<StitchKind>(FullStitchKind.Full);
-    const selectedPaletteItemIndices = ref<number[]>([]);
+    const selectedPaletteItemIndexes = ref<number[]>([]);
     const openedPatterns = ref<OpenedPattern[]>([]);
     const currentPattern = ref<OpenedPattern | undefined>(undefined);
 
@@ -25,11 +25,13 @@ export const useAppStateStore = defineStore(
     function addOpenedPattern(title: string, key: PatternKey) {
       const openedPattern: OpenedPattern = { title, key };
       if (openedPatterns.value.findIndex((p) => p.key === key) < 0) openedPatterns.value.push(openedPattern);
+      selectedPaletteItemIndexes.value = [];
       currentPattern.value = openedPattern;
     }
 
     function removeCurrentPattern() {
       if (!openedPatterns.value || !currentPattern.value) return;
+      selectedPaletteItemIndexes.value = [];
       const index = openedPatterns.value.findIndex((p) => p.key === currentPattern.value!.key);
       if (index >= 0) openedPatterns.value.splice(index, 1);
       if (openedPatterns.value.length) currentPattern.value = openedPatterns.value[0];
@@ -38,7 +40,7 @@ export const useAppStateStore = defineStore(
 
     return {
       selectedStitchTool,
-      selectedPaletteItemIndices,
+      selectedPaletteItemIndexes,
       openedPatterns,
       currentPattern,
       addOpenedPattern,
