@@ -39,7 +39,7 @@
       </SplitterPanel>
 
       <SplitterPanel :size="85">
-        <ProgressSpinner v-if="loading" class="absolute left-1/2 top-1/2" />
+        <ProgressSpinner v-if="loading" class="absolute top-1/2 left-1/2" />
         <Suspense v-if="pattern"><CanvasPanel /></Suspense>
         <div v-else class="relative flex h-full w-full items-center justify-center">
           <Panel header="No pattern loaded" class="w-3/12 border-0">
