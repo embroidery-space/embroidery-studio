@@ -61,7 +61,7 @@
         gridTemplateColumns: `repeat(${selectedPalette.length ? paletteCatalogDisplayOptions.columnsNumber : 1}, minmax(0px, 1fr))`,
       }"
       pt:option:class="p-0"
-      class="absolute left-full top-0 z-10 w-max"
+      class="absolute top-0 left-full z-10 w-max"
       @option-dblclick="
         ({ value }) => {
           if (!pattern?.palette.find((pi) => pi.brand === value.brand && pi.number === value.number)) {
