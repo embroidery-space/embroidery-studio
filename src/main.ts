@@ -22,8 +22,10 @@ app.use(PrimeVue, {
     preset: NordTheme,
     options: {
       cssLayer: {
-        name: "primevue",
-        order: "tailwind-base, primevue, tailwind-utilities",
+        // The name of the CSS layer where the Primevue styles should be injected.
+        name: "components",
+        // The order of the CSS layers injected by Tailwind CSS.
+        order: "theme, base, components, utilities",
       },
     },
   },

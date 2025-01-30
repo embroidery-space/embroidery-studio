@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex h-full"
-    :class="{ 'border-2 border-primary': paletteIsBeingEdited }"
+    :class="{ 'border-primary border-2': paletteIsBeingEdited }"
     @keydown="
       ({ key }) => {
         if (key === 'Escape') paletteIsBeingEdited = false;

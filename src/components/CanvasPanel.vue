@@ -2,7 +2,7 @@
   <BlockUI :blocked="patternsStore.loading || patternsStore.blocked" :auto-z-index="false" class="z-0 size-full">
     <ProgressSpinner
       v-if="patternsStore.loading"
-      class="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+      class="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
     />
     <canvas
       ref="canvas"

@@ -7,7 +7,6 @@
     "rust-lang.rust-analyzer",
     "tauri-apps.tauri-vscode",
     "bradlc.vscode-tailwindcss",
-    "csstools.postcss",
     "macabeus.vscode-fluent"
   ]
 }
