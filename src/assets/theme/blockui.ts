@@ -1,3 +1,3 @@
 export const blockui = {
-  root: { borderRadius: "0" },
+  root: { borderRadius: "{border.radius.none}" },
 };
