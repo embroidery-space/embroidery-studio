@@ -1,6 +1,4 @@
 <template>
-  <ConfirmDialog />
-  <DynamicDialog />
   <div class="flex h-full flex-col">
     <AppHeader />
     <Splitter class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
@@ -10,33 +8,25 @@
 
       <SplitterPanel :size="85">
         <Suspense v-if="patternsStore.pattern"><CanvasPanel /></Suspense>
-        <div v-else class="relative flex h-full w-full items-center justify-center">
-          <Panel header="No pattern loaded" class="w-3/12 border-0">
-            <p class="m-0">Open a pattern or create a new one to get started.</p>
-          </Panel>
-
-          <!-- Credits -->
-          <div class="absolute bottom-0 w-full">
-            <p class="my-2 text-center text-xs">
-              Developed with love in Ukraine | GNU General Public License v3.0 or later
-            </p>
-          </div>
-        </div>
+        <WelcomePanel v-else class="size-full" />
       </SplitterPanel>
     </Splitter>
   </div>
+  <DynamicDialog />
+  <ConfirmDialog />
 </template>
 
 <script lang="ts" setup>
   import { defineAsyncComponent, onMounted } from "vue";
-  import { Panel, ConfirmDialog, Splitter, SplitterPanel, DynamicDialog } from "primevue";
+  import { ConfirmDialog, Splitter, SplitterPanel, DynamicDialog } from "primevue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
-  import CanvasPanel from "./components/CanvasPanel.vue";
 
   const AppHeader = defineAsyncComponent(() => import("./components/AppHeader.vue"));
+  const WelcomePanel = defineAsyncComponent(() => import("./components/WelcomePanel.vue"));
   const PalettePanel = defineAsyncComponent(() => import("./components/PalettePanel.vue"));
+  const CanvasPanel = defineAsyncComponent(() => import("./components/CanvasPanel.vue"));
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();

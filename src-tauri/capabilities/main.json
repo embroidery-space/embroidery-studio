@@ -11,6 +11,7 @@
     "core:app:allow-set-app-theme",
     "dialog:allow-open",
     "dialog:allow-save",
+    "opener:default",
     {
       "identifier": "fs:allow-read-dir",
       "allow": [{ "path": "$RESOURCE/**/*" }]
