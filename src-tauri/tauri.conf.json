@@ -37,8 +37,8 @@
     "windows": [
       {
         "title": "Embroidery Studio",
-        "minWidth": 1024,
-        "minHeight": 768,
+        "minWidth": 640,
+        "minHeight": 480,
         "maximized": true,
         "decorations": false,
         "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection,ElasticOverscroll"
