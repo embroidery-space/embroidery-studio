@@ -9,3 +9,9 @@
     outline: none;
   }
 }
+
+@layer utilities {
+  .border-primary {
+    border-color: var(--p-primary-color);
+  }
+}
