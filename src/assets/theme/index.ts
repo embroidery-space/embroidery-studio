@@ -1,8 +1,5 @@
-// TODO: remove `definePreset` once we fully customize the theme.
-import { definePreset } from "@primevue/themes";
-import Aura from "@primevue/themes/aura";
-
 // Common options.
+import { primitive } from "./primitive";
 import { semantic } from "./semantic";
 
 // Form components.
@@ -42,9 +39,8 @@ import { progressspinner } from "./progressspinner";
  * [Nord Palette]: https://nordtheme.com/docs/colors-and-palettes
  * [Aura Theme]: https://github.com/primefaces/primevue/tree/master/packages/themes/src/presets/aura
  */
-export const NordTheme = definePreset(Aura, {
-  // Color palettes are omitted because they are not intended to be used.
-  primitive: { borderRadius: { none: "0", xs: "2px", sm: "4px", md: "6px", lg: "8px", xl: "12px" } },
+export const NordTheme = {
+  primitive,
   semantic,
   directives: { tooltip },
   components: {
@@ -78,4 +74,4 @@ export const NordTheme = definePreset(Aura, {
     blockui,
     progressspinner,
   },
-});
+};

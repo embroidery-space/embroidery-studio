@@ -61,7 +61,7 @@
 
   <Fieldset :legend="$t('preferences-other')" toggleable>
     <label class="flex items-center gap-2">
-      <Checkbox v-model="preferencesStore.usePaletteItemColorForStitchTools" binary size="small" />
+      <Checkbox v-model="preferencesStore.usePaletteItemColorForStitchTools" binary />
       <span>{{ $t("preferences-use-palitem-color-for-stitch-tools") }}</span>
     </label>
   </Fieldset>

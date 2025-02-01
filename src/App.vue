@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full flex-col">
     <AppHeader />
-    <Splitter class="grow overflow-y-auto rounded-none border-0">
+    <Splitter class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
       <SplitterPanel :size="15" class="overflow-x-visible overflow-y-clip">
         <Suspense><PalettePanel /></Suspense>
       </SplitterPanel>

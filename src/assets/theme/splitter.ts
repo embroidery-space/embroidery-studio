@@ -5,9 +5,7 @@ export const splitter = {
     color: "{content.color}",
     transitionDuration: "{transition.duration}",
   },
-  gutter: {
-    background: "{content.border.color}",
-  },
+  gutter: { background: "{content.border.color}" },
   handle: {
     size: "24px",
     background: "transparent",

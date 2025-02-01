@@ -13,17 +13,10 @@ export const colorpicker = {
     },
   },
   panel: {
-    shadow: "{overlay.popover.shadow}",
+    background: "{overlay.popover.background}",
+    borderColor: "{overlay.popover.border.color}",
     borderRadius: "{overlay.popover.borderRadius}",
+    shadow: "{overlay.popover.shadow}",
   },
-  colorScheme: {
-    light: {
-      panel: { background: "{surface.800}", borderColor: "{surface.900}" },
-      handle: { color: "{surface.0}" },
-    },
-    dark: {
-      panel: { background: "{surface.900}", borderColor: "{surface.700}" },
-      handle: { color: "{surface.0}" },
-    },
-  },
+  handle: { color: "{text.color}" },
 };

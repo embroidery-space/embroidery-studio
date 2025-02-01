@@ -13,9 +13,7 @@ export const listbox = {
   list: {
     padding: "{list.padding}",
     gap: "{list.gap}",
-    header: {
-      padding: "{list.header.padding}",
-    },
+    header: { padding: "{list.header.padding}" },
   },
   option: {
     focusBackground: "{list.option.focus.background}",
@@ -39,19 +37,9 @@ export const listbox = {
     gutterStart: "-0.375rem",
     gutterEnd: "0.375rem",
   },
-  emptyMessage: {
-    padding: "{list.option.padding}",
-  },
+  emptyMessage: { padding: "{list.option.padding}" },
   colorScheme: {
-    light: {
-      option: {
-        stripedBackground: "{surface.50}",
-      },
-    },
-    dark: {
-      option: {
-        stripedBackground: "{surface.900}",
-      },
-    },
+    light: { option: { stripedBackground: "{surface.50}" } },
+    dark: { option: { stripedBackground: "{surface.900}" } },
   },
 };

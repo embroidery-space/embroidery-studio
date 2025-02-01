@@ -31,10 +31,12 @@ export const checkbox = {
   icon: {
     size: "0.875rem",
     color: "{form.field.color}",
-    checkedColor: "{primary.contrast.color}",
-    checkedHoverColor: "{primary.contrast.color}",
     disabledColor: "{form.field.disabled.color}",
     sm: { size: "0.75rem" },
     lg: { size: "1rem" },
+  },
+  colorScheme: {
+    light: { icon: { checkedColor: "{text.color}", checkedHoverColor: "{text.color}" } },
+    dark: { icon: { checkedColor: "{text.contrast.color}", checkedHoverColor: "{text.contrast.color}" } },
   },
 };
