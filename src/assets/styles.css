@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@layer base {
+  /*
+    Disable the default focus ring.
+    PrimeVue's components will apply their own focus styles.
+  */
+  *:focus-visible {
+    outline: none;
+  }
+}
