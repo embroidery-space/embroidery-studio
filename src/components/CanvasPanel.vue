@@ -1,15 +1,9 @@
 <template>
-  <BlockUI :blocked="patternsStore.loading || patternsStore.blocked" :auto-z-index="false" class="z-0 size-full">
-    <ProgressSpinner
-      v-if="patternsStore.loading"
-      class="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-    />
-    <canvas
-      ref="canvas"
-      v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
-      class="size-full"
-    ></canvas>
-  </BlockUI>
+  <canvas
+    ref="canvas"
+    v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
+    class="size-full"
+  ></canvas>
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +11,6 @@
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
-  import { BlockUI, ProgressSpinner } from "primevue";
   import { Point } from "pixi.js";
   import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";

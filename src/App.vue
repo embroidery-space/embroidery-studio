@@ -7,8 +7,16 @@
       </SplitterPanel>
 
       <SplitterPanel :size="85">
-        <Suspense v-if="patternsStore.pattern"><CanvasPanel /></Suspense>
-        <WelcomePanel v-else class="size-full" />
+        <BlockUI
+          :blocked="patternsStore.loading || patternsStore.blocked"
+          :auto-z-index="false"
+          pt:mask:class="z-0"
+          class="size-full"
+        >
+          <ProgressSpinner class="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
+          <Suspense v-if="patternsStore.pattern"><CanvasPanel /></Suspense>
+          <WelcomePanel v-else class="size-full" />
+        </BlockUI>
       </SplitterPanel>
     </Splitter>
   </div>
@@ -18,7 +26,7 @@
 
 <script lang="ts" setup>
   import { defineAsyncComponent, onMounted } from "vue";
-  import { ConfirmDialog, Splitter, SplitterPanel, DynamicDialog } from "primevue";
+  import { ConfirmDialog, Splitter, SplitterPanel, DynamicDialog, BlockUI, ProgressSpinner } from "primevue";
   import { useAppStateStore } from "./stores/state";
   import { usePreferencesStore } from "./stores/preferences";
   import { usePatternsStore } from "./stores/patterns";
