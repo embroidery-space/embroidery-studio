@@ -5,13 +5,9 @@ A theme based on the [Nord Palette] and [Aura Theme] with customizations.
 [Nord Palette]: https://nordtheme.com/docs/colors-and-palettes
 [Aura Theme]: https://github.com/primefaces/primevue/tree/master/packages/themes/src/presets/aura
 
-> [!IMPORTANT]
-> Currently, the light theme is not supported.
-> It will be added soon.
-
 ## General Notes
 
-- Primitive color palettes are omitted.
+- Default primitive color palettes are omitted.
 
 ## Components
 
