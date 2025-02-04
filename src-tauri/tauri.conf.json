@@ -11,7 +11,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "rpm", "deb"],
+    "targets": ["msi", "nsis", "rpm", "deb"],
     "resources": ["resources/**/*"],
     "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
     "license": "GPL-3.0-or-later",
@@ -23,7 +23,14 @@
       { "ext": ["oxs"], "description": "Open Cross-Stitch Desing (WinStitch/MacStitch)" },
       { "ext": ["embproj"], "description": "Embroidery Project (Embroidery Studio)" }
     ],
-    "windows": { "wix": { "language": ["en-US", "uk-UA"] } }
+    "windows": {
+      "wix": { "language": ["en-US", "uk-UA"] },
+      "nsis": {
+        "displayLanguageSelector": true,
+        "languages": ["English", "Ukrainian"],
+        "installMode": "both"
+      }
+    }
   },
   "app": {
     "security": {
