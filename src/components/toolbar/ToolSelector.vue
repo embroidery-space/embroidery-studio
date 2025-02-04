@@ -18,6 +18,7 @@
     </Button>
 
     <Button
+      ref="dropdown-button"
       text
       :disabled="props.disabled"
       severity="contrast"
@@ -80,25 +81,33 @@
   // Suppress the error by casting to `MaybeRefOrGetter`.
   const menu = useTemplateRef("menu");
   const toolButton = useTemplateRef("tool-button") as MaybeRefOrGetter;
+  const dropdownButton = useTemplateRef("dropdown-button") as MaybeRefOrGetter;
   const container = useTemplateRef("container") as MaybeRefOrGetter;
   const containerElement = computed(() => unrefElement(container));
 
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let hasLongPressed = false;
 
-  useEventListener(toolButton, "pointerdown", (e) => {
+  useEventListener(toolButton, "pointerdown", handlePointerDown);
+  useEventListener(toolButton, "pointerup", handlePointerUp);
+
+  useEventListener(dropdownButton, "pointerdown", handlePointerDown);
+  useEventListener(dropdownButton, "pointerup", handlePointerUp);
+
+  function handlePointerDown(e: PointerEvent) {
     if (props.disabled) return;
     clearLongPress();
     timeout = setTimeout(() => {
       hasLongPressed = true;
       longPressHandler(e, hasLongPressed);
     }, 500);
-  });
-  useEventListener(toolButton, "pointerup", (e) => {
+  }
+
+  function handlePointerUp(e: PointerEvent) {
     if (props.disabled) return;
     longPressHandler(e, hasLongPressed);
     clearLongPress();
-  });
+  }
 
   function clearLongPress() {
     if (timeout) {
