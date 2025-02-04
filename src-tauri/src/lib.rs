@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::sync::RwLock;
 
 use state::HistoryStateInner;
-use tauri::Manager;
+use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 
 pub mod commands;
 pub mod state;
@@ -17,6 +17,29 @@ mod utils;
 pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
   builder
     .setup(|app| {
+      #[allow(unused_mut)]
+      let mut webview_window_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+        .title(app.package_info().name.clone())
+        .min_inner_size(640.0, 480.0)
+        .maximized(true)
+        .decorations(false)
+        .additional_browser_args("--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection,ElasticOverscroll");
+
+      // We are using a custom `debug` feature to enable browser extensions only for development and not in debug builds.
+      #[cfg(all(target_os = "windows", feature = "debug"))]
+      {
+        // Enable and setup browser extensions for development.
+        webview_window_builder = webview_window_builder
+          .browser_extensions_enabled(true)
+          // Load the browser extensions from the `src-tauri/extensions/` directory.
+          .extensions_path(std::env::current_dir()?.join("extensions"));
+      }
+
+      let webview_window = webview_window_builder.build()?;
+
+      #[cfg(debug_assertions)]
+      webview_window.open_devtools();
+
       let app_document_dir = utils::path::app_document_dir(app.handle())?;
       if !cfg!(test) && !app_document_dir.exists() {
         // Create the Embroidery Studio directory in the user's document directory
@@ -30,6 +53,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
           std::fs::copy(pattern.clone(), app_document_dir.join(pattern.file_name().unwrap()))?;
         }
       }
+
       Ok(())
     })
     .manage(RwLock::new(

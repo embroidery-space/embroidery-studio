@@ -40,15 +40,6 @@
         "style-src": "'unsafe-inline' 'self'",
         "script-src": "'unsafe-eval' 'self'"
       }
-    },
-    "windows": [
-      {
-        "title": "Embroidery Studio",
-        "minWidth": 1024,
-        "minHeight": 768,
-        "maximized": true,
-        "decorations": false
-      }
-    ]
+    }
   }
 }
