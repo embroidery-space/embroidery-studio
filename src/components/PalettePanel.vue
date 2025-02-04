@@ -23,6 +23,7 @@
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
       @update:model-value="handlePaletteItemsSelection"
+      @option-dblclick="({ palindex }) => handlePaletteOptionDoubleClick(palindex)"
       @contextmenu="(e: PointerEvent) => paletteContextMenu!.show(e)"
     >
       <template #header>
@@ -87,15 +88,7 @@
       class="min-w-min rounded-none border-0"
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}`"
-      @option-dblclick="
-        ({ value: palitem }) => {
-          if (
-            !patternsStore.pattern?.palette.find((pi) => pi.brand === palitem.brand && pi.number === palitem.number)
-          ) {
-            patternsStore.addPaletteItem(palitem);
-          }
-        }
-      "
+      @option-dblclick="({ palitem }) => handlePaletteCatalogOptionDoubleClick(palitem)"
     >
       <template #header>
         <Select
@@ -221,6 +214,11 @@
     } else appStateStore.selectedPaletteItemIndexes = palindexes;
   }
 
+  async function handlePaletteOptionDoubleClick(palindex: number) {
+    if (!paletteIsBeingEdited.value) return;
+    await patternsStore.removePaletteItem([palindex]);
+  }
+
   const paletteCatalogDirPath = await resolveResource("resources/palettes");
   const showPaletteCatalog = ref(false);
   const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
@@ -250,6 +248,13 @@
     [],
     { lazy: true },
   );
+
+  function handlePaletteCatalogOptionDoubleClick(palitem: PaletteItem) {
+    const alreadyContained = patternsStore.pattern?.palette.find(
+      (pi) => pi.brand === palitem.brand && pi.number === palitem.number,
+    );
+    if (!alreadyContained) patternsStore.addPaletteItem(palitem);
+  }
 
   onMounted(async () => {
     for (const entry of await readDir(paletteCatalogDirPath)) {

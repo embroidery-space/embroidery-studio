@@ -12,7 +12,7 @@
     :pt="listboxPassThrough"
     :dt="{ list: { header: { padding: '0.25rem' } } }"
     @update:model-value="(v) => emit('update:modelValue', v)"
-    @option-dblclick="(e) => emit('option-dblclick', e)"
+    @option-dblclick="handleOptionDoubleClick"
   >
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
@@ -53,7 +53,17 @@
 
   const emit = defineEmits<{
     (event: "update:modelValue", value: V): void;
-    (event: "option-dblclick", data: ListboxOptionDblClickEvent): void;
+    (
+      event: "option-dblclick",
+      data: {
+        /** Original event */
+        originalEvent: Event;
+        /** Triggered palitem */
+        palitem: T;
+        /** Index of the palitem in the options array */
+        palindex: number;
+      },
+    ): void;
   }>();
 
   const listboxPassThrough: PassThrough<ListboxPassThroughOptions> = computed(() => ({
@@ -67,4 +77,9 @@
     },
     option: { class: "p-0" },
   }));
+
+  function handleOptionDoubleClick({ originalEvent, value: palitem }: ListboxOptionDblClickEvent) {
+    const palindex = props.options!.indexOf(palitem) ?? -1;
+    if (palindex !== -1) emit("option-dblclick", { originalEvent, palitem, palindex });
+  }
 </script>
