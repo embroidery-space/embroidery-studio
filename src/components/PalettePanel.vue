@@ -211,10 +211,8 @@
 
   watch(paletteIsBeingEdited, (value) => {
     patternsStore.blocked = value;
-    if (!value) {
-      handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
-      showPaletteCatalog.value = false;
-    }
+    showPaletteCatalog.value = value;
+    if (!value) handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
   });
 
   function handlePaletteItemsSelection(palindexes: number[]) {
