@@ -23,7 +23,6 @@
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
       @update:model-value="handlePaletteItemsSelection"
-      @option-dblclick="({ palindex }) => handlePaletteOptionDoubleClick(palindex)"
       @contextmenu="(e: PointerEvent) => paletteContextMenu!.show(e)"
     >
       <template #header>
@@ -214,11 +213,6 @@
     } else appStateStore.selectedPaletteItemIndexes = palindexes;
   }
 
-  async function handlePaletteOptionDoubleClick(palindex: number) {
-    if (!paletteIsBeingEdited.value) return;
-    await patternsStore.removePaletteItem([palindex]);
-  }
-
   const paletteCatalogDirPath = await resolveResource("resources/palettes");
   const showPaletteCatalog = ref(false);
   const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
@@ -253,7 +247,10 @@
     const alreadyContained = patternsStore.pattern?.palette.find(
       (pi) => pi.brand === palitem.brand && pi.number === palitem.number,
     );
-    if (!alreadyContained) patternsStore.addPaletteItem(palitem);
+    if (alreadyContained) {
+      const palindex = patternsStore.pattern!.palette.indexOf(alreadyContained);
+      patternsStore.removePaletteItem([palindex]);
+    } else patternsStore.addPaletteItem(palitem);
   }
 
   onMounted(async () => {
