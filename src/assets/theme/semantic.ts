@@ -81,10 +81,15 @@ export const semantic = {
         950: "#5c75a3",
       },
       primary: {
-        color: "{primary.600}",
+        color: "{primary.500}",
         contrastColor: "{text.contrast.color}",
-        hoverColor: "{primary.700}",
-        activeColor: "{primary.800}",
+        hoverColor: "{primary.600}",
+        activeColor: "{primary.700}",
+        text: {
+          color: "{primary.700}",
+          hoverColor: "{primary.800}",
+          activeColor: "{primary.900}",
+        },
       },
       danger: {
         color: "{danger.500}",
@@ -138,7 +143,7 @@ export const semantic = {
         placeholderColor: "{surface.600}",
         invalidPlaceholderColor: "{danger.color}",
         floatLabelColor: "{text.muted.color}",
-        floatLabelFocusColor: "{primary.color}",
+        floatLabelFocusColor: "{primary.text.color}",
         floatLabelActiveColor: "{text.hover.muted.color}",
         floatLabelInvalidColor: "{danger.color}",
         iconColor: "{text.color}",
@@ -239,6 +244,11 @@ export const semantic = {
         contrastColor: "{text.contrast.color}",
         hoverColor: "{primary.400}",
         activeColor: "{primary.300}",
+        text: {
+          color: "{primary.color}",
+          hoverColor: "{primary.hover.color}",
+          activeColor: "{primary.active.color}",
+        },
       },
       danger: {
         color: "{danger.500}",
@@ -292,7 +302,7 @@ export const semantic = {
         placeholderColor: "{surface.400}",
         invalidPlaceholderColor: "{danger.color}",
         floatLabelColor: "{text.muted.color}",
-        floatLabelFocusColor: "{primary.color}",
+        floatLabelFocusColor: "{primary.text.color}",
         floatLabelActiveColor: "{text.hover.muted.color}",
         floatLabelInvalidColor: "{danger.color}",
         iconColor: "{text.color}",

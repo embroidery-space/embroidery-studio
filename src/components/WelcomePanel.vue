@@ -46,7 +46,7 @@
               class="info-item"
               @click="handleInfoItemClick(item)"
             >
-              <span class="flex items-center gap-2" :style="{ color: dt('primary.700') }">
+              <span class="flex items-center gap-2" :style="{ color: dt('primary.text.color') }">
                 {{ item.title }}
                 <i v-if="item.url" class="pi pi-external-link"></i>
               </span>

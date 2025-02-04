@@ -26,6 +26,23 @@ export const button = {
     badgeSize: "1rem",
     transitionDuration: "{form.field.transition.duration}",
   },
+  text: {
+    primary: {
+      color: "{primary.text.color}",
+      hoverBackground: "color-mix(in srgb, {primary.text.color}, transparent 92%)",
+      activeBackground: "color-mix(in srgb, {primary.text.color}, transparent 84%)",
+    },
+    secondary: {
+      color: "{text.color}",
+      hoverBackground: "color-mix(in srgb, {text.color}, transparent 92%)",
+      activeBackground: "color-mix(in srgb, {text.color}, transparent 84%)",
+    },
+  },
+  link: {
+    color: "{primary.text.color}",
+    hoverColor: "{primary.text.hover.color}",
+    activeColor: "{primary.text.active.color}",
+  },
   colorScheme: {
     light: {
       root: {
@@ -54,37 +71,6 @@ export const button = {
           focusRing: { color: "{surface.600}", shadow: "none" },
         },
       },
-      outlined: {
-        primary: {
-          color: "{primary.700}",
-          borderColor: "{primary.700}",
-          hoverBackground: "color-mix(in srgb, {primary.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {primary.color}, transparent 84%)",
-        },
-        secondary: {
-          color: "{text.color}",
-          borderColor: "{text.color}",
-          hoverBackground: "color-mix(in srgb, {text.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {text.color}, transparent 84%)",
-        },
-      },
-      text: {
-        primary: {
-          color: "{primary.700}",
-          hoverBackground: "color-mix(in srgb, {primary.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {primary.color}, transparent 84%)",
-        },
-        secondary: {
-          color: "{text.color}",
-          hoverBackground: "color-mix(in srgb, {text.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {text.color}, transparent 84%)",
-        },
-      },
-      link: {
-        color: "{primary.700}",
-        hoverColor: "{primary.800}",
-        activeColor: "{primary.900}",
-      },
     },
     dark: {
       root: {
@@ -112,37 +98,6 @@ export const button = {
           activeColor: "{text.color}",
           focusRing: { color: "{surface.600}", shadow: "none" },
         },
-      },
-      outlined: {
-        primary: {
-          color: "{primary.color}",
-          borderColor: "{primary.color}",
-          hoverBackground: "color-mix(in srgb, {primary.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {primary.color}, transparent 84%)",
-        },
-        secondary: {
-          color: "{text.color}",
-          borderColor: "{text.color}",
-          hoverBackground: "color-mix(in srgb, {text.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {text.color}, transparent 84%)",
-        },
-      },
-      text: {
-        primary: {
-          color: "{primary.color}",
-          hoverBackground: "color-mix(in srgb, {primary.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {primary.color}, transparent 84%)",
-        },
-        secondary: {
-          color: "{text.color}",
-          hoverBackground: "color-mix(in srgb, {text.color}, transparent 92%)",
-          activeBackground: "color-mix(in srgb, {text.color}, transparent 84%)",
-        },
-      },
-      link: {
-        color: "{primary.color}",
-        hoverColor: "{primary.hover.color}",
-        activeColor: "{primary.active.color}",
       },
     },
   },
