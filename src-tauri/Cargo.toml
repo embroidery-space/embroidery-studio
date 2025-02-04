@@ -5,6 +5,7 @@ edition = "2021"
 
 [features]
 test = []
+debug = []
 
 [profile.release]
 opt-level = "s"

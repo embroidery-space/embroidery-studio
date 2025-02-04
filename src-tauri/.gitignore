@@ -1,2 +1,7 @@
+# Tauri build output
 gen/schemas/
 target/
+
+# Browser extenions
+extensions/*
+!extensions/README.md
