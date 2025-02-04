@@ -1,5 +1,5 @@
 <template>
-  <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0">
+  <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0" pt:end:class="h-full">
     <template #start>
       <Menubar :model="menuOptions" class="rounded-none border-0" />
     </template>
