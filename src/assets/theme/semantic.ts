@@ -81,10 +81,10 @@ export const semantic = {
         950: "#5c75a3",
       },
       primary: {
-        color: "{primary.500}",
+        color: "{primary.600}",
         contrastColor: "{text.contrast.color}",
-        hoverColor: "{primary.600}",
-        activeColor: "{primary.700}",
+        hoverColor: "{primary.700}",
+        activeColor: "{primary.800}",
       },
       danger: {
         color: "{danger.500}",
