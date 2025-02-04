@@ -8,6 +8,7 @@ A theme based on the [Nord Palette] and [Aura Theme] with customizations.
 ## General Notes
 
 - Default primitive color palettes are omitted.
+- Only `primary` and `secondary` button styles are used.
 
 ## Components
 
