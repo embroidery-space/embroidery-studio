@@ -35,6 +35,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
           .extensions_path(std::env::current_dir()?.join("extensions"));
       }
 
+      #[allow(unused_variables)]
       let webview_window = webview_window_builder.build()?;
 
       #[cfg(debug_assertions)]
