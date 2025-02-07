@@ -21,14 +21,14 @@
           <div class="max-w-max flex flex-col gap-y-1">
             <Button
               text
-              icon="pi pi-file-plus"
+              icon="i-prime:file-plus"
               :label="$t('label-start-create')"
               pt:root:class="justify-start"
               @click="patternsStore.createPattern"
             />
             <Button
               text
-              icon="pi pi-file-arrow-up"
+              icon="i-prime:file-arrow-up"
               :label="$t('label-start-open')"
               pt:root:class="justify-start"
               @click="patternsStore.loadPattern"
@@ -48,7 +48,7 @@
             >
               <span class="flex items-center gap-2" :style="{ color: dt('primary.text.color') }">
                 {{ item.title }}
-                <i v-if="item.url" class="pi pi-external-link"></i>
+                <i v-if="item.url" class="i-prime:external-link"></i>
               </span>
               <span v-if="item.text">{{ item.text }}</span>
             </div>

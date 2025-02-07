@@ -1,16 +1,8 @@
 <template>
   <div class="grid grid-rows-[auto_1fr]">
-    <div ref="header" class="border-content flex flex-none items-center justify-between border-b px-2 py-1">
+    <div ref="header" class="border-content h-11 flex flex-none items-center justify-between border-b px-2 py-1">
       <span class="text-nowrap">{{ props.title }}</span>
-      <Button
-        text
-        rounded
-        icon="pi pi-times"
-        severity="secondary"
-        size="small"
-        class="size-8.5 flex"
-        @click="emit('close')"
-      />
+      <Button text rounded icon="i-prime:times" severity="secondary" class="size-8 flex" @click="emit('close')" />
     </div>
     <slot></slot>
   </div>

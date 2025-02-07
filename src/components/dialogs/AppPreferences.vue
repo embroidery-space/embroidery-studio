@@ -78,9 +78,9 @@
 
   type ThemeOption = { theme: Theme; icon: string };
   const themeOptions: ThemeOption[] = [
-    { theme: "dark", icon: "pi pi-moon" },
-    { theme: "light", icon: "pi pi-sun" },
-    { theme: "system", icon: "pi pi-desktop" },
+    { theme: "dark", icon: "i-prime:moon" },
+    { theme: "light", icon: "i-prime:sun" },
+    { theme: "system", icon: "i-prime:desktop" },
   ];
   const selectedTheme = computed({
     get: () => themeOptions.find((option) => option.theme === preferencesStore.theme)!,

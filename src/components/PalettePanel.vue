@@ -25,16 +25,16 @@
       @contextmenu="(e: PointerEvent) => paletteContextMenu!.show(e)"
     >
       <template #header>
-        <div v-if="paletteIsBeingEdited" class="flex gap-x-1" @contextmenu.stop.prevent>
+        <div v-if="paletteIsBeingEdited" class="h-9 flex gap-x-1" @contextmenu.stop.prevent>
           <Button
             fluid
             size="small"
-            icon="pi pi-check"
+            icon="i-prime:check"
             :label="$t('label-save-changes')"
             class="text-nowrap"
             @click="paletteIsBeingEdited = false"
           />
-          <Button size="small" icon="pi pi-bars" @click="(e) => PaletteSectionsMenu!.toggle(e)" />
+          <Button size="small" icon="i-prime:bars" @click="(e) => PaletteSectionsMenu!.toggle(e)" />
         </div>
         <div v-else class="flex gap-x-2" @contextmenu.stop.prevent>
           <ToolSelector
@@ -73,7 +73,7 @@
             text
             rounded
             :disabled="paletteIsDisabled"
-            :icon="`pi pi-${paletteIsBeingEdited ? 'check' : 'pencil'}`"
+            :icon="paletteIsBeingEdited ? 'i-prime:check' : 'i-prime:pencil'"
             size="small"
             severity="secondary"
             @click="
@@ -100,7 +100,7 @@
     <PaletteCatalog
       v-if="patternsStore.pattern?.palette && showPaletteCatalog"
       :palette="patternsStore.pattern.palette"
-      class="border-content min-w-3xs border-r"
+      class="border-content min-w-60 border-r"
       @close="showPaletteCatalog = false"
       @add-palette-item="patternsStore.addPaletteItem"
       @remove-palette-item="patternsStore.removePaletteItem"

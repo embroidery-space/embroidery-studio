@@ -1,8 +1,14 @@
 import { readFileSync } from "node:fs";
-import { defineConfig, presetUno } from "unocss";
+import { defineConfig, presetIcons, presetUno } from "unocss";
 
 export default defineConfig({
-  presets: [presetUno({ dark: "media" })],
+  presets: [
+    presetUno({ dark: "media" }),
+    presetIcons({
+      scale: 1.5,
+      unit: "rem",
+    }),
+  ],
   preflights: [
     {
       getCSS: () => readFileSync("node_modules/@unocss/reset/tailwind.css", "utf-8"),
