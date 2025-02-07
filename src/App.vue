@@ -3,7 +3,7 @@
     <AppHeader />
     <Splitter class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
       <SplitterPanel :size="15" class="overflow-x-visible overflow-y-clip">
-        <Suspense><PalettePanel /></Suspense>
+        <PalettePanel />
       </SplitterPanel>
 
       <SplitterPanel :size="85">

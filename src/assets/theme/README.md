@@ -44,7 +44,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Slider`        |         |
 | `Textarea`      |         |
 | `ToggleButton`  |         |
-| `ToggleSwitch`  |         |
+| `ToggleSwitch`  | ✅      |
 | `TreeSelect`    |         |
 
 ### Button

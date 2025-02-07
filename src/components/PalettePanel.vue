@@ -8,26 +8,33 @@
       }
     "
   >
-    <!-- Main Palette -->
     <PaletteList
       :model-value="appStateStore.selectedPaletteItemIndexes"
       :options="patternsStore.pattern?.palette.map((pi) => pi.palitem)"
       :option-value="(pi) => patternsStore.pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
-      :display-options="DEFAULT_PALETTE_DISPLAY_OPTIONS"
+      :display-options="paletteDisplayOptions"
       :disabled="paletteIsDisabled"
       mulitple
-      meta-key-selection
+      :meta-key-selection="paletteIsBeingEdited"
       fluid-options
       class="flex-grow rounded-none border-0"
-      :class="{ 'border-r': showPaletteCatalog }"
+      :class="{ 'border-r': paletteIsBeingEdited }"
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
       @update:model-value="handlePaletteItemsSelection"
       @contextmenu="(e: PointerEvent) => paletteContextMenu!.show(e)"
     >
       <template #header>
-        <div v-if="paletteIsBeingEdited" class="min-w-60">
-          <Button fluid size="small" :label="$t('save-changes')" @click="paletteIsBeingEdited = false" />
+        <div v-if="paletteIsBeingEdited" class="flex gap-x-1" @contextmenu.stop.prevent>
+          <Button
+            fluid
+            size="small"
+            icon="pi pi-check"
+            :label="$t('save-changes')"
+            class="text-nowrap"
+            @click="paletteIsBeingEdited = false"
+          />
+          <Button size="small" icon="pi pi-bars" @click="(e) => PaletteSectionsMenu!.toggle(e)" />
         </div>
         <div v-else class="flex gap-x-2" @contextmenu.stop.prevent>
           <ToolSelector
@@ -54,7 +61,7 @@
       </template>
 
       <template #footer>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between" @contextmenu.stop.prevent>
           <span> {{ $t("palette-title", { size: patternsStore.pattern?.palette.length ?? 0 }) }}</span>
           <Button
             v-tooltip="{
@@ -62,11 +69,22 @@
               showDelay: 200,
             }"
             text
+            rounded
             :disabled="paletteIsDisabled"
             :icon="`pi pi-${paletteIsBeingEdited ? 'check' : 'pencil'}`"
             size="small"
             severity="secondary"
-            @click="paletteIsBeingEdited = !paletteIsBeingEdited"
+            @click="
+              () => {
+                paletteIsBeingEdited = !paletteIsBeingEdited;
+                showPaletteCatalog = true;
+              }
+            "
+            @contextmenu="
+              (e) => {
+                if (!paletteIsBeingEdited) PaletteSectionsMenu!.show(e);
+              }
+            "
           />
         </div>
       </template>
@@ -75,61 +93,37 @@
       ref="palette-context-menu"
       :model="paletteIsBeingEdited ? paletteEditingContextMenuOptions : paletteContextMenuOptions"
     />
+    <Menu ref="palette-panels-menu" popup :model="PaletteSectionsMenuOptions" />
 
-    <!-- Palette Catalog -->
-    <PaletteList
-      v-show="showPaletteCatalog"
-      :model-value="patternsStore.pattern?.palette.map((pi) => ({ brand: pi.brand, number: pi.number }))"
-      :options="selectedPalette"
-      :option-value="(pi) => ({ brand: pi.brand, number: pi.number })"
-      :display-options="paletteCatalogDisplayOptions"
-      multiple
-      class="min-w-min rounded-none border-0"
-      :style="{ backgroundColor: dt('content.background') }"
-      :list-style="`border-top: 1px solid ${dt('content.border.color')}`"
-      @option-dblclick="({ palitem }) => handlePaletteCatalogOptionDoubleClick(palitem)"
-    >
-      <template #header>
-        <Select
-          v-model="selectedPaletteCatalogItem"
-          :options="[...paletteCatalog.keys()]"
-          :loading="loadingPalette"
-          size="small"
-          class="w-full"
-        />
-      </template>
+    <PaletteCatalog
+      v-if="patternsStore.pattern?.palette && showPaletteCatalog"
+      :palette="patternsStore.pattern.palette"
+      class="border-content min-w-3xs border-r"
+      @close="showPaletteCatalog = false"
+      @add-palette-item="patternsStore.addPaletteItem"
+      @remove-palette-item="patternsStore.removePaletteItem"
+    />
 
-      <template #option="{ option, displayOptions }">
-        <PaletteItemComponent
-          :palette-item="option"
-          :selected="
-            patternsStore.pattern?.palette.find((pi) => pi.brand === option.brand && pi.number === option.number) !==
-            undefined
-          "
-          :display-options="displayOptions"
-        />
-      </template>
-    </PaletteList>
+    <PaletteDisplayOptions
+      v-if="showPaletteDisplayOptions"
+      v-model:options="paletteDisplayOptions"
+      @close="showPaletteDisplayOptions = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { join, resolveResource } from "@tauri-apps/api/path";
-  import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
-  import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
-  import { computedAsync } from "@vueuse/core";
+  import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch } from "vue";
   import { useFluent } from "fluent-vue";
   import { dt } from "@primevue/themes";
-  import { Button, ContextMenu, Select } from "primevue";
+  import { Button, ContextMenu, Menu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { dequal } from "dequal";
-  import { Color } from "pixi.js";
   import { usePatternsStore } from "#/stores/patterns";
   import { useAppStateStore } from "#/stores/state";
-  import { FullStitchKind, LineStitchKind, NodeStitchKind, PaletteItem, PartStitchKind } from "#/schemas/pattern";
-  import { DEFAULT_PALETTE_DISPLAY_OPTIONS, type PaletteDisplayOptions } from "#/utils/paletteItem";
+  import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "#/schemas/pattern";
+  import { DEFAULT_PALETTE_DISPLAY_OPTIONS } from "#/utils/paletteItem";
   import PaletteList from "./palette/PaletteList.vue";
-  import PaletteItemComponent from "./palette/PaletteItem.vue";
   import ToolSelector from "./toolbar/ToolSelector.vue";
 
   import FullStitchIcon from "#/assets/icons/stitches/full-stitch.svg?raw";
@@ -140,6 +134,9 @@
   import StraightStitchIcon from "#/assets/icons/stitches/straight-stitch.svg?raw";
   import FrenchKnotIcon from "#/assets/icons/stitches/french-knot.svg?raw";
   import BeadIcon from "#/assets/icons/stitches/bead.svg?raw";
+
+  const PaletteCatalog = defineAsyncComponent(() => import("./palette/PaletteCatalog.vue"));
+  const PaletteDisplayOptions = defineAsyncComponent(() => import("./palette/PaletteDisplayOptions.vue"));
 
   const appStateStore = useAppStateStore();
   const patternsStore = usePatternsStore();
@@ -165,6 +162,30 @@
 
   const paletteIsDisabled = computed(() => !patternsStore.pattern);
   const paletteIsBeingEdited = ref(false);
+
+  const showPaletteCatalog = ref(false);
+  const showPaletteDisplayOptions = ref(false);
+
+  const paletteDisplayOptions = ref({ ...DEFAULT_PALETTE_DISPLAY_OPTIONS });
+
+  const PaletteSectionsMenu = useTemplateRef("palette-panels-menu");
+  const PaletteSectionsMenuOptions = computed<MenuItem[]>(() => [
+    {
+      label: fluent.$t("palette-menu-option-colors"),
+      command: () => {
+        paletteIsBeingEdited.value = true;
+        showPaletteCatalog.value = !showPaletteCatalog.value;
+      },
+    },
+    {
+      label: fluent.$t("palette-menu-option-display-options"),
+      command: () => {
+        paletteIsBeingEdited.value = true;
+        showPaletteDisplayOptions.value = !showPaletteDisplayOptions.value;
+      },
+    },
+  ]);
+
   const paletteContextMenu = useTemplateRef("palette-context-menu");
   const paletteContextMenuOptions = computed<MenuItem[]>(() => [
     {
@@ -176,17 +197,14 @@
     },
   ]);
   const paletteEditingContextMenuOptions = computed<MenuItem[]>(() => [
-    {
-      label: fluent.$t("palette-menu-option-colors"),
-      command: () => (showPaletteCatalog.value = !showPaletteCatalog.value),
-    },
+    ...PaletteSectionsMenuOptions.value,
     { separator: true },
     {
       label: fluent.$t("palette-menu-option-delete-selected", {
         selected: appStateStore.selectedPaletteItemIndexes.length,
       }),
       disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndexes.length,
-      command: () => patternsStore.removePaletteItem(appStateStore.selectedPaletteItemIndexes),
+      command: () => patternsStore.removePaletteItem(...appStateStore.selectedPaletteItemIndexes),
     },
     { separator: true },
     {
@@ -203,8 +221,11 @@
 
   watch(paletteIsBeingEdited, (value) => {
     patternsStore.blocked = value;
-    showPaletteCatalog.value = value;
-    if (!value) handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
+    if (!value) {
+      showPaletteCatalog.value = false;
+      showPaletteDisplayOptions.value = false;
+      handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
+    }
   });
 
   function handlePaletteItemsSelection(palindexes: number[]) {
@@ -212,54 +233,4 @@
       appStateStore.selectedPaletteItemIndexes = palindexes.slice(-1);
     } else appStateStore.selectedPaletteItemIndexes = palindexes;
   }
-
-  const paletteCatalogDirPath = await resolveResource("resources/palettes");
-  const showPaletteCatalog = ref(false);
-  const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
-  const selectedPaletteCatalogItem = ref("DMC");
-  const paletteCatalogDisplayOptions: PaletteDisplayOptions = {
-    colorOnly: false,
-    showBrand: false,
-    showNumber: true,
-    showName: false,
-    columnsNumber: 4,
-  };
-
-  const loadingPalette = ref(false);
-  const selectedPalette = computedAsync<PaletteItem[]>(
-    async () => {
-      loadingPalette.value = true;
-      const brand = selectedPaletteCatalogItem.value;
-      let palette = paletteCatalog.value.get(brand);
-      if (palette === undefined) {
-        const content = await readTextFile(await join(paletteCatalogDirPath, `${brand}.json`));
-        palette = JSON.parse(content).map((pi: PaletteItem) => new PaletteItem({ ...pi, color: new Color(pi.color) }));
-        paletteCatalog.value.set(brand, palette);
-      }
-      loadingPalette.value = false;
-      return palette as PaletteItem[];
-    },
-    [],
-    { lazy: true },
-  );
-
-  function handlePaletteCatalogOptionDoubleClick(palitem: PaletteItem) {
-    const alreadyContained = patternsStore.pattern?.palette.find(
-      (pi) => pi.brand === palitem.brand && pi.number === palitem.number,
-    );
-    if (alreadyContained) {
-      const palindex = patternsStore.pattern!.palette.indexOf(alreadyContained);
-      patternsStore.removePaletteItem([palindex]);
-    } else patternsStore.addPaletteItem(palitem);
-  }
-
-  onMounted(async () => {
-    for (const entry of await readDir(paletteCatalogDirPath)) {
-      if (entry.isFile) {
-        // The file name is the brand name.
-        const brand = entry.name.split(".")[0]!;
-        paletteCatalog.value.set(brand, undefined);
-      }
-    }
-  });
 </script>

@@ -167,7 +167,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     triggerRef(pattern);
   });
 
-  async function removePaletteItem(paletteItemIndexes: number[]) {
+  async function removePaletteItem(...paletteItemIndexes: number[]) {
     if (!pattern.value) return;
     await PaletteApi.removePaletteItems(pattern.value.key, paletteItemIndexes);
   }

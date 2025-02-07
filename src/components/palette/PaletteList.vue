@@ -67,12 +67,12 @@
   }>();
 
   const listboxPassThrough: PassThrough<ListboxPassThroughOptions> = computed(() => ({
-    root: { class: "flex flex-col" },
+    root: { class: "flex flex-col overflow-auto" },
     listContainer: { class: "grow" },
     list: {
-      class: "grid gap-1 overflow-x-hidden",
+      class: "grid gap-1",
       style: {
-        gridTemplateColumns: `repeat(${props.options?.length ? props.displayOptions.columnsNumber : 1}, ${props.fluidOptions ? "minmax(0px, 1fr)" : "min-content"})`,
+        gridTemplateColumns: `repeat(${props.options?.length ? props.displayOptions.columnsNumber : 1}, 1fr)`,
       },
     },
     option: { class: "p-0" },

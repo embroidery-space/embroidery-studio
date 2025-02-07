@@ -11,6 +11,7 @@ import { inputtext } from "./inputtext";
 import { listbox } from "./listbox";
 import { radiobutton } from "./radiobutton";
 import { select } from "./select";
+import { toggleswitch } from "./toggleswitch";
 
 // Button components.
 import { button } from "./button";
@@ -53,6 +54,7 @@ export const NordTheme = {
     listbox,
     radiobutton,
     select,
+    toggleswitch,
 
     // Button components.
     button,
