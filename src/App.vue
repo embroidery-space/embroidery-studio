@@ -1,7 +1,7 @@
 <template>
-  <div class="flex h-full flex-col">
+  <div class="h-full flex flex-col">
     <AppHeader />
-    <Splitter class="grow overflow-y-auto rounded-none border-0" pt:gutter:class="z-auto">
+    <Splitter class="grow overflow-y-auto border-0 rounded-none" pt:gutter:class="z-auto">
       <SplitterPanel :size="15" class="overflow-x-visible overflow-y-clip">
         <PalettePanel />
       </SplitterPanel>
@@ -13,7 +13,10 @@
           pt:mask:class="z-0"
           class="size-full"
         >
-          <ProgressSpinner class="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
+          <ProgressSpinner
+            v-if="patternsStore.loading"
+            class="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+          />
           <Suspense v-if="patternsStore.pattern"><CanvasPanel /></Suspense>
           <WelcomePanel v-else class="size-full" />
         </BlockUI>

@@ -2,10 +2,10 @@
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import tailwindcss from "@tailwindcss/vite";
+import UnoCSS from "unocss/vite";
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue(), UnoCSS()],
   clearScreen: false,
   resolve: { alias: { "#": fileURLToPath(new URL("./src", import.meta.url)) } },
   envPrefix: ["VITE_", "TAURI_ENV_*"],

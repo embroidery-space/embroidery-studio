@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full items-center justify-end gap-2">
+  <div class="w-full flex items-center justify-end gap-2">
     <Button severity="secondary" size="small" :label="$t('label-cancel')" @click="() => dialogRef.close()" />
     <Button severity="primary" size="small" :label="$t('label-save')" @click="() => props.save()" />
   </div>

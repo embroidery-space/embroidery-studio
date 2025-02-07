@@ -1,5 +1,4 @@
 {
   "printWidth": 120,
-  "vueIndentScriptAndStyle": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "vueIndentScriptAndStyle": true
 }

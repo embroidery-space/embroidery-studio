@@ -6,7 +6,7 @@
       :option-value="(pi) => ({ brand: pi.brand, number: pi.number })"
       :display-options="PALETTE_CATALOG_DISPLAY_OPTIONS"
       multiple
-      class="w-full rounded-none border-0"
+      class="w-full border-0 rounded-none"
       :style="{ backgroundColor: dt('content.background') }"
       @option-dblclick="({ palitem }) => handlePaletteCatalogOptionDoubleClick(palitem)"
     >

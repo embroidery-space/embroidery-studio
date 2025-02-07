@@ -3,12 +3,12 @@
     <div ref="header" class="border-content flex flex-none items-center justify-between border-b px-2 py-1">
       <span class="text-nowrap">{{ props.title }}</span>
       <Button
-        rounded
         text
+        rounded
         icon="pi pi-times"
         severity="secondary"
         size="small"
-        class="flex size-8.5"
+        class="size-8.5 flex"
         @click="emit('close')"
       />
     </div>

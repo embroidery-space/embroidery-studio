@@ -1,30 +1,30 @@
 <!-- eslint-disable vue/no-v-html -->
 
 <template>
-  <div class="flex h-full items-center justify-center">
+  <div class="h-full flex items-center justify-center">
     <button
-      class="inline-flex h-full items-center justify-center text-black hover:cursor-pointer hover:bg-black/[.06] focus-visible:bg-black/[.06] active:bg-black/[.12] dark:text-white dark:hover:bg-white/[.06] dark:active:bg-white/[.12]"
+      class="h-full inline-flex items-center justify-center text-black hover:cursor-pointer active:bg-black/[.12] focus-visible:bg-black/[.06] hover:bg-black/[.06] dark:text-white dark:active:bg-white/[.12] dark:hover:bg-white/[.06]"
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.minimize()"
     >
-      <span class="inline-flex size-3 items-center justify-center" v-html="WindowMinimizeIcon"></span>
+      <span class="size-3 inline-flex items-center justify-center" v-html="WindowMinimizeIcon"></span>
     </button>
 
     <button
-      class="inline-flex h-full items-center justify-center text-black hover:cursor-pointer hover:bg-black/[.06] focus-visible:bg-black/[.06] active:bg-black/[.12] dark:text-white dark:hover:bg-white/[.06] dark:active:bg-white/[.12]"
+      class="h-full inline-flex items-center justify-center text-black hover:cursor-pointer active:bg-black/[.12] focus-visible:bg-black/[.06] hover:bg-black/[.06] dark:text-white dark:active:bg-white/[.12] dark:hover:bg-white/[.06]"
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.toggleMaximize()"
     >
-      <span v-if="isMaximized" class="inline-flex size-3 items-center justify-center" v-html="WindowRestoreIcon"></span>
-      <span v-else class="inline-flex size-3 items-center justify-center" v-html="WindowMaximizeIcon"></span>
+      <span v-if="isMaximized" class="size-3 inline-flex items-center justify-center" v-html="WindowRestoreIcon"></span>
+      <span v-else class="size-3 inline-flex items-center justify-center" v-html="WindowMaximizeIcon"></span>
     </button>
 
     <button
-      class="inline-flex h-full w-8 items-center justify-center text-black hover:cursor-pointer hover:bg-red-600 hover:text-white focus-visible:bg-red-600 focus-visible:text-white active:bg-red-700 dark:text-white"
+      class="h-full w-8 inline-flex items-center justify-center text-black hover:cursor-pointer active:bg-red-700 focus-visible:bg-red-600 hover:bg-red-600 dark:text-white focus-visible:text-white hover:text-white"
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.close()"
     >
-      <span class="inline-flex size-3 items-center justify-center" v-html="WindowCloseIcon"></span>
+      <span class="size-3 inline-flex items-center justify-center" v-html="WindowCloseIcon"></span>
     </button>
   </div>
 </template>

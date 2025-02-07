@@ -1,7 +1,7 @@
 <template>
-  <Toolbar data-tauri-drag-region class="rounded-none border-0 border-b p-0" pt:end:class="h-full">
+  <Toolbar data-tauri-drag-region class="border-0 border-b rounded-none p-0" pt:end:class="h-full">
     <template #start>
-      <Menubar :model="menuOptions" class="rounded-none border-0" />
+      <Menubar :model="menuOptions" class="border-0 rounded-none" />
     </template>
 
     <template v-if="appStateStore.openedPatterns?.length" #center>

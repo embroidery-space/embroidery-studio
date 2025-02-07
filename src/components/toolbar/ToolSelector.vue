@@ -22,10 +22,10 @@
       text
       :disabled="props.disabled"
       severity="contrast"
-      class="absolute right-0 bottom-0 z-auto rounded-sm border-none p-0"
+      class="absolute bottom-0 right-0 z-auto rounded-sm border-none p-0"
       @click="toggleMenu"
     >
-      <i class="pi pi-angle-down translate-x-0.5 translate-y-0.5 -rotate-45 text-xs"></i>
+      <i class="pi pi-angle-down translate-x-0.5 translate-y-0.5 text-xs -rotate-45"></i>
     </Button>
   </div>
 

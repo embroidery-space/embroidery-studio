@@ -4,8 +4,10 @@ import piniaPluginPersistedState from "pinia-plugin-persistedstate";
 import { PrimeVue } from "@primevue/core";
 import { Tooltip, ConfirmationService, DialogService } from "primevue";
 
+import "uno.css";
 import "primeicons/primeicons.css";
-import "./assets/styles.css";
+
+import "#/assets/styles.css";
 import { NordTheme } from "./assets/theme";
 
 import { fluent } from "./fluent";
@@ -25,7 +27,7 @@ app.use(PrimeVue, {
         // The name of the CSS layer where the Primevue styles should be injected.
         name: "components",
         // The order of the CSS layers injected by Tailwind CSS.
-        order: "theme, base, components, utilities",
+        order: "base, shortcuts, components, utilities",
       },
     },
   },

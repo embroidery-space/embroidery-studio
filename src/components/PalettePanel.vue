@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex h-full"
+    class="h-full flex"
     :class="{ 'border-primary border-2': paletteIsBeingEdited }"
     @keydown="
       ({ key }) => {
@@ -14,10 +14,10 @@
       :option-value="(pi) => patternsStore.pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
       :display-options="paletteDisplayOptions"
       :disabled="paletteIsDisabled"
-      mulitple
       :meta-key-selection="paletteIsBeingEdited"
       fluid-options
-      class="flex-grow rounded-none border-0"
+      mulitple
+      class="flex-grow border-0 rounded-none"
       :class="{ 'border-r': paletteIsBeingEdited }"
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
