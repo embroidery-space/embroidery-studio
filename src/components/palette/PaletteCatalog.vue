@@ -1,5 +1,5 @@
 <template>
-  <PaletteSection :title="$t('palette-menu-option-colors')" @close="emit('close')">
+  <PaletteSection :title="$t('label-palette-colors')" @close="emit('close')">
     <PaletteList
       :model-value="props.palette.map((pi) => ({ brand: pi.brand, number: pi.number }))"
       :options="selectedPalette"

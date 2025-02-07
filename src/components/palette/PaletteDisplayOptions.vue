@@ -1,5 +1,5 @@
 <template>
-  <PaletteSection :title="$t('palette-menu-option-display-options')" @close="emit('close')">
+  <PaletteSection :title="$t('label-palette-display-options')" @close="emit('close')">
     <div class="flex flex-col gap-y-2 p-2 pt-6">
       <FloatLabel variant="over">
         <InputNumber
@@ -11,7 +11,7 @@
           :max="8"
           @update:model-value="(value) => updateOptions('columnsNumber', value)"
         />
-        <label for="columns-number">{{ $t("display-options-columns-number") }}</label>
+        <label for="columns-number">{{ $t("label-display-options-columns-number") }}</label>
       </FloatLabel>
 
       <label class="flex items-center gap-x-2">
@@ -19,7 +19,7 @@
           :model-value="props.options.colorOnly"
           @update:model-value="(value) => updateOptions('colorOnly', value)"
         />
-        <span>{{ $t("display-options-color-only") }}</span>
+        <span>{{ $t("label-display-options-color-only") }}</span>
       </label>
 
       <div class="flex flex-col gap-y-1">
@@ -30,7 +30,7 @@
             binary
             @update:model-value="(value) => updateOptions('showBrand', value)"
           />
-          <span>{{ $t("display-options-show-brand") }}</span>
+          <span>{{ $t("label-display-options-show-brand") }}</span>
         </label>
 
         <label class="flex items-start gap-x-2">
@@ -40,7 +40,7 @@
             binary
             @update:model-value="(value) => updateOptions('showNumber', value)"
           />
-          <span>{{ $t("display-options-show-number") }}</span>
+          <span>{{ $t("label-display-options-show-number") }}</span>
         </label>
 
         <label class="flex items-start gap-x-2">
@@ -50,7 +50,7 @@
             binary
             @update:model-value="(value) => updateOptions('showName', value)"
           />
-          <span>{{ $t("display-options-show-name") }}</span>
+          <span>{{ $t("label-display-options-show-name") }}</span>
         </label>
       </div>
     </div>

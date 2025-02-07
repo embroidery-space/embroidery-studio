@@ -1,11 +1,9 @@
-import { resolveResource, sep } from "@tauri-apps/api/path";
 import { setTheme as setAppTheme } from "@tauri-apps/api/app";
-import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
 import { defineAsyncComponent, reactive, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { useFluent } from "fluent-vue";
 import { useDialog } from "primevue";
-import { FluentBundle, FluentResource } from "@fluent/bundle";
+import { LOCALES } from "#/fluent";
 
 export type Theme = "light" | "dark" | "system";
 export type Language = "en" | "uk";
@@ -40,18 +38,8 @@ export const usePreferencesStore = defineStore(
     const language = ref<Language>("en");
     watch(
       language,
-      async (code) => {
-        const bundle = new FluentBundle(code);
-
-        const localesDirPath = await resolveResource(`resources/locales/${code}`);
-        for (const entry of await readDir(localesDirPath)) {
-          if (entry.isFile && entry.name.endsWith(".ftl")) {
-            const resourceFilePath = [localesDirPath, entry.name].join(sep());
-            const content = await readTextFile(resourceFilePath);
-            bundle.addResource(new FluentResource(content));
-          }
-        }
-
+      (code) => {
+        const bundle = LOCALES[code];
         fluent.bundles.value = [bundle];
       },
       { immediate: true },
@@ -73,7 +61,7 @@ export const usePreferencesStore = defineStore(
     function openPreferences() {
       dialog.open(AppPreferences, {
         props: {
-          header: fluent.$t("preferences-title"),
+          header: fluent.$t("title-preferences"),
           modal: true,
           dismissableMask: true,
         },

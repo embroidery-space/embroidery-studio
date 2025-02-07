@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2">
-    <Fieldset :legend="$t('fabric-properties-count-and-kind')" pt:content:class="flex flex-col gap-6 pt-3">
+    <Fieldset :legend="$t('label-count-and-kind')" pt:content:class="flex flex-col gap-6 pt-3">
       <FloatLabel variant="over">
         <Select
           id="count"
@@ -9,7 +9,7 @@
           :options="fabricCounts"
           @value-change="(value) => (fabric.spi[1] = value)"
         />
-        <label for="count">{{ $t("fabric-properties-count") }}</label>
+        <label for="count">{{ $t("label-count") }}</label>
       </FloatLabel>
 
       <FloatLabel variant="over">
@@ -21,11 +21,11 @@
           option-value="value"
           :options="fabricKinds"
         />
-        <label for="kind">{{ $t("fabric-properties-kind") }}</label>
+        <label for="kind">{{ $t("label-kind") }}</label>
       </FloatLabel>
     </Fieldset>
 
-    <Fieldset :legend="$t('size')">
+    <Fieldset :legend="$t('label-size')">
       <div class="flex gap-4 py-3">
         <div class="flex flex-col gap-6">
           <FloatLabel variant="over">
@@ -36,7 +36,7 @@
               :min="0.1"
               :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
             />
-            <label for="size-width">{{ $t("width") }}</label>
+            <label for="size-width">{{ $t("label-width") }}</label>
           </FloatLabel>
 
           <FloatLabel variant="over">
@@ -47,31 +47,31 @@
               :min="0.1"
               :step="fabricSizeMeasurement === 'inches' ? 0.1 : 1"
             />
-            <label for="size-height">{{ $t("height") }}</label>
+            <label for="size-height">{{ $t("label-height") }}</label>
           </FloatLabel>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="stitches" />
-            {{ $t("measurement-stitches") }}
+            {{ $t("label-unit-stitches") }}
           </label>
 
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="inches" />
-            {{ $t("measurement-inches") }}
+            {{ $t("label-unit-inches") }}
           </label>
 
           <label class="flex items-center gap-2">
             <RadioButton v-model="fabricSizeMeasurement" value="mm" />
-            {{ $t("measurement-mm") }}
+            {{ $t("label-unit-mm") }}
           </label>
         </div>
       </div>
 
       <p>
         {{
-          $t("fabric-properties-total-size", {
+          $t("message-total-size", {
             width: fabricSizeFinal.width,
             height: fabricSizeFinal.height,
             widthInches: stitches2inches(fabricSizeFinal.width, fabric.spi[0]),
@@ -83,7 +83,7 @@
       </p>
     </Fieldset>
 
-    <Fieldset :legend="$t('color')" class="row-start-1 row-end-3">
+    <Fieldset :legend="$t('label-color')" class="row-start-1 row-end-3">
       <PaletteList
         :model-value="{ name: fabric.name, color: fabric.color.toHex().substring(1).toUpperCase() }"
         :options="fabricColors"
@@ -96,7 +96,7 @@
           }
         "
       />
-      <p class="mt-2">{{ $t("fabric-properties-selected-color", { color: fabric.name }) }}</p>
+      <p class="mt-2">{{ $t("message-selected-color", { color: fabric.name }) }}</p>
     </Fieldset>
   </div>
 
@@ -186,9 +186,9 @@
   });
 
   const fabricKinds = ref([
-    { label: fluent.$t("fabric-properties-kind-aida"), value: "Aida" },
-    { label: fluent.$t("fabric-properties-kind-evenweave"), value: "Evenweave" },
-    { label: fluent.$t("fabric-properties-kind-linen"), value: "Linen" },
+    { label: fluent.$t("label-kind-aida"), value: "Aida" },
+    { label: fluent.$t("label-kind-evenweave"), value: "Evenweave" },
+    { label: fluent.$t("label-kind-linen"), value: "Linen" },
   ]);
   const fabricColors = ref<{ name: string; color: string }[]>([]);
   const fabricColorsDisplayOptions: PaletteDisplayOptions = {

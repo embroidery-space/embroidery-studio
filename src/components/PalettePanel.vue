@@ -30,7 +30,7 @@
             fluid
             size="small"
             icon="pi pi-check"
-            :label="$t('save-changes')"
+            :label="$t('label-save-changes')"
             class="text-nowrap"
             @click="paletteIsBeingEdited = false"
           />
@@ -62,10 +62,12 @@
 
       <template #footer>
         <div class="flex items-center justify-between" @contextmenu.stop.prevent>
-          <span> {{ $t("palette-title", { size: patternsStore.pattern?.palette.length ?? 0 }) }}</span>
+          <span class="text-nowrap">{{
+            $t("label-palette-size", { size: patternsStore.pattern?.palette.length ?? 0 })
+          }}</span>
           <Button
             v-tooltip="{
-              value: paletteIsBeingEdited ? $t('save-changes') : $t('palette-menu-option-edit-palette'),
+              value: paletteIsBeingEdited ? $t('label-save-changes') : $t('label-palette-edit'),
               showDelay: 200,
             }"
             text
@@ -144,20 +146,20 @@
   const fluent = useFluent();
 
   const fullstitches = ref([
-    { icon: FullStitchIcon, label: () => fluent.$t("full-stitch"), value: FullStitchKind.Full },
-    { icon: PetiteStitchIcon, label: () => fluent.$t("petite-stitch"), value: FullStitchKind.Petite },
+    { icon: FullStitchIcon, label: () => fluent.$t("label-stitch-full"), value: FullStitchKind.Full },
+    { icon: PetiteStitchIcon, label: () => fluent.$t("label-stitch-petite"), value: FullStitchKind.Petite },
   ]);
   const partstitches = ref([
-    { icon: HalfStitchIcon, label: () => fluent.$t("half-stitch"), value: PartStitchKind.Half },
-    { icon: QuarterStitchIcon, label: () => fluent.$t("quarter-stitch"), value: PartStitchKind.Quarter },
+    { icon: HalfStitchIcon, label: () => fluent.$t("label-stitch-half"), value: PartStitchKind.Half },
+    { icon: QuarterStitchIcon, label: () => fluent.$t("label-stitch-quarter"), value: PartStitchKind.Quarter },
   ]);
   const linestitches = ref([
-    { icon: BackStitchIcon, label: () => fluent.$t("back-stitch"), value: LineStitchKind.Back },
-    { icon: StraightStitchIcon, label: () => fluent.$t("straight-stitch"), value: LineStitchKind.Straight },
+    { icon: BackStitchIcon, label: () => fluent.$t("label-stitch-back"), value: LineStitchKind.Back },
+    { icon: StraightStitchIcon, label: () => fluent.$t("label-stitch-straight"), value: LineStitchKind.Straight },
   ]);
   const nodestitches = ref([
-    { icon: FrenchKnotIcon, label: () => fluent.$t("french-knot"), value: NodeStitchKind.FrenchKnot },
-    { icon: BeadIcon, label: () => fluent.$t("bead"), value: NodeStitchKind.Bead },
+    { icon: FrenchKnotIcon, label: () => fluent.$t("label-stitch-french-knot"), value: NodeStitchKind.FrenchKnot },
+    { icon: BeadIcon, label: () => fluent.$t("label-stitch-bead"), value: NodeStitchKind.Bead },
   ]);
 
   const paletteIsDisabled = computed(() => !patternsStore.pattern);
@@ -171,14 +173,14 @@
   const PaletteSectionsMenu = useTemplateRef("palette-panels-menu");
   const PaletteSectionsMenuOptions = computed<MenuItem[]>(() => [
     {
-      label: fluent.$t("palette-menu-option-colors"),
+      label: fluent.$t("label-palette-colors"),
       command: () => {
         paletteIsBeingEdited.value = true;
         showPaletteCatalog.value = !showPaletteCatalog.value;
       },
     },
     {
-      label: fluent.$t("palette-menu-option-display-options"),
+      label: fluent.$t("label-palette-display-options"),
       command: () => {
         paletteIsBeingEdited.value = true;
         showPaletteDisplayOptions.value = !showPaletteDisplayOptions.value;
@@ -189,7 +191,7 @@
   const paletteContextMenu = useTemplateRef("palette-context-menu");
   const paletteContextMenuOptions = computed<MenuItem[]>(() => [
     {
-      label: fluent.$t("palette-menu-option-edit-palette"),
+      label: fluent.$t("label-palette-edit"),
       command: ({ originalEvent }) => {
         paletteIsBeingEdited.value = true;
         nextTick(() => paletteContextMenu.value!.show(originalEvent));
@@ -200,7 +202,7 @@
     ...PaletteSectionsMenuOptions.value,
     { separator: true },
     {
-      label: fluent.$t("palette-menu-option-delete-selected", {
+      label: fluent.$t("label-palette-delete-selected", {
         selected: appStateStore.selectedPaletteItemIndexes.length,
       }),
       disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndexes.length,
@@ -208,7 +210,7 @@
     },
     { separator: true },
     {
-      label: fluent.$t("palette-menu-option-select-all"),
+      label: fluent.$t("label-palette-select-all"),
       disabled: !patternsStore.pattern?.palette.length,
       command: ({ originalEvent }) => {
         appStateStore.selectedPaletteItemIndexes = patternsStore.pattern!.palette.map((_, i) => i);
@@ -216,7 +218,7 @@
       },
     },
     { separator: true },
-    { label: fluent.$t("save-changes"), command: () => (paletteIsBeingEdited.value = false) },
+    { label: fluent.$t("label-save-changes"), command: () => (paletteIsBeingEdited.value = false) },
   ]);
 
   watch(paletteIsBeingEdited, (value) => {

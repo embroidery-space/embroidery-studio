@@ -33,57 +33,57 @@
 
   const menuOptions = ref<MenuItem[]>([
     {
-      label: () => fluent.$t("file"),
+      label: () => fluent.$t("label-file"),
       items: [
         {
-          label: () => fluent.$t("open"),
+          label: () => fluent.$t("label-open"),
           command: patternsStore.loadPattern,
         },
         {
-          label: () => fluent.$t("create"),
+          label: () => fluent.$t("label-create"),
           command: patternsStore.createPattern,
         },
         { separator: true },
         {
-          label: () => fluent.$t("save"),
+          label: () => fluent.$t("label-save"),
           command: () => patternsStore.savePattern(),
           disabled: () => !patternsStore.pattern,
         },
         {
-          label: () => fluent.$t("save-as"),
+          label: () => fluent.$t("label-save-as"),
           command: () => patternsStore.savePattern(true),
           disabled: () => !patternsStore.pattern,
         },
         { separator: true },
         {
-          label: () => fluent.$t("export"),
+          label: () => fluent.$t("label-export"),
           disabled: () => !patternsStore.pattern,
           items: [{ label: "OXS", command: () => patternsStore.exportPattern("oxs") }],
         },
         { separator: true },
         {
-          label: () => fluent.$t("close"),
+          label: () => fluent.$t("label-close"),
           command: patternsStore.closePattern,
           disabled: () => !patternsStore.pattern,
         },
       ],
     },
     {
-      label: () => fluent.$t("pattern"),
+      label: () => fluent.$t("label-pattern"),
       visible: () => patternsStore.pattern !== undefined,
       items: [
         {
-          label: () => fluent.$t("fabric-properties-title"),
+          label: () => fluent.$t("title-fabric-properties"),
           command: patternsStore.updateFabric,
         },
         {
-          label: () => fluent.$t("grid-properties-title"),
+          label: () => fluent.$t("title-grid-properties"),
           command: patternsStore.updateGrid,
         },
       ],
     },
     {
-      label: () => fluent.$t("preferences-title"),
+      label: () => fluent.$t("title-preferences"),
       command: preferencesStore.openPreferences,
     },
   ]);

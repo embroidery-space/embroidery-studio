@@ -58,7 +58,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   function createPattern() {
     dialog.open(FabricProperties, {
       props: {
-        header: fluent.$t("fabric-properties-title"),
+        header: fluent.$t("title-fabric-properties"),
         modal: true,
       },
       onClose: async (options) => {
@@ -121,7 +121,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(FabricProperties, {
       props: {
-        header: fluent.$t("fabric-properties-title"),
+        header: fluent.$t("title-fabric-properties"),
         modal: true,
       },
       data: { fabric: pattern.value.fabric },
@@ -141,7 +141,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     if (!pattern.value) return;
     dialog.open(GridProperties, {
       props: {
-        header: fluent.$t("grid-properties-title"),
+        header: fluent.$t("title-grid-properties"),
         modal: true,
       },
       data: { grid: pattern.value.grid },

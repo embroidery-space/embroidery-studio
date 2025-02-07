@@ -8,11 +8,11 @@
         :allow-empty="false"
         :min="1"
       />
-      <label for="major-lines-interval">{{ $t("grid-properties-major-lines-interval") }}</label>
+      <label for="major-lines-interval">{{ $t("label-major-lines-interval") }}</label>
     </FloatLabel>
   </div>
 
-  <Fieldset :legend="$t('grid-properties-minor-lines')" pt:content:class="flex items-center gap-4 pt-3">
+  <Fieldset :legend="$t('label-minor-lines')" pt:content:class="flex items-center gap-4 pt-3">
     <FloatLabel variant="over">
       <InputNumber
         id="minor-thickness"
@@ -22,16 +22,16 @@
         :min="0.001"
         :step="0.01"
       />
-      <label for="minor-thickness">{{ $t("thickness") }}</label>
+      <label for="minor-thickness">{{ $t("label-thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
-      {{ $t("color") }}:
+      {{ $t("label-color") }}:
       <ColorPicker v-model="grid.minorScreenLines.color" format="hex" />
     </label>
   </Fieldset>
 
-  <Fieldset :legend="$t('grid-properties-major-lines')" pt:content:class="flex items-center gap-4 pt-3">
+  <Fieldset :legend="$t('label-major-lines')" pt:content:class="flex items-center gap-4 pt-3">
     <FloatLabel variant="over">
       <InputNumber
         id="major-thickness"
@@ -41,11 +41,11 @@
         :min="0.001"
         :step="0.01"
       />
-      <label for="major-thickness">{{ $t("thickness") }}</label>
+      <label for="major-thickness">{{ $t("label-thickness") }}</label>
     </FloatLabel>
 
     <label class="flex items-center gap-2">
-      {{ $t("color") }}:
+      {{ $t("label-color") }}:
       <ColorPicker v-model="grid.majorScreenLines.color" format="hex" />
     </label>
   </Fieldset>

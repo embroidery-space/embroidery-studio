@@ -4,9 +4,9 @@
     <div></div>
 
     <div class="max-size-full flex min-w-1/2 flex-col gap-6 overflow-auto p-8">
-      <span class="text-4xl">{{ $t("app-welcome-title") }}</span>
+      <span class="text-4xl">{{ $t("title-welcome") }}</span>
 
-      <i18n tag="span" path="app-welcome-get-started">
+      <i18n tag="span" path="message-get-started">
         <template #button-open="{ buttonOpenLabel }">
           <Button variant="link" :label="buttonOpenLabel" class="p-0" @click="patternsStore.loadPattern" />
         </template>
@@ -17,19 +17,19 @@
 
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-col gap-y-1">
-          <span class="text-lg">{{ $t("app-welcome-start") }}</span>
+          <span class="text-lg">{{ $t("label-start") }}</span>
           <div class="flex max-w-max flex-col gap-y-1">
             <Button
               text
               icon="pi pi-file-plus"
-              :label="$t('app-welcome-start-create')"
+              :label="$t('label-start-create')"
               pt:root:class="justify-start"
               @click="patternsStore.createPattern"
             />
             <Button
               text
               icon="pi pi-file-arrow-up"
-              :label="$t('app-welcome-start-open')"
+              :label="$t('label-start-open')"
               pt:root:class="justify-start"
               @click="patternsStore.loadPattern"
             />
@@ -58,7 +58,7 @@
     </div>
 
     <div class="w-full py-2 text-center text-xs">
-      {{ $t("app-welcome-credits") }}
+      {{ $t("message-credits") }}
     </div>
   </div>
 </template>
@@ -79,30 +79,30 @@
 
   const infoSections = computed<InfoSection[]>(() => [
     {
-      title: fluent.$t("app-welcome-customize"),
+      title: fluent.$t("label-customize"),
       items: [
         {
-          title: fluent.$t("app-welcome-customize-settings-title"),
-          text: fluent.$t("app-welcome-customize-settings-text"),
+          title: fluent.$t("label-customize-settings"),
+          text: fluent.$t("message-customize-settings"),
           command: () => preferencesStore.openPreferences(),
         },
       ],
     },
     {
-      title: fluent.$t("app-welcome-learn-more"),
+      title: fluent.$t("label-learn-more"),
       items: [
         {
-          title: fluent.$t("app-welcome-learn-more-documentation-title"),
-          text: fluent.$t("app-welcome-learn-more-documentation-text"),
+          title: fluent.$t("label-learn-more-documentation"),
+          text: fluent.$t("message-learn-more-documentation"),
           url: "https://embroidery-studio.niusia.me",
         },
       ],
     },
     {
-      title: fluent.$t("app-welcome-get-help"),
+      title: fluent.$t("label-get-help"),
       items: [
         {
-          title: fluent.$t("app-welcome-get-help-telegram"),
+          title: fluent.$t("label-get-help-telegram"),
           url: "https://t.me/embroidery_space",
         },
       ],

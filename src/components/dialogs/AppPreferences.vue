@@ -14,7 +14,7 @@
             <span :style="{ fontFamily }">{{ fontFamily }}</span>
           </template>
         </Select>
-        <label for="font-family">{{ $t("preferences-font-family") }}</label>
+        <label for="font-family">{{ $t("label-font-family") }}</label>
       </FloatLabel>
 
       <FloatLabel variant="over">
@@ -22,9 +22,9 @@
           id="font-size"
           v-model="preferencesStore.font.size"
           :options="fontSizeOptions"
-          :option-label="(value) => $t(`preferences-font-size-${value}`)"
+          :option-label="(value) => $t(`label-font-size-${value}`)"
         />
-        <label for="font-size">{{ $t("preferences-font-size") }}</label>
+        <label for="font-size">{{ $t("label-font-size") }}</label>
       </FloatLabel>
 
       <FloatLabel variant="over">
@@ -32,18 +32,18 @@
           <template #value="{ value }">
             <div v-if="value" class="flex items-center">
               <i class="mr-4" :class="value.icon" />
-              <span>{{ $t(`preferences-theme-${value.theme}`) }}</span>
+              <span>{{ $t(`label-theme-${value.theme}`) }}</span>
             </div>
           </template>
 
           <template #option="{ option }">
             <div class="flex items-center">
               <i class="mr-4" :class="option.icon" />
-              <span>{{ $t(`preferences-theme-${option.theme}`) }}</span>
+              <span>{{ $t(`label-theme-${option.theme}`) }}</span>
             </div>
           </template>
         </Select>
-        <label for="theme">{{ $t("preferences-theme") }}</label>
+        <label for="theme">{{ $t("label-theme") }}</label>
       </FloatLabel>
 
       <FloatLabel variant="over">
@@ -54,15 +54,15 @@
           option-value="code"
           :options="languageOptions"
         />
-        <label for="language">{{ $t("preferences-language") }}</label>
+        <label for="language">{{ $t("label-language") }}</label>
       </FloatLabel>
     </div>
   </Fluid>
 
-  <Fieldset :legend="$t('preferences-other')" toggleable>
+  <Fieldset :legend="$t('label-other')" toggleable>
     <label class="flex items-center gap-2">
       <Checkbox v-model="preferencesStore.usePaletteItemColorForStitchTools" binary />
-      <span>{{ $t("preferences-use-palitem-color-for-stitch-tools") }}</span>
+      <span>{{ $t("label-use-palitem-color-for-stitch-tools") }}</span>
     </label>
   </Fieldset>
 </template>

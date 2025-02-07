@@ -18,6 +18,7 @@ export default defineConfig({
     target: ["es2020", process.env.TAURI_ENV_PLATFORM == "windows" ? "chrome105" : "safari14"],
     minify: !process.env.TAURI_ENV_DEBUG ? "esbuild" : false,
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
+    chunkSizeWarningLimit: 1000,
   },
   test: { environment: "jsdom", globals: true },
 });

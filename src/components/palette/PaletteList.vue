@@ -6,7 +6,7 @@
     :disabled="disabled"
     :multiple="mulitple"
     :meta-key-selection="metaKeySelection"
-    :empty-message="$t('palette-empty-message')"
+    :empty-message="$t('message-palette-empty')"
     scroll-height="100%"
     :list-style="listStyle"
     :pt="listboxPassThrough"
