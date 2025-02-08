@@ -21,6 +21,7 @@ tauri = { version = "2.2.5", features = ["test"] }
 tauri-plugin-dialog = "2.0.5"
 tauri-plugin-fs = "2.0.3"
 tauri-plugin-log = "2.2.1"
+tauri-plugin-opener = "2.2.5"
 
 # Parsing
 byteorder = "1.5.0"
@@ -30,8 +31,14 @@ hex = "0.4.3"
 quick-xml = "0.37.2"
 
 # Zipping
-zip = { version = "2.2.2", features = ["zstd", "time"], default-features = false }
-zip-extract = { version = "0.2.1", features = ["zstd", "time"], default-features = false }
+zip = { version = "2.2.2", features = [
+  "zstd",
+  "time",
+], default-features = false }
+zip-extract = { version = "0.2.1", features = [
+  "zstd",
+  "time",
+], default-features = false }
 
 # Serialization
 serde = { version = "1.0.217", features = ["derive"] }
@@ -48,5 +55,11 @@ log = "0.4.25"
 # Other
 ordered-float = { version = "4.6.0", features = ["borsh"] }
 dyn-clone = "1.0.18"
-nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = ["borsh"] }
+nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = [
+  "borsh",
+] }
 tempfile = "3.16.0"
+font-kit = "0.14.2"
+
+[dev-dependencies]
+rand = "0.9.0"

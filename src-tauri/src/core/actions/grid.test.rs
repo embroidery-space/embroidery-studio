@@ -20,7 +20,7 @@ fn test_update_fabric() {
 
   let mut patproj = PatternProject::default();
   let grid = Grid {
-    major_line_every_stitches: 15,
+    major_lines_interval: 15,
     ..Grid::default()
   };
   let action = UpdateGridPropertiesAction::new(grid.clone());

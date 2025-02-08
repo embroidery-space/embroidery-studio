@@ -215,7 +215,7 @@ impl Default for FontFormat {
 
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct Grid {
-  pub major_line_every_stitches: u16,
+  pub major_lines_interval: u16,
   pub minor_screen_lines: GridLineStyle,
   pub major_screen_lines: GridLineStyle,
   pub minor_printer_lines: GridLineStyle,
@@ -225,7 +225,7 @@ pub struct Grid {
 impl Default for Grid {
   fn default() -> Self {
     Self {
-      major_line_every_stitches: 10,
+      major_lines_interval: 10,
       minor_screen_lines: GridLineStyle {
         color: String::from("C8C8C8"),
         thickness: 0.072,

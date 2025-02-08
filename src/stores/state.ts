@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { FullStitchKind, type StitchKind, type PatternKey } from "#/schemas/pattern";
 
@@ -7,24 +7,16 @@ interface OpenedPattern {
   key: PatternKey;
 }
 
-export interface AppState {
-  selectedStitchTool: StitchKind;
-  selectedPaletteItemIndex: number | null;
-  openedPatterns: OpenedPattern[];
-  currentPattern?: OpenedPattern;
-}
-
 export const useAppStateStore = defineStore(
   "embroidery-studio-state",
   () => {
-    const state = reactive<AppState>({
-      selectedStitchTool: FullStitchKind.Full,
-      selectedPaletteItemIndex: null,
-      openedPatterns: [],
-    });
+    const selectedStitchTool = ref<StitchKind>(FullStitchKind.Full);
+    const selectedPaletteItemIndexes = ref<number[]>([]);
+    const openedPatterns = ref<OpenedPattern[]>([]);
+    const currentPattern = ref<OpenedPattern | undefined>(undefined);
 
     /**
-     * Adds the opened pattern to the app state.
+     * Adds the opened pattern to the app
      * If the pattern is already opened, it will not be added again.
      *
      * @param title The title of the pattern.
@@ -32,19 +24,28 @@ export const useAppStateStore = defineStore(
      */
     function addOpenedPattern(title: string, key: PatternKey) {
       const openedPattern: OpenedPattern = { title, key };
-      if (state.openedPatterns.findIndex((p) => p.key === key) < 0) state.openedPatterns.push(openedPattern);
-      state.currentPattern = openedPattern;
+      if (openedPatterns.value.findIndex((p) => p.key === key) < 0) openedPatterns.value.push(openedPattern);
+      selectedPaletteItemIndexes.value = [];
+      currentPattern.value = openedPattern;
     }
 
     function removeCurrentPattern() {
-      if (!state.openedPatterns || !state.currentPattern) return;
-      const index = state.openedPatterns.findIndex((p) => p.key === state.currentPattern!.key);
-      if (index >= 0) state.openedPatterns.splice(index, 1);
-      if (state.openedPatterns.length) state.currentPattern = state.openedPatterns[0];
-      else state.currentPattern = undefined;
+      if (!openedPatterns.value || !currentPattern.value) return;
+      selectedPaletteItemIndexes.value = [];
+      const index = openedPatterns.value.findIndex((p) => p.key === currentPattern.value!.key);
+      if (index >= 0) openedPatterns.value.splice(index, 1);
+      if (openedPatterns.value.length) currentPattern.value = openedPatterns.value[0];
+      else currentPattern.value = undefined;
     }
 
-    return { state, addOpenedPattern, removeCurrentPattern };
+    return {
+      selectedStitchTool,
+      selectedPaletteItemIndexes,
+      openedPatterns,
+      currentPattern,
+      addOpenedPattern,
+      removeCurrentPattern,
+    };
   },
   { persist: { storage: sessionStorage } },
 );

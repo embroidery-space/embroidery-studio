@@ -1,14 +1,14 @@
 <template>
   <canvas
     ref="canvas"
-    v-element-size="useThrottleFn((size: CanvasSize) => patternCanvas.resize(size), 500)"
+    v-element-size="useDebounceFn((size: CanvasSize) => patternCanvas.resize(size), 100)"
     class="size-full"
   ></canvas>
 </template>
 
 <script lang="ts" setup>
   import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
-  import { useThrottleFn } from "@vueuse/core";
+  import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
@@ -26,8 +26,8 @@
   import { type Stitch, type StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
 
   const appStateStore = useAppStateStore();
-  const patternProjectStore = usePatternsStore();
-  const { pattern } = storeToRefs(patternProjectStore);
+  const patternsStore = usePatternsStore();
+  const { pattern } = storeToRefs(patternsStore);
 
   const canvas = useTemplateRef("canvas");
   const patternCanvas = new PatternCanvas();
@@ -39,9 +39,9 @@
 
   let prevStitchState: Stitch | undefined;
   patternCanvas.addEventListener(EventType.AddStitch, async (e) => {
-    const tool = appStateStore.state.selectedStitchTool;
-    const palindex = appStateStore.state.selectedPaletteItemIndex;
-    if (palindex === null) return;
+    const tool = appStateStore.selectedStitchTool;
+    const palindex = appStateStore.selectedPaletteItemIndexes[0];
+    if (palindex === undefined) return;
 
     // A start point is needed to draw the lines.
     // An end point is needed to draw all the other kinds of stitches (in addition to lines).
@@ -58,7 +58,7 @@
           full.x = Math.trunc(x) + (prevStitchState.x - Math.trunc(prevStitchState.x));
           full.y = Math.trunc(y) + (prevStitchState.y - Math.trunc(prevStitchState.y));
         }
-        await patternProjectStore.addStitch(full);
+        await patternsStore.addStitch(full);
         break;
       }
 
@@ -78,7 +78,7 @@
             part.y = Math.trunc(y) + (prevStitchState.y - Math.trunc(prevStitchState.y));
           }
         }
-        await patternProjectStore.addStitch(part);
+        await patternsStore.addStitch(part);
         break;
       }
 
@@ -95,7 +95,7 @@
         // Check that the line is not longer than 1 horizontally and vertically, or it is diagonal.
         if (lineLength > 1 && lineLength !== Math.sqrt(2)) return;
         prevStitchState = line;
-        if (stage === AddStitchEventStage.Continue) await patternProjectStore.addStitch(line);
+        if (stage === AddStitchEventStage.Continue) await patternsStore.addStitch(line);
         break;
       }
 
@@ -104,7 +104,7 @@
         const { x: x1, y: y1 } = adjustStitchCoordinate(_start, tool);
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line = new LineStitch({ x: [x1, x2], y: [y1, y2], palindex, kind: tool });
-        if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch(line);
+        if (stage === AddStitchEventStage.End) await patternsStore.addStitch(line);
         else patternCanvas.drawLineHint(line, pattern.value!.palette[palindex]!.color);
         break;
       }
@@ -112,7 +112,7 @@
       case NodeStitchKind.FrenchKnot:
       case NodeStitchKind.Bead: {
         const node = new NodeStitch({ x, y, palindex, kind: tool, rotated: alt });
-        if (stage === AddStitchEventStage.End) await patternProjectStore.addStitch(node);
+        if (stage === AddStitchEventStage.End) await patternsStore.addStitch(node);
         else {
           const palitem = pattern.value!.palette[palindex]!;
           patternCanvas.drawNodeHint(node, palitem.color, palitem.bead);
@@ -124,7 +124,7 @@
 
   patternCanvas.addEventListener(EventType.RemoveStitch, async (e) => {
     const detail: RemoveStitchData = (e as CustomEvent).detail;
-    if ("stitch" in detail) await patternProjectStore.removeStitch(detail.stitch);
+    if ("stitch" in detail) await patternsStore.removeStitch(detail.stitch);
     else {
       // In this case we need to determine the stitch based on the point.
       // The simplest (but not so optimized) way is to try to remove all the possible simple stitches.
@@ -132,14 +132,14 @@
       const kind = detail.kind;
       const { x, y } = adjustStitchCoordinate(detail.point, kind);
       if (kind === FullStitchKind.Full || kind === FullStitchKind.Petite) {
-        await patternProjectStore.removeStitch(new FullStitch({ x, y, kind, palindex: 0 }));
+        await patternsStore.removeStitch(new FullStitch({ x, y, kind, palindex: 0 }));
       } else if (kind === PartStitchKind.Half || kind === PartStitchKind.Quarter) {
         const [fractX, fractY] = [detail.point.x - Math.trunc(x), detail.point.y - Math.trunc(y)];
         const direction =
           (fractX < 0.5 && fractY > 0.5) || (fractX > 0.5 && fractY < 0.5)
             ? PartStitchDirection.Forward
             : PartStitchDirection.Backward;
-        await patternProjectStore.removeStitch(new PartStitch({ x, y, kind, direction, palindex: 0 }));
+        await patternsStore.removeStitch(new PartStitch({ x, y, kind, direction, palindex: 0 }));
       }
     }
   });

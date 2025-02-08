@@ -35,6 +35,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
           .extensions_path(std::env::current_dir()?.join("extensions"));
       }
 
+      #[allow(unused_variables)]
       let webview_window = webview_window_builder.build()?;
 
       #[cfg(debug_assertions)]
@@ -63,6 +64,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
     .plugin(logger::setup_logger().build())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![
       commands::path::get_app_document_dir,
       commands::pattern::load_pattern,
@@ -73,11 +75,12 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
       commands::fabric::update_fabric,
       commands::grid::update_grid,
       commands::palette::add_palette_item,
-      commands::palette::remove_palette_item,
+      commands::palette::remove_palette_items,
       commands::stitches::add_stitch,
       commands::stitches::remove_stitch,
       commands::history::undo,
       commands::history::redo,
+      commands::fonts::get_all_text_font_families,
     ])
     .build(tauri::generate_context!())
     .expect("Failed to build Embroidery Studio")

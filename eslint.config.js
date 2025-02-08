@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import vue from "eslint-plugin-vue";
 import vuePrettierEslintConfig from "@vue/eslint-config-prettier/skip-formatting";
 import vueTypescriptEslintConfig from "@vue/eslint-config-typescript";
+import unocss from "@unocss/eslint-config/flat";
 
 export default [
   js.configs.recommended,
@@ -12,4 +13,5 @@ export default [
   ...vue.configs["flat/recommended"],
   vuePrettierEslintConfig,
   ...vueTypescriptEslintConfig(),
+  unocss,
 ];

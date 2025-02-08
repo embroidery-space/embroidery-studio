@@ -1,10 +1,10 @@
 <template>
   <Select
-    v-model="appState.state.currentPattern"
-    :options="appState.state.openedPatterns"
+    v-model="appStateStore.currentPattern"
+    :options="appStateStore.openedPatterns"
     option-label="title"
     pt:root:class="border-0 rounded-none bg-transparent"
-    @change="() => emit('switch', appState.state.currentPattern!.key)"
+    @change="() => emit('switch', appStateStore.currentPattern!.key)"
   />
 </template>
 
@@ -14,5 +14,5 @@
 
   const emit = defineEmits<{ (e: "switch", key: string): void }>();
 
-  const appState = useAppStateStore();
+  const appStateStore = useAppStateStore();
 </script>

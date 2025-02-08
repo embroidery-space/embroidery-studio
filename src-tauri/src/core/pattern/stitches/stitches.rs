@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::collections::BTreeSet;
 
 use borsh::{BorshDeserialize, BorshSerialize};
@@ -435,7 +434,7 @@ impl Stitches<Node> {
 }
 
 // TODO: rewrite
-// Just defines some common methods to work with the palette indices.
+// Just defines some common methods to work with the palette item indexes.
 // That allows to share some logic across different stitch types.
 pub trait PaletteIndex {
   fn palindex(&self) -> u8;
@@ -443,30 +442,60 @@ pub trait PaletteIndex {
 }
 
 impl<T: Ord + PaletteIndex> Stitches<T> {
-  pub fn remove_stitches_by_palindex(&mut self, palindex: u8) -> Vec<T> {
-    let mut conflicts = Vec::new();
-    for mut stitch in std::mem::take(&mut self.inner).into_iter() {
-      match stitch.palindex().cmp(&palindex) {
-        Ordering::Less => {
-          self.inner.insert(stitch);
-        }
-        Ordering::Equal => {
-          conflicts.push(stitch);
-        }
-        Ordering::Greater => {
-          stitch.set_palindex(stitch.palindex() - 1);
-          self.inner.insert(stitch);
-        }
-      };
+  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u8]) -> Vec<T> {
+    let mut remaining_stitches = Vec::new();
+    let mut removed_stitches = Vec::new();
+
+    // First, we need to separate the stitches into two groups: the ones that should be removed and the ones that should remain.
+    for stitch in std::mem::take(&mut self.inner).into_iter() {
+      if palindexes.contains(&stitch.palindex()) {
+        removed_stitches.push(stitch);
+      } else {
+        remaining_stitches.push(stitch);
+      }
     }
-    conflicts
+
+    // Then, we need to reinsert the remaining stitches into the set with the new palette item indexes.
+    let mut palindexes_map = std::collections::HashMap::new();
+    'outer: for mut stitch in remaining_stitches.into_iter() {
+      if let Some(&new_palindex) = palindexes_map.get(&stitch.palindex()) {
+        stitch.set_palindex(new_palindex);
+      } else {
+        for (index, &palindex) in palindexes.iter().enumerate().rev() {
+          if stitch.palindex() > palindex {
+            let new_palindex = stitch.palindex() - (index as u8) - 1;
+            palindexes_map.insert(stitch.palindex(), new_palindex);
+            stitch.set_palindex(new_palindex);
+            self.inner.insert(stitch);
+            continue 'outer;
+          }
+        }
+        palindexes_map.insert(stitch.palindex(), stitch.palindex());
+      }
+      self.inner.insert(stitch);
+    }
+
+    removed_stitches
   }
 
-  pub fn restore_stitches(&mut self, stitches: Vec<T>, palindex: u8) {
-    for mut stitch in std::mem::take(&mut self.inner).into_iter() {
-      if stitch.palindex() >= palindex {
-        stitch.set_palindex(stitch.palindex() + 1);
+  pub fn restore_stitches(&mut self, stitches: Vec<T>, palindexes: &[u8], palsize: u8) {
+    // First, we need to create a map of the old palette item indexes to the new ones.
+    // We do this by iterating over the complete range of current palette item indexes
+    // and incrementing those that are greater than the removed ones.
+    let mut palindexes_map = std::collections::HashMap::new();
+    let mut counter = 0;
+    for palindex in 0..palsize {
+      while palindexes.contains(&(palindex + counter)) {
+        counter += 1;
       }
+      let new_palindex = palindex + counter;
+      palindexes_map.insert(palindex, new_palindex);
+    }
+
+    // Then, we need to update the palette item indexes of the stitches.
+    for mut stitch in std::mem::take(&mut self.inner).into_iter() {
+      let new_palindex = palindexes_map.get(&stitch.palindex()).unwrap();
+      stitch.set_palindex(*new_palindex);
       self.inner.insert(stitch);
     }
     self.inner.extend(stitches);

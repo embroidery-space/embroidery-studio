@@ -1,6 +1,10 @@
 <template>
   <div
-    v-tooltip="{ value: paletteItemTitle(paletteItem), showDelay: 200 }"
+    v-tooltip="{
+      value: paletteItemTitle(paletteItem),
+      showDelay: 200,
+      pt: { root: { class: 'max-w-fit' } },
+    }"
     class="h-8 w-full px-2 py-1"
     :style="{
       backgroundColor,
@@ -16,18 +20,20 @@
 
 <script setup lang="ts">
   import { computed } from "vue";
+  import { Color } from "pixi.js";
   import { contrastColor } from "#/utils/color";
   import { paletteItemTitle, type PaletteDisplayOptions } from "#/utils/paletteItem";
   import type { PaletteItem } from "#/schemas/pattern";
 
   interface PaletteItemProps {
-    paletteItem: PaletteItem;
+    paletteItem: PaletteItem & { color: Color | string };
     displayOptions: PaletteDisplayOptions;
     selected: boolean;
   }
 
   const { paletteItem, displayOptions, selected } = defineProps<PaletteItemProps>();
 
-  const backgroundColor = computed(() => paletteItem.color.toHex());
-  const foregroundColor = computed(() => contrastColor(paletteItem.color));
+  const palitemColor = computed(() => new Color(paletteItem.color));
+  const backgroundColor = computed(() => palitemColor.value.toHex());
+  const foregroundColor = computed(() => contrastColor(palitemColor.value));
 </script>

@@ -190,34 +190,34 @@ impl Pattern {
   }
 
   /// Removes and returns all stitches with a given palette index from the pattern.
-  pub fn remove_stitches_by_palindex(&mut self, palindex: u8) -> Vec<Stitch> {
+  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u8]) -> Vec<Stitch> {
     log::trace!("Removing stitches by palette index");
     let mut conflicts = Vec::new();
     conflicts.extend(
       self
         .fullstitches
-        .remove_stitches_by_palindex(palindex)
+        .remove_stitches_by_palindexes(palindexes)
         .into_iter()
         .map(Stitch::Full),
     );
     conflicts.extend(
       self
         .partstitches
-        .remove_stitches_by_palindex(palindex)
+        .remove_stitches_by_palindexes(palindexes)
         .into_iter()
         .map(Stitch::Part),
     );
     conflicts.extend(
       self
         .lines
-        .remove_stitches_by_palindex(palindex)
+        .remove_stitches_by_palindexes(palindexes)
         .into_iter()
         .map(Stitch::Line),
     );
     conflicts.extend(
       self
         .nodes
-        .remove_stitches_by_palindex(palindex)
+        .remove_stitches_by_palindexes(palindexes)
         .into_iter()
         .map(Stitch::Node),
     );
@@ -259,7 +259,7 @@ impl Pattern {
     conflicts
   }
 
-  pub fn restore_stitches(&mut self, stitches: Vec<Stitch>, palindex: u8) {
+  pub fn restore_stitches(&mut self, stitches: Vec<Stitch>, palindexes: &[u8], palsize: u8) {
     let mut fullstitches = Vec::new();
     let mut partstitches = Vec::new();
     let mut lines = Vec::new();
@@ -273,10 +273,10 @@ impl Pattern {
       }
     }
 
-    self.fullstitches.restore_stitches(fullstitches, palindex);
-    self.partstitches.restore_stitches(partstitches, palindex);
-    self.lines.restore_stitches(lines, palindex);
-    self.nodes.restore_stitches(nodes, palindex);
+    self.fullstitches.restore_stitches(fullstitches, palindexes, palsize);
+    self.partstitches.restore_stitches(partstitches, palindexes, palsize);
+    self.lines.restore_stitches(lines, palindexes, palsize);
+    self.nodes.restore_stitches(nodes, palindexes, palsize);
   }
 }
 

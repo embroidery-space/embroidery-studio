@@ -1,4 +1,5 @@
 pub mod fabric;
+pub mod fonts;
 pub mod grid;
 pub mod history;
 pub mod palette;
