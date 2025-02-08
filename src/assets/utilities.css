@@ -1,0 +1,7 @@
+.border-primary {
+  border-color: var(--p-primary-color);
+}
+
+.border-content {
+  border-color: var(--p-content-border-color);
+}

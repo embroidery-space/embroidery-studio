@@ -25,7 +25,7 @@ export const usePreferencesStore = defineStore(
       font,
       ({ family, size }) => {
         // If the font family is null, clear the property, so the font family from the CSS is used.
-        // Otherwise, set the property to the selected font family and the default one from Tailwind CSS as a fallback.
+        // Otherwise, set the property to the selected font family and the default one from `reset.css` as a fallback.
         document.documentElement.style.fontFamily = family === null ? "" : `'${family}', var(--default-font-family)`;
         document.documentElement.style.fontSize = size;
       },
