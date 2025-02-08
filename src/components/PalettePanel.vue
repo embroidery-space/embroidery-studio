@@ -17,7 +17,7 @@
       :meta-key-selection="paletteIsBeingEdited"
       fluid-options
       mulitple
-      class="flex-grow border-0 rounded-none"
+      class="grow border-0 rounded-none"
       :class="{ 'border-r': paletteIsBeingEdited }"
       :style="{ backgroundColor: dt('content.background') }"
       :list-style="`border-top: 1px solid ${dt('content.border.color')}; border-bottom: 1px solid ${dt('content.border.color')}`"
@@ -100,7 +100,7 @@
     <PaletteCatalog
       v-if="patternsStore.pattern?.palette && showPaletteCatalog"
       :palette="patternsStore.pattern.palette"
-      class="border-content min-w-60 border-r"
+      class="border-content min-w-max border-r"
       @close="showPaletteCatalog = false"
       @add-palette-item="patternsStore.addPaletteItem"
       @remove-palette-item="patternsStore.removePaletteItem"
