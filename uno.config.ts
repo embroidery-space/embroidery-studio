@@ -11,8 +11,8 @@ export default defineConfig({
   ],
   preflights: [
     // Import custom CSS files here to include them into the optimization process.
-    { getCSS: () => readFileSync("src/assets/reset.css", "utf-8"), layer: "base" },
-    { getCSS: () => readFileSync("src/assets/utilities.css", "utf-8"), layer: "utilities" },
+    { getCSS: () => readFileSync("src/assets/theme/reset.css", "utf-8"), layer: "base" },
+    { getCSS: () => readFileSync("src/assets/theme/utilities.css", "utf-8"), layer: "utilities" },
   ],
   outputToCssLayers: {
     cssLayerName(layer) {
