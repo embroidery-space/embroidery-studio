@@ -1,5 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
-
 <template>
   <div ref="container" class="relative">
     <Button
@@ -11,22 +9,19 @@
       :text="!selected"
       :disabled="props.disabled"
       severity="secondary"
-      class="border-none p-1.5"
+      :icon="currentOption.icon"
+      class="size-[var(--p-button-icon-only-width)] border-none p-1.5"
       :style="{ color: selected && color ? color.toHex() : dt('text.muted.color') }"
-    >
-      <div class="size-6" v-html="currentOption.icon"></div>
-    </Button>
+    />
 
     <Button
       ref="dropdown-button"
       text
       :disabled="props.disabled"
-      severity="contrast"
-      class="absolute bottom-0 right-0 z-auto rounded-sm border-none p-0"
-      @click="toggleMenu"
-    >
-      <i class="i-prime:angle-down translate-2 -rotate-45"></i>
-    </Button>
+      icon="i-prime:angle-down absolute left-1/2 top-1/2 -translate-1/2 -rotate-45"
+      severity="secondary"
+      class="absolute bottom-0 right-0 size-3 rounded-sm border-none p-0"
+    />
   </div>
 
   <Menu ref="menu" :model="options" pt:root:class="min-w-fit" popup>
@@ -41,7 +36,7 @@
           }
         "
       >
-        <span class="mr-2 size-6" v-html="item.icon" />
+        <span class="mr-2" :class="item.icon" />
         <span>{{ label }}</span>
       </a>
     </template>
@@ -82,6 +77,7 @@
   const menu = useTemplateRef("menu");
   const toolButton = useTemplateRef("tool-button") as MaybeRefOrGetter;
   const dropdownButton = useTemplateRef("dropdown-button") as MaybeRefOrGetter;
+  const dropdownButtonElement = computed(() => unrefElement(dropdownButton));
   const container = useTemplateRef("container") as MaybeRefOrGetter;
   const containerElement = computed(() => unrefElement(container));
 
@@ -99,13 +95,13 @@
     clearLongPress();
     timeout = setTimeout(() => {
       hasLongPressed = true;
-      longPressHandler(e, hasLongPressed);
+      handleLongPress(e, hasLongPressed);
     }, 500);
   }
 
   function handlePointerUp(e: PointerEvent) {
     if (props.disabled) return;
-    longPressHandler(e, hasLongPressed);
+    handleLongPress(e, hasLongPressed);
     clearLongPress();
   }
 
@@ -117,8 +113,9 @@
     hasLongPressed = false;
   }
 
-  function longPressHandler(e: PointerEvent, isLongPress: boolean) {
-    if ((e.button === 0 && isLongPress) || e.button === 2) toggleMenu(e);
+  function handleLongPress(e: PointerEvent, isLongPress: boolean) {
+    const isDropdownButtonClick = dropdownButtonElement.value.contains(e.target);
+    if ((e.button === 0 && (isLongPress || isDropdownButtonClick)) || e.button === 2) toggleMenu(e);
     else emit("update:modelValue", currentOption.value.value);
   }
 

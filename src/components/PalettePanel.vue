@@ -128,15 +128,6 @@
   import PaletteList from "./palette/PaletteList.vue";
   import ToolSelector from "./toolbar/ToolSelector.vue";
 
-  import FullStitchIcon from "#/assets/icons/stitches/full-stitch.svg?raw";
-  import PetiteStitchIcon from "#/assets/icons/stitches/petite-stitch.svg?raw";
-  import HalfStitchIcon from "#/assets/icons/stitches/half-stitch.svg?raw";
-  import QuarterStitchIcon from "#/assets/icons/stitches/quarter-stitch.svg?raw";
-  import BackStitchIcon from "#/assets/icons/stitches/back-stitch.svg?raw";
-  import StraightStitchIcon from "#/assets/icons/stitches/straight-stitch.svg?raw";
-  import FrenchKnotIcon from "#/assets/icons/stitches/french-knot.svg?raw";
-  import BeadIcon from "#/assets/icons/stitches/bead.svg?raw";
-
   const PaletteCatalog = defineAsyncComponent(() => import("./palette/PaletteCatalog.vue"));
   const PaletteDisplayOptions = defineAsyncComponent(() => import("./palette/PaletteDisplayOptions.vue"));
 
@@ -146,20 +137,20 @@
   const fluent = useFluent();
 
   const fullstitches = ref([
-    { icon: FullStitchIcon, label: () => fluent.$t("label-stitch-full"), value: FullStitchKind.Full },
-    { icon: PetiteStitchIcon, label: () => fluent.$t("label-stitch-petite"), value: FullStitchKind.Petite },
+    { icon: "i-stitches:full", label: () => fluent.$t("label-stitch-full"), value: FullStitchKind.Full },
+    { icon: "i-stitches:petite", label: () => fluent.$t("label-stitch-petite"), value: FullStitchKind.Petite },
   ]);
   const partstitches = ref([
-    { icon: HalfStitchIcon, label: () => fluent.$t("label-stitch-half"), value: PartStitchKind.Half },
-    { icon: QuarterStitchIcon, label: () => fluent.$t("label-stitch-quarter"), value: PartStitchKind.Quarter },
+    { icon: "i-stitches:half", label: () => fluent.$t("label-stitch-half"), value: PartStitchKind.Half },
+    { icon: "i-stitches:quarter", label: () => fluent.$t("label-stitch-quarter"), value: PartStitchKind.Quarter },
   ]);
   const linestitches = ref([
-    { icon: BackStitchIcon, label: () => fluent.$t("label-stitch-back"), value: LineStitchKind.Back },
-    { icon: StraightStitchIcon, label: () => fluent.$t("label-stitch-straight"), value: LineStitchKind.Straight },
+    { icon: "i-stitches:back", label: () => fluent.$t("label-stitch-back"), value: LineStitchKind.Back },
+    { icon: "i-stitches:straight", label: () => fluent.$t("label-stitch-straight"), value: LineStitchKind.Straight },
   ]);
   const nodestitches = ref([
-    { icon: FrenchKnotIcon, label: () => fluent.$t("label-stitch-french-knot"), value: NodeStitchKind.FrenchKnot },
-    { icon: BeadIcon, label: () => fluent.$t("label-stitch-bead"), value: NodeStitchKind.Bead },
+    { icon: "i-stitches:french-knot", label: () => fluent.$t("label-stitch-french-knot"), value: NodeStitchKind.FrenchKnot }, // prettier-ignore
+    { icon: "i-stitches:bead", label: () => fluent.$t("label-stitch-bead"), value: NodeStitchKind.Bead },
   ]);
 
   const paletteIsDisabled = computed(() => !patternsStore.pattern);
