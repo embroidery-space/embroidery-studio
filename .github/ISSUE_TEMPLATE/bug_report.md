@@ -17,9 +17,13 @@ assignees: niusia-ua
 4. See error
 -->
 
-**Expected Behaviour**
+**Expected Behavior**
 
-<!-- A clear and concise description of what you expected to happen. -->
+<!-- A clear and concise description of what you _expected to happen_. -->
+
+**Actual Behavior**
+
+<!-- A clear and concise description of what _actually happened_. -->
 
 **Screenshots**
 
