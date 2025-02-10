@@ -1,5 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
-
 <template>
   <div class="h-full flex items-center justify-center">
     <button
@@ -7,7 +5,7 @@
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.minimize()"
     >
-      <span class="size-3 inline-flex items-center justify-center" v-html="WindowMinimizeIcon"></span>
+      <span class="i-window-controls:minimize size-3 inline-flex items-center justify-center"></span>
     </button>
 
     <button
@@ -15,8 +13,8 @@
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.toggleMaximize()"
     >
-      <span v-if="isMaximized" class="size-3 inline-flex items-center justify-center" v-html="WindowRestoreIcon"></span>
-      <span v-else class="size-3 inline-flex items-center justify-center" v-html="WindowMaximizeIcon"></span>
+      <span v-if="isMaximized" class="i-window-controls:restore size-3 inline-flex items-center justify-center"></span>
+      <span v-else class="i-window-controls:maximize size-3 inline-flex items-center justify-center"></span>
     </button>
 
     <button
@@ -24,7 +22,7 @@
       :style="{ width: dt('button.icon.only.width') }"
       @click="appWindow.close()"
     >
-      <span class="size-3 inline-flex items-center justify-center" v-html="WindowCloseIcon"></span>
+      <span class="i-window-controls:close size-3 inline-flex items-center justify-center"></span>
     </button>
   </div>
 </template>
@@ -33,11 +31,6 @@
   import { getCurrentWindow } from "@tauri-apps/api/window";
   import { dt } from "@primevue/themes";
   import { onUnmounted, ref } from "vue";
-
-  import WindowMinimizeIcon from "#/assets/icons/window-controls/minimize.svg?raw";
-  import WindowMaximizeIcon from "#/assets/icons/window-controls/maximize.svg?raw";
-  import WindowRestoreIcon from "#/assets/icons/window-controls/restore.svg?raw";
-  import WindowCloseIcon from "#/assets/icons/window-controls/close.svg?raw";
 
   // New window is maximized by default.
   const isMaximized = ref(true);

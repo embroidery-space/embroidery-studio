@@ -10,6 +10,7 @@ export default defineConfig({
       unit: "rem",
       collections: {
         stitches: FileSystemIconLoader("./src/assets/icons/stitches"),
+        "window-controls": FileSystemIconLoader("./src/assets/icons/window-controls"),
       },
     }),
   ],
