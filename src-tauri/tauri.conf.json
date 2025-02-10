@@ -38,6 +38,7 @@
         "default-src": "'self' customprotocol: asset:",
         "connect-src": "ipc: http://ipc.localhost",
         "style-src": "'unsafe-inline' 'self'",
+        "img-src": "'self' data:",
         "script-src": "'unsafe-eval' 'self'"
       }
     }
