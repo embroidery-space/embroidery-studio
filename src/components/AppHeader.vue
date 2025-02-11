@@ -35,14 +35,8 @@
     {
       label: () => fluent.$t("label-file"),
       items: [
-        {
-          label: () => fluent.$t("label-open"),
-          command: patternsStore.loadPattern,
-        },
-        {
-          label: () => fluent.$t("label-create"),
-          command: patternsStore.createPattern,
-        },
+        { label: () => fluent.$t("label-open"), command: patternsStore.loadPattern },
+        { label: () => fluent.$t("label-create"), command: patternsStore.createPattern },
         { separator: true },
         {
           label: () => fluent.$t("label-save"),
@@ -72,19 +66,10 @@
       label: () => fluent.$t("label-pattern"),
       visible: () => patternsStore.pattern !== undefined,
       items: [
-        {
-          label: () => fluent.$t("title-fabric-properties"),
-          command: patternsStore.updateFabric,
-        },
-        {
-          label: () => fluent.$t("title-grid-properties"),
-          command: patternsStore.updateGrid,
-        },
+        { label: () => fluent.$t("title-fabric-properties"), command: patternsStore.updateFabric },
+        { label: () => fluent.$t("title-grid-properties"), command: patternsStore.updateGrid },
       ],
     },
-    {
-      label: () => fluent.$t("title-preferences"),
-      command: preferencesStore.openPreferences,
-    },
+    { label: () => fluent.$t("title-preferences"), command: preferencesStore.openPreferences },
   ]);
 </script>

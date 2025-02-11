@@ -1,10 +1,6 @@
 <template>
   <div
-    v-tooltip="{
-      value: paletteItemTitle(paletteItem),
-      showDelay: 200,
-      pt: { root: { class: 'max-w-fit' } },
-    }"
+    v-tooltip="{ value: paletteItemTitle(paletteItem), showDelay: 200, pt: { root: { class: 'max-w-fit' } } }"
     class="h-8 w-full px-2 py-1"
     :style="{
       backgroundColor,

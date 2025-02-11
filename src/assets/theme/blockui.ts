@@ -1,3 +1,1 @@
-export const blockui = {
-  root: { borderRadius: "{border.radius.none}" },
-};
+export const blockui = { root: { borderRadius: "{border.radius.none}" } };

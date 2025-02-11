@@ -9,11 +9,7 @@ export default defineConfig({
   clearScreen: false,
   resolve: { alias: { "#": fileURLToPath(new URL("./src", import.meta.url)) } },
   envPrefix: ["VITE_", "TAURI_ENV_*"],
-  server: {
-    port: 1420,
-    strictPort: true,
-    watch: { ignored: ["src-tauri/**"] },
-  },
+  server: { port: 1420, strictPort: true, watch: { ignored: ["src-tauri/**"] } },
   build: {
     target: ["es2020", process.env.TAURI_ENV_PLATFORM == "windows" ? "chrome105" : "safari14"],
     minify: !process.env.TAURI_ENV_DEBUG ? "esbuild" : false,

@@ -3,43 +3,14 @@ import { blendTitle, paletteItemTitle, type PaletteDisplayOptions } from "./pale
 import type { Blend, PaletteItem } from "#/schemas/pattern/pattern";
 
 const BLENDS: Blend[] = [
-  {
-    brand: "Anchor",
-    number: "9159",
-    strands: 1,
-  },
-  {
-    brand: "Madeira",
-    number: "0705",
-    strands: 1,
-  },
+  { brand: "Anchor", number: "9159", strands: 1 },
+  { brand: "Madeira", number: "0705", strands: 1 },
 ];
 const PALETTE: PaletteItem[] = [
-  {
-    brand: "DMC",
-    number: "310",
-    name: "Black",
-    color: "2C3225",
-  },
-  {
-    brand: "Anchor",
-    number: "9159",
-    name: "Glacier Blue",
-    color: "B2D8E5",
-  },
-  {
-    brand: "Madeira",
-    number: "0705",
-    name: "Plum-DK",
-    color: "901b6b",
-  },
-  {
-    brand: "Blends",
-    number: "",
-    name: "",
-    color: "A382AE",
-    blends: BLENDS,
-  },
+  { brand: "DMC", number: "310", name: "Black", color: "2C3225" },
+  { brand: "Anchor", number: "9159", name: "Glacier Blue", color: "B2D8E5" },
+  { brand: "Madeira", number: "0705", name: "Plum-DK", color: "901b6b" },
+  { brand: "Blends", number: "", name: "", color: "A382AE", blends: BLENDS },
 ];
 
 describe("paletteItemTitle", () => {

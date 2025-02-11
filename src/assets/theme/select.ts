@@ -44,11 +44,7 @@ export const select = {
     color: "{overlay.select.color}",
     shadow: "{overlay.select.shadow}",
   },
-  list: {
-    padding: "{list.padding}",
-    gap: "{list.gap}",
-    header: { padding: "{list.header.padding}" },
-  },
+  list: { padding: "{list.padding}", gap: "{list.gap}", header: { padding: "{list.header.padding}" } },
   option: {
     focusBackground: "{list.option.focus.background}",
     selectedBackground: "{list.option.selected.background}",
@@ -67,10 +63,6 @@ export const select = {
     padding: "{list.option.group.padding}",
   },
   clearIcon: { color: "{form.field.icon.color}" },
-  checkmark: {
-    color: "{list.option.color}",
-    gutterStart: "-0.375rem",
-    gutterEnd: "0.375rem",
-  },
+  checkmark: { color: "{list.option.color}", gutterStart: "-0.375rem", gutterEnd: "0.375rem" },
   emptyMessage: { padding: "{list.option.padding}" },
 };

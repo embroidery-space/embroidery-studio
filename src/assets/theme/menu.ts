@@ -7,10 +7,7 @@ export const menu = {
     shadow: "{overlay.navigation.shadow}",
     transitionDuration: "{transition.duration}",
   },
-  list: {
-    padding: "{navigation.list.padding}",
-    gap: "{navigation.list.gap}",
-  },
+  list: { padding: "{navigation.list.padding}", gap: "{navigation.list.gap}" },
   item: {
     focusBackground: "{navigation.item.focus.background}",
     color: "{navigation.item.color}",
@@ -18,10 +15,7 @@ export const menu = {
     padding: "{navigation.item.padding}",
     borderRadius: "{navigation.item.border.radius}",
     gap: "{navigation.item.gap}",
-    icon: {
-      color: "{navigation.item.icon.color}",
-      focusColor: "{navigation.item.icon.focus.color}",
-    },
+    icon: { color: "{navigation.item.icon.color}", focusColor: "{navigation.item.icon.focus.color}" },
   },
   submenuLabel: {
     padding: "{navigation.submenu.label.padding}",

@@ -6,10 +6,7 @@ import unocss from "@unocss/eslint-config/flat";
 
 export default [
   js.configs.recommended,
-  {
-    files: ["src/**/*.ts", "src/**/*.vue"],
-    languageOptions: { ecmaVersion: "latest" },
-  },
+  { files: ["src/**/*.ts", "src/**/*.vue"], languageOptions: { ecmaVersion: "latest" } },
   ...vue.configs["flat/recommended"],
   vuePrettierEslintConfig,
   ...vueTypescriptEslintConfig(),
