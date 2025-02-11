@@ -2596,16 +2596,16 @@ dependencies = [
 
 [[package]]
 name = "nutype"
-version = "0.5.0"
-source = "git+https://github.com/niusia-ua/nutype.git?branch=feat%2Fborsh#ece73e291708629b2cdaacfedcb16ee5b3702ea5"
+version = "0.6.1"
+source = "git+https://github.com/niusia-ua/nutype.git?branch=feat%2Fborsh#d1cfe03d9c435f8da87b5784edc2cea3e3cfa758"
 dependencies = [
  "nutype_macros",
 ]
 
 [[package]]
 name = "nutype_macros"
-version = "0.5.0"
-source = "git+https://github.com/niusia-ua/nutype.git?branch=feat%2Fborsh#ece73e291708629b2cdaacfedcb16ee5b3702ea5"
+version = "0.6.1"
+source = "git+https://github.com/niusia-ua/nutype.git?branch=feat%2Fborsh#d1cfe03d9c435f8da87b5784edc2cea3e3cfa758"
 dependencies = [
  "cfg-if",
  "kinded",
