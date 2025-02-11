@@ -60,11 +60,7 @@ export const usePreferencesStore = defineStore(
 
     function openPreferences() {
       dialog.open(AppPreferences, {
-        props: {
-          header: fluent.$t("title-preferences"),
-          modal: true,
-          dismissableMask: true,
-        },
+        props: { header: fluent.$t("title-preferences"), modal: true, dismissableMask: true },
       });
     }
 

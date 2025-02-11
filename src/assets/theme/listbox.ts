@@ -10,11 +10,7 @@ export const listbox = {
     borderRadius: "{form.field.border.radius}",
     transitionDuration: "{form.field.transition.duration}",
   },
-  list: {
-    padding: "{list.padding}",
-    gap: "{list.gap}",
-    header: { padding: "{list.header.padding}" },
-  },
+  list: { padding: "{list.padding}", gap: "{list.gap}", header: { padding: "{list.header.padding}" } },
   option: {
     focusBackground: "{list.option.focus.background}",
     selectedBackground: "{list.option.selected.background}",
@@ -32,11 +28,7 @@ export const listbox = {
     fontWeight: "{list.option.group.font.weight}",
     padding: "{list.option.group.padding}",
   },
-  checkmark: {
-    color: "{list.option.color}",
-    gutterStart: "-0.375rem",
-    gutterEnd: "0.375rem",
-  },
+  checkmark: { color: "{list.option.color}", gutterStart: "-0.375rem", gutterEnd: "0.375rem" },
   emptyMessage: { padding: "{list.option.padding}" },
   colorScheme: {
     light: { option: { stripedBackground: "{surface.50}" } },

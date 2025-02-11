@@ -1,36 +1,16 @@
 export const semantic = {
   transitionDuration: "0.2s",
-  focusRing: {
-    width: "1px",
-    style: "solid",
-    color: "{primary.color}",
-    offset: "2px",
-    shadow: "none",
-  },
+  focusRing: { width: "1px", style: "solid", color: "{primary.color}", offset: "2px", shadow: "none" },
   disabledOpacity: "0.6",
   iconSize: "1rem",
   anchorGutter: "2px",
   formField: {
     paddingX: "0.625rem",
     paddingY: "0.5rem",
-    sm: {
-      fontSize: "0.875rem",
-      paddingX: "0.5rem",
-      paddingY: "0.375rem",
-    },
-    lg: {
-      fontSize: "1.125rem",
-      paddingX: "0.75rem",
-      paddingY: "0.625rem",
-    },
+    sm: { fontSize: "0.875rem", paddingX: "0.5rem", paddingY: "0.375rem" },
+    lg: { fontSize: "1.125rem", paddingX: "0.75rem", paddingY: "0.625rem" },
     borderRadius: "{border.radius.md}",
-    focusRing: {
-      width: "0",
-      style: "none",
-      color: "transparent",
-      offset: "0",
-      shadow: "none",
-    },
+    focusRing: { width: "0", style: "none", color: "transparent", offset: "0", shadow: "none" },
     transitionDuration: "{transition.duration}",
   },
   list: {
@@ -85,11 +65,7 @@ export const semantic = {
         contrastColor: "{text.contrast.color}",
         hoverColor: "{primary.600}",
         activeColor: "{primary.700}",
-        text: {
-          color: "{primary.700}",
-          hoverColor: "{primary.800}",
-          activeColor: "{primary.900}",
-        },
+        text: { color: "{primary.700}", hoverColor: "{primary.800}", activeColor: "{primary.900}" },
       },
       danger: {
         color: "{danger.500}",
@@ -171,16 +147,8 @@ export const semantic = {
           borderColor: "{content.border.color}",
           color: "{text.color}",
         },
-        popover: {
-          background: "{surface.600}",
-          borderColor: "{surface.700}",
-          color: "{text.color}",
-        },
-        modal: {
-          background: "{content.background}",
-          borderColor: "{content.border.color}",
-          color: "{text.color}",
-        },
+        popover: { background: "{surface.600}", borderColor: "{surface.700}", color: "{text.color}" },
+        modal: { background: "{content.background}", borderColor: "{content.border.color}", color: "{text.color}" },
       },
       list: {
         option: {
@@ -191,15 +159,9 @@ export const semantic = {
           focusColor: "{text.color}",
           selectedColor: "{highlight.color}",
           selectedFocusColor: "{highlight.focus.color}",
-          icon: {
-            color: "{text.color}",
-            focusColor: "{text.color}",
-          },
+          icon: { color: "{text.color}", focusColor: "{text.color}" },
         },
-        optionGroup: {
-          background: "transparent",
-          color: "{text.muted.color}",
-        },
+        optionGroup: { background: "transparent", color: "{text.muted.color}" },
       },
       navigation: {
         item: {
@@ -208,21 +170,10 @@ export const semantic = {
           color: "{text.color}",
           focusColor: "{text.color}",
           activeColor: "{text.color}",
-          icon: {
-            color: "{text.color}",
-            focusColor: "{text.color}",
-            activeColor: "{text.color}",
-          },
+          icon: { color: "{text.color}", focusColor: "{text.color}", activeColor: "{text.color}" },
         },
-        submenuLabel: {
-          background: "transparent",
-          color: "{text.muted.color}",
-        },
-        submenuIcon: {
-          color: "{text.color}",
-          focusColor: "{text.color}",
-          activeColor: "{text.color}",
-        },
+        submenuLabel: { background: "transparent", color: "{text.muted.color}" },
+        submenuIcon: { color: "{text.color}", focusColor: "{text.color}", activeColor: "{text.color}" },
       },
     },
     dark: {
@@ -244,11 +195,7 @@ export const semantic = {
         contrastColor: "{text.contrast.color}",
         hoverColor: "{primary.400}",
         activeColor: "{primary.300}",
-        text: {
-          color: "{primary.color}",
-          hoverColor: "{primary.hover.color}",
-          activeColor: "{primary.active.color}",
-        },
+        text: { color: "{primary.color}", hoverColor: "{primary.hover.color}", activeColor: "{primary.active.color}" },
       },
       danger: {
         color: "{danger.500}",
@@ -325,21 +272,9 @@ export const semantic = {
         hoverColor: "{text.hover.color}",
       },
       overlay: {
-        select: {
-          background: "{surface.900}",
-          borderColor: "{content.border.color}",
-          color: "{text.color}",
-        },
-        popover: {
-          background: "{surface.900}",
-          borderColor: "{content.border.color}",
-          color: "{text.color}",
-        },
-        modal: {
-          background: "{content.background}",
-          borderColor: "{content.border.color}",
-          color: "{text.color}",
-        },
+        select: { background: "{surface.900}", borderColor: "{content.border.color}", color: "{text.color}" },
+        popover: { background: "{surface.900}", borderColor: "{content.border.color}", color: "{text.color}" },
+        modal: { background: "{content.background}", borderColor: "{content.border.color}", color: "{text.color}" },
       },
       list: {
         option: {
@@ -350,15 +285,9 @@ export const semantic = {
           focusColor: "{text.contrast.color}",
           selectedColor: "{highlight.color}",
           selectedFocusColor: "{highlight.focus.color}",
-          icon: {
-            color: "{text.color}",
-            focusColor: "{text.color}",
-          },
+          icon: { color: "{text.color}", focusColor: "{text.color}" },
         },
-        optionGroup: {
-          background: "transparent",
-          color: "{text.muted.color}",
-        },
+        optionGroup: { background: "transparent", color: "{text.muted.color}" },
       },
       navigation: {
         item: {
@@ -367,16 +296,9 @@ export const semantic = {
           color: "{text.color}",
           focusColor: "{text.contrast.color}",
           activeColor: "{text.contrast.color}",
-          icon: {
-            color: "{text.color}",
-            focusColor: "{text.contrast.color}",
-            activeColor: "{text.contrast.color}",
-          },
+          icon: { color: "{text.color}", focusColor: "{text.contrast.color}", activeColor: "{text.contrast.color}" },
         },
-        submenuLabel: {
-          background: "transparent",
-          color: "{text.muted.color}",
-        },
+        submenuLabel: { background: "transparent", color: "{text.muted.color}" },
         submenuIcon: {
           color: "{text.color}",
           focusColor: "{text.contrast.color}",

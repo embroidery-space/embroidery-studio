@@ -7,10 +7,7 @@ export const contextmenu = {
     shadow: "{overlay.navigation.shadow}",
     transitionDuration: "{transition.duration}",
   },
-  list: {
-    padding: "{navigation.list.padding}",
-    gap: "{navigation.list.gap}",
-  },
+  list: { padding: "{navigation.list.padding}", gap: "{navigation.list.gap}" },
   item: {
     focusBackground: "{navigation.item.focus.background}",
     activeBackground: "{navigation.item.active.background}",

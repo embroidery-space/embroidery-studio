@@ -100,12 +100,7 @@
     },
     {
       title: fluent.$t("label-get-help"),
-      items: [
-        {
-          title: fluent.$t("label-get-help-telegram"),
-          url: "https://t.me/embroidery_space",
-        },
-      ],
+      items: [{ title: fluent.$t("label-get-help-telegram"), url: "https://t.me/embroidery_space" }],
     },
   ]);
 

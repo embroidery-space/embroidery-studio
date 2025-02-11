@@ -8,10 +8,7 @@ export const menubar = {
     padding: "0.5rem",
     transitionDuration: "{transition.duration}",
   },
-  baseItem: {
-    borderRadius: "{content.border.radius}",
-    padding: "{navigation.item.padding}",
-  },
+  baseItem: { borderRadius: "{content.border.radius}", padding: "{navigation.item.padding}" },
   item: {
     focusBackground: "{navigation.item.focus.background}",
     activeBackground: "{navigation.item.active.background}",

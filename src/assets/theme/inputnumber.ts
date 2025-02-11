@@ -13,17 +13,7 @@ export const inputnumber = {
     activeColor: "{text.muted.color}",
   },
   colorScheme: {
-    light: {
-      button: {
-        hoverBackground: "{surface.500}",
-        activeBackground: "{surface.600}",
-      },
-    },
-    dark: {
-      button: {
-        hoverBackground: "{surface.800}",
-        activeBackground: "{surface.900}",
-      },
-    },
+    light: { button: { hoverBackground: "{surface.500}", activeBackground: "{surface.600}" } },
+    dark: { button: { hoverBackground: "{surface.800}", activeBackground: "{surface.900}" } },
   },
 };

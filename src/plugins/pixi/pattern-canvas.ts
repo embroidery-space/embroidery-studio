@@ -33,11 +33,7 @@ export class PatternCanvas extends EventTarget {
     await this.#pixi.init(Object.assign({ width, height }, DEFAULT_INIT_OPTIONS, options));
     this.#tm = new TextureManager(this.#pixi.renderer);
     this.#viewport = this.#pixi.stage.addChild(
-      new Viewport({
-        screenWidth: width,
-        screenHeight: height,
-        events: this.#pixi.renderer.events,
-      }),
+      new Viewport({ screenWidth: width, screenHeight: height, events: this.#pixi.renderer.events }),
     );
 
     // Configure the viewport.
@@ -116,13 +112,7 @@ export class PatternCanvas extends EventTarget {
   #fireAddStitchEvent(e: FederatedPointerEvent, stage: AddStitchEventStage) {
     const point = this.#viewport.toWorld(e.global);
     if (this.#pointIsOutside(point)) return;
-    const detail: AddStitchData = {
-      stage,
-      start: this.#startPoint!,
-      end: point,
-      alt: e.ctrlKey,
-      fixed: e.ctrlKey,
-    };
+    const detail: AddStitchData = { stage, start: this.#startPoint!, end: point, alt: e.ctrlKey, fixed: e.ctrlKey };
     this.dispatchEvent(new CustomEvent(EventType.AddStitch, { detail }));
   }
 

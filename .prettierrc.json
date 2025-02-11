@@ -1,4 +1,5 @@
 {
   "printWidth": 120,
+  "objectWrap": "collapse",
   "vueIndentScriptAndStyle": true
 }

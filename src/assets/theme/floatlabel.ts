@@ -15,8 +15,5 @@ export const floatlabel = {
     input: { paddingTop: "1.5rem", paddingBottom: "{form.field.padding.y}" },
     active: { top: "{form.field.padding.y}" },
   },
-  on: {
-    borderRadius: "{border.radius.xs}",
-    active: { background: "{form.field.background}", padding: "0 0.125rem" },
-  },
+  on: { borderRadius: "{border.radius.xs}", active: { background: "{form.field.background}", padding: "0 0.125rem" } },
 };

@@ -193,9 +193,7 @@
     ...PaletteSectionsMenuOptions.value,
     { separator: true },
     {
-      label: fluent.$t("label-palette-delete-selected", {
-        selected: appStateStore.selectedPaletteItemIndexes.length,
-      }),
+      label: fluent.$t("label-palette-delete-selected", { selected: appStateStore.selectedPaletteItemIndexes.length }),
       disabled: !patternsStore.pattern?.palette.length || !appStateStore.selectedPaletteItemIndexes.length,
       command: () => patternsStore.removePaletteItem(...appStateStore.selectedPaletteItemIndexes),
     },

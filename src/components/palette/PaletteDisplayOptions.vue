@@ -63,10 +63,7 @@
   import PaletteSection from "./PaletteSection.vue";
 
   const props = defineProps<{ options: PaletteDisplayOptions }>();
-  const emit = defineEmits<{
-    (event: "close"): void;
-    (event: "update:options", data: PaletteDisplayOptions): void;
-  }>();
+  const emit = defineEmits<{ (event: "close"): void; (event: "update:options", data: PaletteDisplayOptions): void }>();
 
   function updateOptions<K extends keyof PaletteDisplayOptions>(key: K, value: PaletteDisplayOptions[K]) {
     emit("update:options", { ...props.options, [key]: value });
