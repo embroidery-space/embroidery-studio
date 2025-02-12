@@ -5,3 +5,7 @@
 .border-content {
   border-color: var(--p-content-border-color);
 }
+
+.bg-content {
+  background-color: var(--p-content-background);
+}

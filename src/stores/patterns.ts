@@ -31,6 +31,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   const blocked = ref(false);
   const loading = ref(false);
   const pattern = shallowRef<PatternView>();
+  const patternViewMode = ref<"solid" | "stitches">("solid");
 
   async function loadPattern() {
     const path = await open({
@@ -217,6 +218,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     blocked,
     loading,
     pattern,
+    patternViewMode,
     loadPattern,
     openPattern,
     createPattern,
