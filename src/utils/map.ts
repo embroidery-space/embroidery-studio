@@ -86,6 +86,12 @@ export class ObjectedMap<K extends object, V> {
     capacity = capacity < DEFAULT_BUCKETS_COUNT ? DEFAULT_BUCKETS_COUNT : capacity;
     return new ObjectedMap(Math.ceil(capacity / DEFAULT_LOAD_FACTOR));
   }
+
+  static withKeys<K extends object, V>(keys: K[]): ObjectedMap<K, V> {
+    const map = ObjectedMap.withCapacity<K, V>(keys.length);
+    for (const key of keys) map.set(key, undefined as V);
+    return map;
+  }
 }
 
 type Bucket<K, V> = Array<{ key: K; value: V }>;

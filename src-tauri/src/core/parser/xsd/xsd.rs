@@ -438,7 +438,7 @@ fn read_pattern_settings<R: Read + Seek>(reader: &mut R) -> Result<XsdPatternSet
   };
   reader.seek_relative(10)?;
 
-  let view: View = reader.read_u16::<LittleEndian>()?.into();
+  let view = View::from_pattern_maker(reader.read_u16::<LittleEndian>()?);
   // Match a zoom variant into a percentage value.
   let zoom = match reader.read_u16::<LittleEndian>()? {
     0 => 400,

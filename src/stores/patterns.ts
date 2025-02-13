@@ -10,7 +10,7 @@ import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
 import { FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
 import { PatternView } from "#/plugins/pixi";
-import { AddedPaletteItemData, deserializeStitch, deserializeStitches } from "#/schemas/pattern";
+import { AddedPaletteItemData, deserializeStitch, deserializeStitches, View } from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
 const SAVE_AS_FILTERS: DialogFilter[] = [
@@ -31,7 +31,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   const blocked = ref(false);
   const loading = ref(false);
   const pattern = shallowRef<PatternView>();
-  const patternViewMode = ref<"solid" | "stitches">("solid");
+  const patternView = ref<View>(View.Solid);
 
   async function loadPattern() {
     const path = await open({
@@ -218,7 +218,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     blocked,
     loading,
     pattern,
-    patternViewMode,
+    patternView,
     loadPattern,
     openPattern,
     createPattern,

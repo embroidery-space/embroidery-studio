@@ -76,6 +76,11 @@ label-display-options-show-brand = Show thread brand
 label-display-options-show-number = Show color number
 label-display-options-show-name = Show color name
 
+## Titles, labels and messages related to the canvas panel and its settings.
+
+label-view-as-solid = View as Solid
+label-view-as-stitches = View as Stitches
+
 ## Titles, labels and messages related to the preferences dialog.
 
 title-preferences = Preferences

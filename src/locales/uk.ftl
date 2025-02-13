@@ -79,6 +79,11 @@ label-display-options-show-brand = Відображати бренд нитки
 label-display-options-show-number = Відображати номер кольору
 label-display-options-show-name = Відображати назву кольору
 
+## Titles, labels and messages related to the canvas panel and its settings.
+
+label-view-as-solid = Відображати як суцільне
+label-view-as-stitches = Відображати як стібки
+
 ## Titles, labels and messages related to the preferences dialog.
 
 title-preferences = Налаштування
