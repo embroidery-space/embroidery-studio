@@ -257,22 +257,15 @@ pub struct GridLineStyle {
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
 pub enum View {
-  Stitches = 0,
-  Symbols = 1,
-  Solid = 2,
-  Information = 3,
-  MachineEmbInfo = 4,
+  Solid = 0,
+  Stitches = 1,
 }
 
-impl From<u16> for View {
-  fn from(value: u16) -> Self {
+impl View {
+  pub fn from_pattern_maker(value: u16) -> Self {
     match value {
       0 => View::Stitches,
-      1 => View::Symbols,
-      2 => View::Solid,
-      3 => View::Information,
-      5 => View::MachineEmbInfo,
-      _ => panic!("Invalid View value: {value}"),
+      _ => View::Solid,
     }
   }
 }

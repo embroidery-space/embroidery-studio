@@ -5,6 +5,7 @@
       v-tooltip="{
         value: typeof currentOption.label === 'function' ? currentOption.label() : currentOption.label,
         showDelay: 200,
+        disabled: props.disabled,
       }"
       :text="!selected"
       :disabled="props.disabled"
@@ -15,6 +16,7 @@
     />
 
     <Button
+      v-if="props.options.length > 1"
       ref="dropdown-button"
       text
       :disabled="props.disabled"
@@ -50,16 +52,19 @@
   import type { MenuItem } from "primevue/menuitem";
   import { dt } from "@primevue/themes";
   import { useAppStateStore } from "#/stores/state";
-  import { usePreferencesStore } from "#/stores/preferences";
   import { usePatternsStore } from "#/stores/patterns";
 
   type ToolOption = Omit<MenuItem, "command"> & { value: unknown };
 
-  const props = defineProps<{ modelValue: unknown; options: ToolOption[]; disabled?: boolean }>();
+  const props = defineProps<{
+    modelValue: unknown;
+    options: ToolOption[];
+    disabled?: boolean;
+    usePalitemColor?: boolean;
+  }>();
   const emit = defineEmits(["update:modelValue"]);
 
   const appStateStore = useAppStateStore();
-  const preferencesStore = usePreferencesStore();
   const patternsStore = usePatternsStore();
 
   const currentOption = ref<ToolOption>(
@@ -69,7 +74,7 @@
 
   const color = computed(() => {
     const palindex = appStateStore.selectedPaletteItemIndexes[0];
-    if (!preferencesStore.usePaletteItemColorForStitchTools || !patternsStore.pattern || palindex === undefined) return;
+    if (!props.usePalitemColor || !patternsStore.pattern || palindex === undefined) return;
     return patternsStore.pattern.palette[palindex]!.color;
   });
 
@@ -92,11 +97,12 @@
 
   function handlePointerDown(e: PointerEvent) {
     if (props.disabled) return;
-    clearLongPress();
-    timeout = setTimeout(() => {
-      hasLongPressed = true;
-      handleLongPress(e, hasLongPressed);
-    }, 500);
+    if (props.options.length > 1) {
+      timeout = setTimeout(() => {
+        hasLongPressed = true;
+        handleLongPress(e, hasLongPressed);
+      }, 500);
+    } else handleLongPress(e, hasLongPressed);
   }
 
   function handlePointerUp(e: PointerEvent) {
@@ -114,16 +120,14 @@
   }
 
   function handleLongPress(e: PointerEvent, isLongPress: boolean) {
-    const isDropdownButtonClick = dropdownButtonElement.value.contains(e.target);
-    if ((e.button === 0 && (isLongPress || isDropdownButtonClick)) || e.button === 2) toggleMenu(e);
-    else emit("update:modelValue", currentOption.value.value);
-  }
-
-  function toggleMenu(e: Event) {
-    // This is a workaround to attach the menu to the element
-    // and to avoid issues that the `event.currentTarget` is `null` because it is used outside the event handler.
-    const event = { ...e, currentTarget: containerElement.value };
-    menu.value!.toggle(event);
+    const isDropdownButtonClick = dropdownButtonElement.value && dropdownButtonElement.value.contains(e.target);
+    if ((e.button === 0 && (isLongPress || isDropdownButtonClick)) || e.button === 2) {
+      if (props.options.length === 1) return;
+      // This is a workaround to attach the menu to the element
+      // and to avoid issues that the `event.currentTarget` is `null` because it is used outside the event handler.
+      const event = { ...e, currentTarget: containerElement.value };
+      menu.value!.toggle(event);
+    } else emit("update:modelValue", currentOption.value.value);
   }
 
   useEventListener(document, ["pointerdown", "contextmenu"], (e) => {

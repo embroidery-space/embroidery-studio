@@ -12,7 +12,7 @@
   import { vElementSize } from "@vueuse/components";
   import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
-  import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
+  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
@@ -31,6 +31,15 @@
 
   const canvas = useTemplateRef("canvas");
   const patternCanvas = new PatternCanvas();
+
+  watch(
+    () => patternsStore.patternView,
+    (view) => {
+      if (!patternsStore.pattern) return;
+      TextureManager.shared.view = view;
+      patternCanvas.setPatternView(patternsStore.pattern);
+    },
+  );
 
   watch(pattern, (view) => {
     if (!view) return;

@@ -40,21 +40,25 @@
           <ToolSelector
             v-model="appStateStore.selectedStitchTool"
             :options="fullstitches"
+            :use-palitem-color="preferencesStore.usePaletteItemColorForStitchTools"
             :disabled="paletteIsDisabled"
           />
           <ToolSelector
             v-model="appStateStore.selectedStitchTool"
             :options="partstitches"
+            :use-palitem-color="preferencesStore.usePaletteItemColorForStitchTools"
             :disabled="paletteIsDisabled"
           />
           <ToolSelector
             v-model="appStateStore.selectedStitchTool"
             :options="linestitches"
+            :use-palitem-color="preferencesStore.usePaletteItemColorForStitchTools"
             :disabled="paletteIsDisabled"
           />
           <ToolSelector
             v-model="appStateStore.selectedStitchTool"
             :options="nodestitches"
+            :use-palitem-color="preferencesStore.usePaletteItemColorForStitchTools"
             :disabled="paletteIsDisabled"
           />
         </div>
@@ -123,6 +127,7 @@
   import { dequal } from "dequal";
   import { usePatternsStore } from "#/stores/patterns";
   import { useAppStateStore } from "#/stores/state";
+  import { usePreferencesStore } from "#/stores/preferences";
   import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "#/schemas/pattern";
   import { DEFAULT_PALETTE_DISPLAY_OPTIONS } from "#/utils/paletteItem";
   import PaletteList from "./palette/PaletteList.vue";
@@ -132,6 +137,7 @@
   const PaletteDisplayOptions = defineAsyncComponent(() => import("./palette/PaletteDisplayOptions.vue"));
 
   const appStateStore = useAppStateStore();
+  const preferencesStore = usePreferencesStore();
   const patternsStore = usePatternsStore();
 
   const fluent = useFluent();
