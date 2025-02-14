@@ -30,8 +30,8 @@ export class PatternView {
   #info: PatternInfo;
   #palette: CompletePaletteItem[];
 
-  #fabric!: Fabric;
-  #grid!: Grid;
+  #fabric: Fabric;
+  #grid: Grid;
 
   // Simple stitches (fulls, petites, halves and quarters) are rendered using particles.
   // It allows us to render a large number of stitches very efficiently.
@@ -72,9 +72,8 @@ export class PatternView {
       return new CompletePaletteItem(palitem, symbols, formats);
     });
 
-    // Set the fabric and grid.
-    this.setFabric(pattern.fabric);
-    this.setGrid(displaySettings.grid);
+    this.#fabric = pattern.fabric;
+    this.#grid = displaySettings.grid;
 
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.
@@ -87,27 +86,36 @@ export class PatternView {
     this.#specialStitchModels = pattern.specialStitchModels;
   }
 
-  init() {
+  render() {
+    this.clear();
+
+    // Set the fabric and grid.
+    this.setFabric(this.#fabric);
+    this.setGrid(this.#grid);
+
     // Add actual stitches to the view.
-    this.#stages.fullstitches.destroy();
-    this.#stages.fullstitches = new StitchParticleContainer(FullStitchKind.Full);
-    this.#stages.petites.destroy();
-    this.#stages.petites = new StitchParticleContainer(FullStitchKind.Petite);
-    for (const fullstitch of this.#fullstitches.extract().map((entry) => entry.key)) this.addFullStitch(fullstitch);
-    this.#stages.halfstitches.destroy();
-    this.#stages.halfstitches = new StitchParticleContainer(PartStitchKind.Half);
-    this.#stages.quarters.destroy();
-    this.#stages.quarters = new StitchParticleContainer(PartStitchKind.Quarter);
-    for (const partstitch of this.#partstitches.extract().map((entry) => entry.key)) this.addPartStitch(partstitch);
-    this.#stages.lines.destroy();
-    this.#stages.lines = new Container();
-    for (const line of this.#lines.extract().map((entry) => entry.key)) this.addLineStitch(line);
-    this.#stages.nodes.destroy();
-    this.#stages.nodes = new Container();
-    for (const node of this.#nodes.extract().map((entry) => entry.key)) this.addNodeStitch(node);
-    this.#stages.specialstitches.destroy();
-    this.#stages.specialstitches = new Container();
+    for (const fullstitch of this.#fullstitches.keys()) this.addFullStitch(fullstitch);
+    for (const partstitch of this.#partstitches.keys()) this.addPartStitch(partstitch);
+    for (const line of this.#lines.keys()) this.addLineStitch(line);
+    for (const node of this.#nodes.keys()) this.addNodeStitch(node);
     for (const specialstitch of this.#specialstitches) this.addSpecialStitch(specialstitch);
+  }
+
+  clear() {
+    for (const stage of Object.values(this.#stages)) stage.destroy();
+    this.#stages = {
+      // lowest
+      fabric: new Graphics(),
+      fullstitches: new StitchParticleContainer(FullStitchKind.Full),
+      petites: new StitchParticleContainer(FullStitchKind.Petite),
+      halfstitches: new StitchParticleContainer(PartStitchKind.Half),
+      quarters: new StitchParticleContainer(PartStitchKind.Quarter),
+      grid: new Graphics(),
+      specialstitches: new Container(),
+      lines: new Container(),
+      nodes: new Container(),
+      // highest
+    };
   }
 
   get key() {

@@ -53,7 +53,7 @@ export class PatternCanvas extends EventTarget {
   setPatternView(view: PatternView) {
     this.clear();
 
-    view.init();
+    view.render();
     for (const stage of Object.values(view.stages)) this.#viewport.addChild(stage);
     this.#viewport.addChild(this.#hint);
 
