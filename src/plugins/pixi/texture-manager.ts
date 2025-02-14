@@ -8,6 +8,7 @@ import { Bead, FullStitchKind, NodeStitchKind, PartStitchKind, View } from "#/sc
 const DEFAULT_TEXTURE_SOURCE_OPTIONS: Partial<TextureSourceOptions> = {
   resolution: window.devicePixelRatio,
   antialias: true,
+  scaleMode: "linear",
 };
 
 /**
@@ -26,7 +27,7 @@ export class TextureManager {
   #frenchKnot?: RenderTexture;
   #beads = new ObjectedMap<Bead, RenderTexture>();
 
-  view = View.Solid;
+  view = View.Stitches;
 
   init(renderer: Renderer, textureSourceOptions?: TextureSourceOptions) {
     this.#renderer = renderer;
@@ -76,6 +77,7 @@ export class TextureManager {
               { x: 20, y: 50 },
               { x: 0, y: 30 },
             ])
+            .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
           return this.#createTexture(shape, { width: 100, height: 100 });
         })(),
@@ -99,7 +101,7 @@ export class TextureManager {
               { x: 10, y: 25 },
               { x: 0, y: 15 },
             ])
-            // .stroke(TEXTURE_STROKE)
+            .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
           return this.#createTexture(shape, { width: 50, height: 50 });
         })(),
