@@ -15,7 +15,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
   import { useFluent } from "fluent-vue";
-  import { View } from "#/schemas/pattern";
+  import { DisplayMode } from "#/schemas/pattern";
   import { usePatternsStore } from "#/stores/patterns";
   import ToolSelector from "./ToolSelector.vue";
 
@@ -25,14 +25,14 @@
 
   const disabled = computed(() => patternsStore.pattern === undefined);
   const displayMode = computed({
-    get: () => patternsStore.pattern?.displayMode ?? View.Solid,
+    get: () => patternsStore.pattern?.displayMode ?? DisplayMode.Solid,
     set: (mode) => {
       if (patternsStore.pattern?.displayMode !== mode) patternsStore.setDisplayMode(mode);
     },
   });
 
   const patternViewOptions = ref([
-    { icon: "i-stitches:square", label: () => fluent.$t("label-view-as-solid"), value: View.Solid },
-    { icon: "i-stitches:full", label: () => fluent.$t("label-view-as-stitches"), value: View.Stitches },
+    { icon: "i-stitches:square", label: () => fluent.$t("label-view-as-solid"), value: DisplayMode.Solid },
+    { icon: "i-stitches:full", label: () => fluent.$t("label-view-as-stitches"), value: DisplayMode.Stitches },
   ]);
 </script>

@@ -10,7 +10,7 @@ import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
 import { FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
 import { PatternView } from "#/plugins/pixi";
-import { AddedPaletteItemData, deserializeStitch, deserializeStitches, View } from "#/schemas/pattern";
+import { AddedPaletteItemData, deserializeStitch, deserializeStitches, DisplayMode } from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
 const SAVE_AS_FILTERS: DialogFilter[] = [
@@ -196,7 +196,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.removeStitch(stitch);
   });
 
-  function setDisplayMode(mode: View) {
+  function setDisplayMode(mode: DisplayMode) {
     if (!pattern.value) return;
     pattern.value.setDisplayMode(mode);
     triggerRef(pattern);

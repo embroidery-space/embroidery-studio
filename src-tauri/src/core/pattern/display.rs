@@ -9,7 +9,7 @@ pub struct DisplaySettings {
   pub symbol_settings: SymbolSettings,
   pub formats: Vec<Formats>,
   pub grid: Grid,
-  pub view: View,
+  pub display_mode: DisplayMode,
   pub zoom: u16,
   pub show_grid: bool,
   pub show_rulers: bool,
@@ -29,7 +29,7 @@ impl Default for DisplaySettings {
       symbol_settings: SymbolSettings::default(),
       formats: Vec::new(),
       grid: Grid::default(),
-      view: View::Solid,
+      display_mode: DisplayMode::Solid,
       zoom: 100,
       show_grid: true,
       show_rulers: true,
@@ -256,16 +256,16 @@ pub struct GridLineStyle {
 
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
-pub enum View {
+pub enum DisplayMode {
   Solid = 0,
   Stitches = 1,
 }
 
-impl View {
+impl DisplayMode {
   pub fn from_pattern_maker(value: u16) -> Self {
     match value {
-      0 => View::Stitches,
-      _ => View::Solid,
+      0 => DisplayMode::Stitches,
+      _ => DisplayMode::Solid,
     }
   }
 }

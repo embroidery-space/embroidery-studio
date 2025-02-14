@@ -313,7 +313,7 @@ export class DisplaySettings {
   grid: Grid;
 
   @field({ type: "u8" })
-  view: View;
+  displayMode: DisplayMode;
 
   @field({ type: "u16" })
   zoom: number;
@@ -348,7 +348,7 @@ export class DisplaySettings {
     this.symbolSettings = data.symbolSettings;
     this.formats = data.formats;
     this.grid = data.grid;
-    this.view = data.view;
+    this.displayMode = data.displayMode;
     this.zoom = data.zoom;
     this.showGrid = data.showGrid;
     this.showRulers = data.showRulers;
@@ -373,7 +373,7 @@ export const enum LineStitchStyle {
   Morse = 8,
 }
 
-export const enum View {
+export const enum DisplayMode {
   Solid = 0,
   Stitches = 1,
 }

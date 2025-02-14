@@ -19,7 +19,7 @@ import type {
   SpecialStitch,
   SpecialStitchModel,
   Stitch,
-  View,
+  DisplayMode,
 } from "#/schemas/pattern";
 
 /**
@@ -34,7 +34,7 @@ export class PatternView {
   #fabric: Fabric;
   #grid: Grid;
 
-  displayMode: View;
+  displayMode: DisplayMode;
 
   // Simple stitches (fulls, petites, halves and quarters) are rendered using particles.
   // It allows us to render a large number of stitches very efficiently.
@@ -78,7 +78,7 @@ export class PatternView {
     this.#fabric = pattern.fabric;
     this.#grid = displaySettings.grid;
 
-    this.displayMode = displaySettings.view;
+    this.displayMode = displaySettings.displayMode;
 
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.
@@ -104,7 +104,7 @@ export class PatternView {
     for (const specialstitch of this.#specialstitches) this.addSpecialStitch(specialstitch);
   }
 
-  setDisplayMode(displayMode: View) {
+  setDisplayMode(displayMode: DisplayMode) {
     this.displayMode = displayMode;
     this.#stages.fullstitches.texture = TextureManager.shared.getFullStitchTexture(displayMode, FullStitchKind.Full);
     this.#stages.petites.texture = TextureManager.shared.getFullStitchTexture(displayMode, FullStitchKind.Petite);

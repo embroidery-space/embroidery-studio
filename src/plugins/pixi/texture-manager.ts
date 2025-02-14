@@ -3,7 +3,7 @@ import type { Renderer, RenderOptions, TextureSourceOptions } from "pixi.js";
 import { TEXTURE_STROKE } from "./constants";
 import { ObjectedMap } from "#/utils/map";
 import { mm2px } from "#/utils/measurement";
-import { Bead, FullStitchKind, NodeStitchKind, PartStitchKind, View } from "#/schemas/pattern";
+import { Bead, FullStitchKind, NodeStitchKind, PartStitchKind, DisplayMode } from "#/schemas/pattern";
 
 const DEFAULT_TEXTURE_SOURCE_OPTIONS: Partial<TextureSourceOptions> = {
   resolution: window.devicePixelRatio,
@@ -21,8 +21,8 @@ export class TextureManager {
   #renderer!: Renderer;
   #textureSourceOptions!: TextureSourceOptions;
 
-  #fullstitches = new Map<View, Record<FullStitchKind, RenderTexture>>();
-  #partstitches = new Map<View, Record<PartStitchKind, RenderTexture>>();
+  #fullstitches = new Map<DisplayMode, Record<FullStitchKind, RenderTexture>>();
+  #partstitches = new Map<DisplayMode, Record<PartStitchKind, RenderTexture>>();
 
   #frenchKnot?: RenderTexture;
   #beads = new ObjectedMap<Bead, RenderTexture>();
@@ -32,7 +32,7 @@ export class TextureManager {
     this.#textureSourceOptions = Object.assign({}, DEFAULT_TEXTURE_SOURCE_OPTIONS, textureSourceOptions);
   }
 
-  getFullStitchTexture(mode: View, kind: FullStitchKind) {
+  getFullStitchTexture(mode: DisplayMode, kind: FullStitchKind) {
     let textures = this.#fullstitches.get(mode);
     if (!textures) {
       textures = this.#createFullStitchTextures(mode);
@@ -41,8 +41,8 @@ export class TextureManager {
     return textures[kind];
   }
 
-  #createFullStitchTextures(mode: View) {
-    if (mode === View.Solid) {
+  #createFullStitchTextures(mode: DisplayMode) {
+    if (mode === DisplayMode.Solid) {
       return {
         [FullStitchKind.Full]: (() => {
           const shape = new Graphics().rect(0, 0, 100, 100).fill(0xffffff);
@@ -107,7 +107,7 @@ export class TextureManager {
     }
   }
 
-  getPartStitchTexture(mode: View, kind: PartStitchKind) {
+  getPartStitchTexture(mode: DisplayMode, kind: PartStitchKind) {
     let textures = this.#partstitches.get(mode);
     if (!textures) {
       textures = this.#createPartStitchTextures(mode);
@@ -116,8 +116,8 @@ export class TextureManager {
     return textures[kind];
   }
 
-  #createPartStitchTextures(mode: View) {
-    if (mode === View.Solid) {
+  #createPartStitchTextures(mode: DisplayMode) {
+    if (mode === DisplayMode.Solid) {
       return {
         [PartStitchKind.Half]: (() => {
           const shape = new Graphics().rect(1, 51, 48, 48).rect(51, 1, 48, 48).stroke(TEXTURE_STROKE).fill(0xffffff);

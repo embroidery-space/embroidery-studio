@@ -50,14 +50,14 @@ export class PatternCanvas extends EventTarget {
     this.#viewport.on("rightclick", this.#onRightClick, this);
   }
 
-  setPatternView(view: PatternView) {
+  setPatternView(pattern: PatternView) {
     this.clear();
 
-    view.render();
-    for (const stage of Object.values(view.stages)) this.#viewport.addChild(stage);
+    pattern.render();
+    for (const stage of Object.values(pattern.stages)) this.#viewport.addChild(stage);
     this.#viewport.addChild(this.#hint);
 
-    const { width, height } = view.fabric;
+    const { width, height } = pattern.fabric;
     this.#viewport.worldWidth = width;
     this.#viewport.worldHeight = height;
 
