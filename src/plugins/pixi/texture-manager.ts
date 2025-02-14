@@ -27,32 +27,30 @@ export class TextureManager {
   #frenchKnot?: RenderTexture;
   #beads = new ObjectedMap<Bead, RenderTexture>();
 
-  view = View.Solid;
-
   init(renderer: Renderer, textureSourceOptions?: TextureSourceOptions) {
     this.#renderer = renderer;
     this.#textureSourceOptions = Object.assign({}, DEFAULT_TEXTURE_SOURCE_OPTIONS, textureSourceOptions);
   }
 
-  getFullStitchTexture(kind: FullStitchKind) {
-    let textures = this.#fullstitches.get(this.view);
+  getFullStitchTexture(mode: View, kind: FullStitchKind) {
+    let textures = this.#fullstitches.get(mode);
     if (!textures) {
-      textures = this.#createFullStitchTextures();
-      this.#fullstitches.set(this.view, textures);
+      textures = this.#createFullStitchTextures(mode);
+      this.#fullstitches.set(mode, textures);
     }
     return textures[kind];
   }
 
-  #createFullStitchTextures() {
-    if (this.view === View.Solid) {
+  #createFullStitchTextures(mode: View) {
+    if (mode === View.Solid) {
       return {
         [FullStitchKind.Full]: (() => {
           const shape = new Graphics().rect(0, 0, 100, 100).fill(0xffffff);
-          return this.#createTexture(shape, { width: 100, height: 100 });
+          return this.#createTexture(shape, { label: "FullStitch-Solid", width: 100, height: 100 });
         })(),
         [FullStitchKind.Petite]: (() => {
           const shape = new Graphics().rect(1, 1, 48, 48).stroke(TEXTURE_STROKE).fill(0xffffff);
-          return this.#createTexture(shape, { width: 50, height: 50 });
+          return this.#createTexture(shape, { label: "PetiteStitch-Solid", width: 50, height: 50 });
         })(),
       };
     } else {
@@ -79,7 +77,7 @@ export class TextureManager {
             ])
             .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
-          return this.#createTexture(shape, { width: 100, height: 100 });
+          return this.#createTexture(shape, { label: "FullStitch-Stitches", width: 100, height: 100 });
         })(),
         [FullStitchKind.Petite]: (() => {
           const shape = new Graphics()
@@ -103,31 +101,31 @@ export class TextureManager {
             ])
             .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
-          return this.#createTexture(shape, { width: 50, height: 50 });
+          return this.#createTexture(shape, { label: "PetiteStitch-Stitches", width: 50, height: 50 });
         })(),
       };
     }
   }
 
-  getPartStitchTexture(kind: PartStitchKind) {
-    let textures = this.#partstitches.get(this.view);
+  getPartStitchTexture(mode: View, kind: PartStitchKind) {
+    let textures = this.#partstitches.get(mode);
     if (!textures) {
-      textures = this.#createPartStitchTextures();
-      this.#partstitches.set(this.view, textures);
+      textures = this.#createPartStitchTextures(mode);
+      this.#partstitches.set(mode, textures);
     }
     return textures[kind];
   }
 
-  #createPartStitchTextures() {
-    if (this.view === View.Solid) {
+  #createPartStitchTextures(mode: View) {
+    if (mode === View.Solid) {
       return {
         [PartStitchKind.Half]: (() => {
           const shape = new Graphics().rect(1, 51, 48, 48).rect(51, 1, 48, 48).stroke(TEXTURE_STROKE).fill(0xffffff);
-          return this.#createTexture(shape, { width: 100, height: 100 });
+          return this.#createTexture(shape, { label: "HalfStitch-Solid", width: 100, height: 100 });
         })(),
         [PartStitchKind.Quarter]: (() => {
           const shape = new Graphics().rect(1, 1, 48, 48).stroke(TEXTURE_STROKE).fill(0xffffff);
-          return this.#createTexture(shape, { width: 50, height: 50 });
+          return this.#createTexture(shape, { label: "QuarterStitch-Solid", width: 50, height: 50 });
         })(),
       };
     } else {
@@ -144,7 +142,7 @@ export class TextureManager {
             ])
             .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
-          return this.#createTexture(shape, { width: 100, height: 100 });
+          return this.#createTexture(shape, { label: "halfStitch-Stitches", width: 100, height: 100 });
         })(),
         [PartStitchKind.Quarter]: (() => {
           const shape = new Graphics()
@@ -158,7 +156,7 @@ export class TextureManager {
             ])
             .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
-          return this.#createTexture(shape, { width: 50, height: 50 });
+          return this.#createTexture(shape, { label: "QuarterStitch-Stitches", width: 50, height: 50 });
         })(),
       };
     }
@@ -173,7 +171,11 @@ export class TextureManager {
 
   #createFrenchKnotTexture() {
     const shape = new Graphics().circle(0, 0, 24).stroke(TEXTURE_STROKE).fill(0xffffff);
-    return this.#createTexture(shape, { width: 50, height: 50 }, { transform: new Matrix(1, 0, 0, 1, 25, 25) });
+    return this.#createTexture(
+      shape,
+      { label: "FrenchKnot", width: 50, height: 50 },
+      { transform: new Matrix(1, 0, 0, 1, 25, 25) },
+    );
   }
 
   #createBeadTexture(bead: Bead) {
@@ -183,7 +185,7 @@ export class TextureManager {
       .roundRect(1, 2, width - 2, height - 4, (width - 2) * 0.4)
       .stroke(TEXTURE_STROKE)
       .fill(0xffffff);
-    return this.#createTexture(shape, { width, height });
+    return this.#createTexture(shape, { label: `Bead-${bead.diameter}:${bead.length}`, width, height });
   }
 
   #createTexture(

@@ -11,33 +11,28 @@
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { Point } from "pixi.js";
-  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager } from "#/plugins/pixi";
+  import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
   import {
+    FullStitch,
+    LineStitch,
+    NodeStitch,
+    PartStitch,
     FullStitchKind,
     PartStitchKind,
     PartStitchDirection,
     LineStitchKind,
     NodeStitchKind,
   } from "#/schemas/pattern";
-  import { type Stitch, type StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
+  import type { Stitch, StitchKind } from "#/schemas/pattern";
 
   const appStateStore = useAppStateStore();
   const patternsStore = usePatternsStore();
 
   const canvas = useTemplateRef("canvas");
   const patternCanvas = new PatternCanvas();
-
-  watch(
-    () => patternsStore.patternView,
-    (view) => {
-      if (!patternsStore.pattern) return;
-      TextureManager.shared.view = view;
-      patternCanvas.setPatternView(patternsStore.pattern);
-    },
-  );
 
   watch(
     () => patternsStore.pattern,

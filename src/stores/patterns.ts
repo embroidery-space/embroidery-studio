@@ -31,7 +31,6 @@ export const usePatternsStore = defineStore("pattern-project", () => {
   const blocked = ref(false);
   const loading = ref(false);
   const pattern = shallowRef<PatternView>();
-  const patternView = ref<View>(View.Solid);
 
   async function loadPattern() {
     const path = await open({
@@ -197,6 +196,12 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.removeStitch(stitch);
   });
 
+  function setDisplayMode(mode: View) {
+    if (!pattern.value) return;
+    pattern.value.setDisplayMode(mode);
+    triggerRef(pattern);
+  }
+
   const keys = useMagicKeys();
 
   whenever(keys["Ctrl+KeyO"]!, loadPattern);
@@ -218,7 +223,6 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     blocked,
     loading,
     pattern,
-    patternView,
     loadPattern,
     openPattern,
     createPattern,
@@ -231,5 +235,6 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     removePaletteItem,
     addStitch,
     removeStitch,
+    setDisplayMode,
   };
 });

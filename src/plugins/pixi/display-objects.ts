@@ -1,4 +1,4 @@
-import { Graphics, GraphicsContext, Particle, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { Graphics, GraphicsContext, ParticleContainer, Sprite, Texture } from "pixi.js";
 import type { FullStitchKind, PartStitchKind, Stitch } from "#/schemas/pattern";
 
 /** A `Graphics` object that contains a reference to the `Stitch` object it represents. */
@@ -28,13 +28,5 @@ export class StitchParticleContainer extends ParticleContainer {
   constructor(kind: FullStitchKind | PartStitchKind) {
     super();
     this.kind = kind;
-  }
-
-  override addParticle(...children: Particle[]) {
-    return super.addParticle(...children);
-  }
-
-  override removeParticle(...children: Particle[]) {
-    return super.removeParticle(...children);
   }
 }

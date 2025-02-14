@@ -19,6 +19,7 @@ import type {
   SpecialStitch,
   SpecialStitchModel,
   Stitch,
+  View,
 } from "#/schemas/pattern";
 
 /**
@@ -32,6 +33,8 @@ export class PatternView {
 
   #fabric: Fabric;
   #grid: Grid;
+
+  displayMode: View;
 
   // Simple stitches (fulls, petites, halves and quarters) are rendered using particles.
   // It allows us to render a large number of stitches very efficiently.
@@ -75,6 +78,8 @@ export class PatternView {
     this.#fabric = pattern.fabric;
     this.#grid = displaySettings.grid;
 
+    this.displayMode = displaySettings.view;
+
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.
     this.#fullstitches = ObjectedMap.withKeys(pattern.fullstitches);
@@ -87,8 +92,6 @@ export class PatternView {
   }
 
   render() {
-    this.clear();
-
     // Set the fabric and grid.
     this.setFabric(this.#fabric);
     this.setGrid(this.#grid);
@@ -101,21 +104,12 @@ export class PatternView {
     for (const specialstitch of this.#specialstitches) this.addSpecialStitch(specialstitch);
   }
 
-  clear() {
-    for (const stage of Object.values(this.#stages)) stage.destroy();
-    this.#stages = {
-      // lowest
-      fabric: new Graphics(),
-      fullstitches: new StitchParticleContainer(FullStitchKind.Full),
-      petites: new StitchParticleContainer(FullStitchKind.Petite),
-      halfstitches: new StitchParticleContainer(PartStitchKind.Half),
-      quarters: new StitchParticleContainer(PartStitchKind.Quarter),
-      grid: new Graphics(),
-      specialstitches: new Container(),
-      lines: new Container(),
-      nodes: new Container(),
-      // highest
-    };
+  setDisplayMode(displayMode: View) {
+    this.displayMode = displayMode;
+    this.#stages.fullstitches.texture = TextureManager.shared.getFullStitchTexture(displayMode, FullStitchKind.Full);
+    this.#stages.petites.texture = TextureManager.shared.getFullStitchTexture(displayMode, FullStitchKind.Petite);
+    this.#stages.halfstitches.texture = TextureManager.shared.getPartStitchTexture(displayMode, PartStitchKind.Half);
+    this.#stages.quarters.texture = TextureManager.shared.getPartStitchTexture(displayMode, PartStitchKind.Quarter);
   }
 
   get key() {
@@ -219,7 +213,7 @@ export class PatternView {
   addFullStitch(full: FullStitch) {
     const { x, y, palindex, kind } = full;
     const particle = new Particle({
-      texture: TextureManager.shared.getFullStitchTexture(kind),
+      texture: TextureManager.shared.getFullStitchTexture(this.displayMode, kind),
       x,
       y,
       tint: this.#palette[palindex]!.color,
@@ -240,7 +234,7 @@ export class PatternView {
   addPartStitch(part: PartStitch) {
     const { x, y, palindex, kind, direction } = part;
     const particle = new Particle({
-      texture: TextureManager.shared.getPartStitchTexture(kind),
+      texture: TextureManager.shared.getPartStitchTexture(this.displayMode, kind),
       x,
       y,
       tint: this.#palette[palindex]!.color,
