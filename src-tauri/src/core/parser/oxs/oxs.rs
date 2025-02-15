@@ -54,20 +54,27 @@ pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo)
 }
 
 pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize) -> Result<DisplaySettings> {
-  let mut display_settings = DisplaySettings::new(palette_size);
-
   let mut reader = Reader::from_file(&file_path)?;
   reader.config_mut().expand_empty_elements = true;
   reader.config_mut().check_end_names = true;
   reader.config_mut().trim_text(true);
+
+  let mut display_settings = DisplaySettings::new(palette_size);
 
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf) {
       Ok(Event::Start(ref e)) => {
         log::trace!("Parsing {:?}", String::from_utf8(e.name().as_ref().to_vec())?);
-        #[allow(clippy::single_match)]
         match e.name().as_ref() {
+          b"display_settings" => {
+            let attributes = process_attributes(e.attributes())?;
+            display_settings.display_mode = attributes
+              .get("display_mode")
+              .unwrap()
+              .parse::<DisplayMode>()
+              .map_err(|e| anyhow::anyhow!(e))?;
+          }
           b"grid" => {
             let attributes = process_attributes(e.attributes())?;
             display_settings.grid = Grid {
@@ -100,6 +107,7 @@ pub fn save_display_settings_to_vec(display_settings: &DisplaySettings) -> Resul
   writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None)))?;
   writer
     .create_element("display_settings")
+    .with_attributes([("display_mode", display_settings.display_mode.to_string().as_str())])
     .write_inner_content(|writer| {
       write_grid(writer, &display_settings.grid)?;
       Ok(())

@@ -1,3 +1,4 @@
+export * as DisplayApi from "./display";
 export * as PatternApi from "./pattern";
 export * as PaletteApi from "./palette";
 export * as FabricApi from "./fabric";

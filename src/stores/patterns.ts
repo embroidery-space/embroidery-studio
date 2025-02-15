@@ -8,7 +8,7 @@ import { defineStore } from "pinia";
 import { deserialize } from "@dao-xyz/borsh";
 import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
-import { FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import { DisplayApi, FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
 import { PatternView } from "#/plugins/pixi";
 import { AddedPaletteItemData, deserializeStitch, deserializeStitches, DisplayMode } from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
@@ -198,9 +198,13 @@ export const usePatternsStore = defineStore("pattern-project", () => {
 
   function setDisplayMode(mode: DisplayMode) {
     if (!pattern.value) return;
+    return DisplayApi.setDisplayMode(pattern.value.key, mode);
+  }
+  appWindow.listen<DisplayMode>("display:set_mode", ({ payload: mode }) => {
+    if (!pattern.value) return;
     pattern.value.setDisplayMode(mode);
     triggerRef(pattern);
-  }
+  });
 
   const keys = useMagicKeys();
 

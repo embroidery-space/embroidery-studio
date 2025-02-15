@@ -8,7 +8,7 @@ import {
 } from "#/plugins/pixi";
 import { ObjectedMap } from "#/utils/map";
 import { AddedPaletteItemData, FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
-import { CompletePaletteItem, FullStitch, LineStitch, PartStitch } from "#/schemas/pattern";
+import { CompletePaletteItem, FullStitch, LineStitch, PartStitch, DisplayMode } from "#/schemas/pattern";
 import type {
   Fabric,
   Grid,
@@ -19,7 +19,6 @@ import type {
   SpecialStitch,
   SpecialStitchModel,
   Stitch,
-  DisplayMode,
 } from "#/schemas/pattern";
 
 /**
@@ -78,7 +77,7 @@ export class PatternView {
     this.#fabric = pattern.fabric;
     this.#grid = displaySettings.grid;
 
-    this.displayMode = displaySettings.displayMode;
+    this.displayMode = displaySettings.displayMode === 0 ? DisplayMode.Solid : DisplayMode.Stitches;
 
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.

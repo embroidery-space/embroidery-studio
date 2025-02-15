@@ -270,6 +270,27 @@ impl DisplayMode {
   }
 }
 
+impl std::fmt::Display for DisplayMode {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      DisplayMode::Solid => write!(f, "Solid"),
+      DisplayMode::Stitches => write!(f, "Stitches"),
+    }
+  }
+}
+
+impl std::str::FromStr for DisplayMode {
+  type Err = &'static str;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s {
+      "Solid" => Ok(DisplayMode::Solid),
+      "Stitches" => Ok(DisplayMode::Stitches),
+      _ => Ok(DisplayMode::Solid),
+    }
+  }
+}
+
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct StitchOutline {
   pub color: Option<String>,

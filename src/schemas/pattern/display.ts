@@ -313,7 +313,7 @@ export class DisplaySettings {
   grid: Grid;
 
   @field({ type: "u8" })
-  displayMode: DisplayMode;
+  displayMode: number;
 
   @field({ type: "u16" })
   zoom: number;
@@ -374,6 +374,6 @@ export const enum LineStitchStyle {
 }
 
 export const enum DisplayMode {
-  Solid = 0,
-  Stitches = 1,
+  Solid = "Solid",
+  Stitches = "Stitches",
 }

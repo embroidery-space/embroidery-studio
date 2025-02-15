@@ -26,8 +26,8 @@
   const disabled = computed(() => patternsStore.pattern === undefined);
   const displayMode = computed({
     get: () => patternsStore.pattern?.displayMode ?? DisplayMode.Solid,
-    set: (mode) => {
-      if (patternsStore.pattern?.displayMode !== mode) patternsStore.setDisplayMode(mode);
+    set: async (mode) => {
+      if (patternsStore.pattern?.displayMode !== mode) await patternsStore.setDisplayMode(mode);
     },
   });
 

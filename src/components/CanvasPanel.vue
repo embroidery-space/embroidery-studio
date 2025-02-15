@@ -11,7 +11,7 @@
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
   import { Point } from "pixi.js";
-  import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
+  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
@@ -192,5 +192,6 @@
 
   onUnmounted(() => {
     patternCanvas.clear();
+    TextureManager.shared.clear();
   });
 </script>

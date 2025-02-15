@@ -199,4 +199,24 @@ export class TextureManager {
     container.destroy(true);
     return rt;
   }
+
+  clear() {
+    for (const textures of this.#fullstitches.values()) {
+      for (const texture of Object.values(textures)) texture.destroy(true);
+    }
+    this.#fullstitches.clear();
+
+    for (const textures of this.#partstitches.values()) {
+      for (const texture of Object.values(textures)) texture.destroy(true);
+    }
+    this.#partstitches.clear();
+
+    if (this.#frenchKnot) {
+      this.#frenchKnot.destroy(true);
+      this.#frenchKnot = undefined;
+    }
+
+    for (const texture of this.#beads.values()) texture.destroy(true);
+    this.#beads.clear();
+  }
 }

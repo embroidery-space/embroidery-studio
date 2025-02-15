@@ -1,3 +1,4 @@
+pub mod display;
 pub mod fabric;
 pub mod fonts;
 pub mod grid;
