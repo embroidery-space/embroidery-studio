@@ -8,8 +8,8 @@
       boxShadow: selected ? `inset 0 0 0 2px ${backgroundColor}, inset 0 0 0 4px ${foregroundColor}` : '',
     }"
   >
-    <p v-show="!displayOptions.colorOnly" class="overflow-hidden text-ellipsis whitespace-nowrap">
-      {{ paletteItemTitle(paletteItem, displayOptions) }}
+    <p v-show="!displaySettings.colorOnly" class="overflow-hidden text-ellipsis whitespace-nowrap">
+      {{ paletteItemTitle(paletteItem, displaySettings) }}
     </p>
   </div>
 </template>
@@ -18,16 +18,16 @@
   import { computed } from "vue";
   import { Color } from "pixi.js";
   import { contrastColor } from "#/utils/color";
-  import { paletteItemTitle, type PaletteDisplayOptions } from "#/utils/paletteItem";
-  import type { PaletteItem } from "#/schemas/pattern";
+  import { paletteItemTitle } from "#/utils/paletteItem";
+  import type { PaletteItem, PaletteSettings } from "#/schemas/pattern";
 
   interface PaletteItemProps {
     paletteItem: PaletteItem & { color: Color | string };
-    displayOptions: PaletteDisplayOptions;
+    displaySettings: PaletteSettings;
     selected: boolean;
   }
 
-  const { paletteItem, displayOptions, selected } = defineProps<PaletteItemProps>();
+  const { paletteItem, displaySettings, selected } = defineProps<PaletteItemProps>();
 
   const palitemColor = computed(() => new Color(paletteItem.color));
   const backgroundColor = computed(() => palitemColor.value.toHex());

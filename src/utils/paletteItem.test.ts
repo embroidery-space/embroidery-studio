@@ -1,38 +1,39 @@
 import { describe, expect, test } from "vitest";
-import { blendTitle, paletteItemTitle, type PaletteDisplayOptions } from "./paletteItem";
-import type { Blend, PaletteItem } from "#/schemas/pattern/pattern";
+import { Color } from "pixi.js";
+import { blendTitle, paletteItemTitle } from "./paletteItem";
+import { Blend, PaletteItem, PaletteSettings } from "#/schemas/pattern";
 
-const BLENDS: Blend[] = [
-  { brand: "Anchor", number: "9159", strands: 1 },
-  { brand: "Madeira", number: "0705", strands: 1 },
+const BLENDS = [
+  new Blend({ brand: "Anchor", number: "9159", strands: 1 }),
+  new Blend({ brand: "Madeira", number: "0705", strands: 1 }),
 ];
-const PALETTE: PaletteItem[] = [
-  { brand: "DMC", number: "310", name: "Black", color: "2C3225" },
-  { brand: "Anchor", number: "9159", name: "Glacier Blue", color: "B2D8E5" },
-  { brand: "Madeira", number: "0705", name: "Plum-DK", color: "901b6b" },
-  { brand: "Blends", number: "", name: "", color: "A382AE", blends: BLENDS },
+const PALETTE = [
+  new PaletteItem({ brand: "DMC", number: "310", name: "Black", color: new Color("2C3225") }),
+  new PaletteItem({ brand: "Anchor", number: "9159", name: "Glacier Blue", color: new Color("B2D8E5") }),
+  new PaletteItem({ brand: "Madeira", number: "0705", name: "Plum-DK", color: new Color("901b6b") }),
+  new PaletteItem({ brand: "Blends", number: "", name: "", color: new Color("A382AE"), blends: BLENDS }),
 ];
 
 describe("paletteItemTitle", () => {
   test("empty", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: true,
-      showBrand: false,
-      showNumber: false,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: true,
+      showColorBrands: false,
+      showColorNumbers: false,
+      showColorNames: false,
+    });
     for (const pi of PALETTE) expect(paletteItemTitle(pi, options)).toBe("");
   });
 
   test("brand only", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: true,
-      showNumber: false,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: true,
+      showColorNumbers: false,
+      showColorNames: false,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("DMC");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("Anchor");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("Madeira");
@@ -40,13 +41,13 @@ describe("paletteItemTitle", () => {
   });
 
   test("number only", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: false,
-      showNumber: true,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: false,
+      showColorNumbers: true,
+      showColorNames: false,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("310");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("9159");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("0705");
@@ -54,13 +55,13 @@ describe("paletteItemTitle", () => {
   });
 
   test("name only", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: false,
-      showNumber: false,
-      showName: true,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: false,
+      showColorNumbers: false,
+      showColorNames: true,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("Black");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("Glacier Blue");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("Plum-DK");
@@ -68,13 +69,13 @@ describe("paletteItemTitle", () => {
   });
 
   test("brand and number", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: true,
-      showNumber: true,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: true,
+      showColorNumbers: true,
+      showColorNames: false,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("DMC 310");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("Anchor 9159");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("Madeira 0705");
@@ -82,13 +83,13 @@ describe("paletteItemTitle", () => {
   });
 
   test("brand and name", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: true,
-      showNumber: false,
-      showName: true,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: true,
+      showColorNumbers: false,
+      showColorNames: true,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("DMC, Black");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("Anchor, Glacier Blue");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("Madeira, Plum-DK");
@@ -96,13 +97,13 @@ describe("paletteItemTitle", () => {
   });
 
   test("number and name", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: false,
-      showNumber: true,
-      showName: true,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: false,
+      showColorNumbers: true,
+      showColorNames: true,
+    });
     expect(paletteItemTitle(PALETTE[0], options)).toBe("310, Black");
     expect(paletteItemTitle(PALETTE[1], options)).toBe("9159, Glacier Blue");
     expect(paletteItemTitle(PALETTE[2], options)).toBe("0705, Plum-DK");
@@ -112,48 +113,48 @@ describe("paletteItemTitle", () => {
 
 describe("blendTitle", () => {
   test("empty", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: false,
-      showNumber: false,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: false,
+      showColorNumbers: false,
+      showColorNames: false,
+    });
     for (const blend of BLENDS) expect(blendTitle(blend, options)).toBe("");
   });
 
   test("brand only", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: true,
-      showNumber: false,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: true,
+      showColorNumbers: false,
+      showColorNames: false,
+    });
     expect(blendTitle(BLENDS[0], options)).toBe("Anchor");
     expect(blendTitle(BLENDS[1], options)).toBe("Madeira");
   });
 
   test("number only", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: false,
-      showNumber: true,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: false,
+      showColorNumbers: true,
+      showColorNames: false,
+    });
     expect(blendTitle(BLENDS[0], options)).toBe("9159");
     expect(blendTitle(BLENDS[1], options)).toBe("0705");
   });
 
   test("brand and number", () => {
-    const options: PaletteDisplayOptions = {
-      colorOnly: false,
-      showBrand: true,
-      showNumber: true,
-      showName: false,
+    const options = new PaletteSettings({
       columnsNumber: 1,
-    };
+      colorOnly: false,
+      showColorBrands: true,
+      showColorNumbers: true,
+      showColorNames: false,
+    });
     expect(blendTitle(BLENDS[0], options)).toBe("Anchor 9159");
     expect(blendTitle(BLENDS[1], options)).toBe("Madeira 0705");
   });

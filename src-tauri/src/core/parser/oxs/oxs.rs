@@ -4,7 +4,7 @@ use anyhow::{bail, Result};
 use quick_xml::events::{BytesDecl, BytesStart, Event};
 use quick_xml::{Reader, Writer};
 
-use super::utils::{process_attributes, OxsVersion, Software};
+use super::utils::{process_attributes, MapAttributes, OxsVersion, Software};
 use super::v1;
 use crate::core::pattern::PatternProject;
 use crate::display::*;
@@ -75,6 +75,10 @@ pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize
               .parse::<DisplayMode>()
               .map_err(|e| anyhow::anyhow!(e))?;
           }
+          b"palette_settings" => {
+            let attributes = process_attributes(e.attributes())?;
+            display_settings.palette_settings = read_palette_settings(&attributes)?;
+          }
           b"grid" => {
             let attributes = process_attributes(e.attributes())?;
             display_settings.grid = Grid {
@@ -109,6 +113,7 @@ pub fn save_display_settings_to_vec(display_settings: &DisplaySettings) -> Resul
     .create_element("display_settings")
     .with_attributes([("display_mode", display_settings.display_mode.to_string().as_str())])
     .write_inner_content(|writer| {
+      write_palette_settings(writer, &display_settings.palette_settings)?;
       write_grid(writer, &display_settings.grid)?;
       Ok(())
     })?;
@@ -169,5 +174,38 @@ fn write_grid<W: io::Write>(writer: &mut Writer<W>, grid: &Grid) -> io::Result<(
       Ok(())
     })?;
 
+  Ok(())
+}
+
+fn read_palette_settings(attributes: &MapAttributes) -> Result<PaletteSettings> {
+  Ok(PaletteSettings {
+    columns_number: attributes.get("columns_number").unwrap().parse()?,
+    color_only: attributes.get("color_only").unwrap().parse()?,
+    show_color_brands: attributes.get("show_color_brands").unwrap().parse()?,
+    show_color_numbers: attributes.get("show_color_names").unwrap().parse()?,
+    show_color_names: attributes.get("show_color_numbers").unwrap().parse()?,
+  })
+}
+
+fn write_palette_settings<W: io::Write>(writer: &mut Writer<W>, palette_settings: &PaletteSettings) -> io::Result<()> {
+  writer
+    .create_element("palette_settings")
+    .with_attributes([
+      ("columns_number", palette_settings.columns_number.to_string().as_str()),
+      ("color_only", palette_settings.color_only.to_string().as_str()),
+      (
+        "show_color_brands",
+        palette_settings.show_color_brands.to_string().as_str(),
+      ),
+      (
+        "show_color_names",
+        palette_settings.show_color_names.to_string().as_str(),
+      ),
+      (
+        "show_color_numbers",
+        palette_settings.show_color_numbers.to_string().as_str(),
+      ),
+    ])
+    .write_empty()?;
   Ok(())
 }

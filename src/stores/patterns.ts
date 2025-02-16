@@ -10,7 +10,13 @@ import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
 import { DisplayApi, FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
 import { PatternView } from "#/plugins/pixi";
-import { AddedPaletteItemData, deserializeStitch, deserializeStitches, DisplayMode } from "#/schemas/pattern";
+import {
+  AddedPaletteItemData,
+  deserializeStitch,
+  deserializeStitches,
+  DisplayMode,
+  PaletteSettings,
+} from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
 const SAVE_AS_FILTERS: DialogFilter[] = [
@@ -171,6 +177,19 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     triggerRef(pattern);
   });
 
+  async function updatePaletteDisplaySettings(displaySettings: PaletteSettings, local = false) {
+    if (!pattern.value) return;
+    if (local) {
+      pattern.value.paletteDisplaySettings = displaySettings;
+      triggerRef(pattern);
+    } else await PaletteApi.updatePaletteDisplaySettings(pattern.value.key, displaySettings);
+  }
+  appWindow.listen<string>("palette:update_display_settings", ({ payload }) => {
+    if (!pattern.value) return;
+    pattern.value.paletteDisplaySettings = deserialize(toByteArray(payload), PaletteSettings);
+    triggerRef(pattern);
+  });
+
   function addStitch(stitch: Stitch) {
     if (!pattern.value) return;
     return StitchesApi.addStitch(pattern.value.key, stitch);
@@ -237,6 +256,7 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     updateGrid,
     addPaletteItem,
     removePaletteItem,
+    updatePaletteDisplaySettings,
     addStitch,
     removeStitch,
     setDisplayMode,

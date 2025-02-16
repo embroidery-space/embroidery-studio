@@ -12,7 +12,7 @@
       :model-value="appStateStore.selectedPaletteItemIndexes"
       :options="patternsStore.pattern?.palette.map((pi) => pi.palitem)"
       :option-value="(pi) => patternsStore.pattern?.palette.findIndex((cmp) => dequal(cmp.palitem, pi))"
-      :display-options="paletteDisplayOptions"
+      :display-settings="paletteDisplaySettings"
       :disabled="paletteIsDisabled"
       :meta-key-selection="paletteIsBeingEdited"
       fluid-options
@@ -110,10 +110,11 @@
       @remove-palette-item="patternsStore.removePaletteItem"
     />
 
-    <PaletteDisplayOptions
-      v-if="showPaletteDisplayOptions"
-      v-model:options="paletteDisplayOptions"
-      @close="showPaletteDisplayOptions = false"
+    <PaletteDisplaySettings
+      v-if="showPaletteDisplaySettings"
+      :settings="paletteDisplaySettings"
+      @update:settings="(value) => (paletteDisplaySettings = value)"
+      @close="showPaletteDisplaySettings = false"
     />
   </div>
 </template>
@@ -128,13 +129,12 @@
   import { usePatternsStore } from "#/stores/patterns";
   import { useAppStateStore } from "#/stores/state";
   import { usePreferencesStore } from "#/stores/preferences";
-  import { FullStitchKind, LineStitchKind, NodeStitchKind, PartStitchKind } from "#/schemas/pattern";
-  import { DEFAULT_PALETTE_DISPLAY_OPTIONS } from "#/utils/paletteItem";
+  import { FullStitchKind, LineStitchKind, NodeStitchKind, PaletteSettings, PartStitchKind } from "#/schemas/pattern";
   import PaletteList from "./palette/PaletteList.vue";
   import ToolSelector from "./toolbar/ToolSelector.vue";
 
   const PaletteCatalog = defineAsyncComponent(() => import("./palette/PaletteCatalog.vue"));
-  const PaletteDisplayOptions = defineAsyncComponent(() => import("./palette/PaletteDisplayOptions.vue"));
+  const PaletteDisplaySettings = defineAsyncComponent(() => import("./palette/PaletteDisplaySettings.vue"));
 
   const appStateStore = useAppStateStore();
   const preferencesStore = usePreferencesStore();
@@ -163,9 +163,16 @@
   const paletteIsBeingEdited = ref(false);
 
   const showPaletteCatalog = ref(false);
-  const showPaletteDisplayOptions = ref(false);
+  const showPaletteDisplaySettings = ref(false);
 
-  const paletteDisplayOptions = ref({ ...DEFAULT_PALETTE_DISPLAY_OPTIONS });
+  let paletteDisplaySettingsHaveChanged = false;
+  const paletteDisplaySettings = computed({
+    get: () => patternsStore.pattern?.paletteDisplaySettings ?? PaletteSettings.default(),
+    set: (value: PaletteSettings) => {
+      paletteDisplaySettingsHaveChanged = true;
+      patternsStore.updatePaletteDisplaySettings(value, true);
+    },
+  });
 
   const PaletteSectionsMenu = useTemplateRef("palette-panels-menu");
   const PaletteSectionsMenuOptions = computed<MenuItem[]>(() => [
@@ -180,7 +187,7 @@
       label: fluent.$t("label-palette-display-options"),
       command: () => {
         paletteIsBeingEdited.value = true;
-        showPaletteDisplayOptions.value = !showPaletteDisplayOptions.value;
+        showPaletteDisplaySettings.value = !showPaletteDisplaySettings.value;
       },
     },
   ]);
@@ -220,7 +227,11 @@
     patternsStore.blocked = value;
     if (!value) {
       showPaletteCatalog.value = false;
-      showPaletteDisplayOptions.value = false;
+      if (paletteDisplaySettingsHaveChanged) {
+        patternsStore.updatePaletteDisplaySettings(paletteDisplaySettings.value);
+        paletteDisplaySettingsHaveChanged = false;
+      }
+      showPaletteDisplaySettings.value = false;
       handlePaletteItemsSelection(appStateStore.selectedPaletteItemIndexes);
     }
   });

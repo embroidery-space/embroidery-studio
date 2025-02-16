@@ -1,8 +1,17 @@
 import { Container, Graphics, Particle } from "pixi.js";
 import { TextureManager, StitchGraphics, STITCH_SCALE_FACTOR, StitchParticleContainer } from "#/plugins/pixi";
 import { ObjectedMap } from "#/utils/map";
-import { AddedPaletteItemData, FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
-import { CompletePaletteItem, FullStitch, LineStitch, PartStitch, DisplayMode } from "#/schemas/pattern";
+import {
+  AddedPaletteItemData,
+  FullStitchKind,
+  PartStitchDirection,
+  PartStitchKind,
+  CompletePaletteItem,
+  FullStitch,
+  LineStitch,
+  PartStitch,
+  DisplayMode,
+} from "#/schemas/pattern";
 import type {
   Fabric,
   Grid,
@@ -10,6 +19,7 @@ import type {
   PatternInfo,
   PatternKey,
   PatternProject,
+  PaletteSettings,
   SpecialStitch,
   SpecialStitchModel,
   Stitch,
@@ -22,7 +32,9 @@ import type {
 export class PatternView {
   #key: PatternKey;
   #info: PatternInfo;
+
   #palette: CompletePaletteItem[];
+  paletteDisplaySettings: PaletteSettings;
 
   #fabric: Fabric;
   #grid: Grid;
@@ -67,6 +79,7 @@ export class PatternView {
       const formats = displaySettings.formats[idx]!;
       return new CompletePaletteItem(palitem, symbols, formats);
     });
+    this.paletteDisplaySettings = displaySettings.paletteSettings;
 
     this.#fabric = pattern.fabric;
     this.#grid = displaySettings.grid;

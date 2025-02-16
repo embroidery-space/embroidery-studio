@@ -143,6 +143,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
       outlined_stitches,
       stitch_outline,
       stitch_settings,
+      palette_settings: Default::default(),
     },
     print_settings: PrintSettings {
       font: pattern_settings.font,

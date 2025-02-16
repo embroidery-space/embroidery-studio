@@ -64,7 +64,7 @@ message-palette-empty = Палітра порожня
 label-palette-edit = Редагувати палітру
 
 label-palette-colors = Кольори
-label-palette-display-options = Параметри відображення
+label-palette-display-options = Налаштування відображення
 label-palette-delete-selected = { $selected ->
   [0] Видалити вибрані
   [one] Видалити { $selected } вибраний
@@ -75,9 +75,9 @@ label-palette-select-all = Виділити всі
 
 label-display-options-columns-number = Кількість стовпців
 label-display-options-color-only = Тільки колір
-label-display-options-show-brand = Відображати бренд нитки
-label-display-options-show-number = Відображати номер кольору
-label-display-options-show-name = Відображати назву кольору
+label-display-options-show-brand = Відображати бренди ниток
+label-display-options-show-number = Відображати номери кольорів
+label-display-options-show-name = Відображати назви кольорів
 
 ## Titles, labels and messages related to the canvas panel and its settings.
 

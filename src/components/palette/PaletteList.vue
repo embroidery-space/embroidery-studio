@@ -19,8 +19,8 @@
     </template>
 
     <template #option="{ option, selected }">
-      <slot name="option" v-bind="{ option, selected, displayOptions }">
-        <PaletteItem :palette-item="option" :selected="selected" :display-options="displayOptions" />
+      <slot name="option" v-bind="{ option, selected, displaySettings }">
+        <PaletteItem :palette-item="option" :selected="selected" :display-settings="displaySettings" />
       </slot>
     </template>
 
@@ -36,7 +36,7 @@
   import { computed } from "vue";
   import { type PassThrough } from "@primevue/core";
   import { Listbox, type ListboxOptionDblClickEvent, type ListboxPassThroughOptions } from "primevue";
-  import type { PaletteDisplayOptions } from "#/utils/paletteItem";
+  import type { PaletteSettings } from "#/schemas/pattern";
   import PaletteItem from "./PaletteItem.vue";
 
   const props = defineProps<{
@@ -46,7 +46,7 @@
     disabled?: boolean;
     mulitple?: boolean;
     metaKeySelection?: boolean;
-    displayOptions: PaletteDisplayOptions;
+    displaySettings: PaletteSettings;
     fluidOptions?: boolean;
     listStyle?: string;
   }>();
@@ -72,7 +72,7 @@
     list: {
       class: "grid gap-1",
       style: {
-        gridTemplateColumns: `repeat(${props.options?.length ? props.displayOptions.columnsNumber : 1}, minmax(${props.fluidOptions ? "0px" : "min-content"}, 1fr))`,
+        gridTemplateColumns: `repeat(${props.options?.length ? props.displaySettings.columnsNumber : 1}, minmax(${props.fluidOptions ? "0px" : "min-content"}, 1fr))`,
       },
     },
     option: { class: "p-0" },

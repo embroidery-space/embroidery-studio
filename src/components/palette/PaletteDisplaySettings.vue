@@ -4,20 +4,20 @@
       <FloatLabel variant="over">
         <InputNumber
           id="columns-number"
-          :model-value="props.options.columnsNumber"
+          :model-value="props.settings.columnsNumber"
           show-buttons
           :allow-empty="false"
           :min="1"
           :max="8"
-          @update:model-value="(value) => updateOptions('columnsNumber', value)"
+          @update:model-value="(value) => updateSettings('columnsNumber', value)"
         />
         <label for="columns-number">{{ $t("label-display-options-columns-number") }}</label>
       </FloatLabel>
 
       <label class="flex items-center gap-x-2">
         <ToggleSwitch
-          :model-value="props.options.colorOnly"
-          @update:model-value="(value) => updateOptions('colorOnly', value)"
+          :model-value="props.settings.colorOnly"
+          @update:model-value="(value) => updateSettings('colorOnly', value)"
         />
         <span>{{ $t("label-display-options-color-only") }}</span>
       </label>
@@ -25,30 +25,30 @@
       <div class="flex flex-col gap-y-1">
         <label class="flex items-start gap-x-2">
           <Checkbox
-            :model-value="props.options.showBrand"
-            :disabled="props.options.colorOnly"
+            :model-value="props.settings.showColorBrands"
+            :disabled="props.settings.colorOnly"
             binary
-            @update:model-value="(value) => updateOptions('showBrand', value)"
+            @update:model-value="(value) => updateSettings('showColorBrands', value)"
           />
           <span>{{ $t("label-display-options-show-brand") }}</span>
         </label>
 
         <label class="flex items-start gap-x-2">
           <Checkbox
-            :model-value="props.options.showNumber"
-            :disabled="props.options.colorOnly"
+            :model-value="props.settings.showColorNumbers"
+            :disabled="props.settings.colorOnly"
             binary
-            @update:model-value="(value) => updateOptions('showNumber', value)"
+            @update:model-value="(value) => updateSettings('showColorNumbers', value)"
           />
           <span>{{ $t("label-display-options-show-number") }}</span>
         </label>
 
         <label class="flex items-start gap-x-2">
           <Checkbox
-            :model-value="props.options.showName"
-            :disabled="props.options.colorOnly"
+            :model-value="props.settings.showColorNames"
+            :disabled="props.settings.colorOnly"
             binary
-            @update:model-value="(value) => updateOptions('showName', value)"
+            @update:model-value="(value) => updateSettings('showColorNames', value)"
           />
           <span>{{ $t("label-display-options-show-name") }}</span>
         </label>
@@ -59,13 +59,13 @@
 
 <script setup lang="ts">
   import { Checkbox, FloatLabel, InputNumber, ToggleSwitch } from "primevue";
-  import type { PaletteDisplayOptions } from "#/utils/paletteItem";
+  import { PaletteSettings } from "#/schemas/pattern";
   import PaletteSection from "./PaletteSection.vue";
 
-  const props = defineProps<{ options: PaletteDisplayOptions }>();
-  const emit = defineEmits<{ (event: "close"): void; (event: "update:options", data: PaletteDisplayOptions): void }>();
+  const props = defineProps<{ settings: PaletteSettings }>();
+  const emit = defineEmits<{ (event: "close"): void; (event: "update:settings", data: PaletteSettings): void }>();
 
-  function updateOptions<K extends keyof PaletteDisplayOptions>(key: K, value: PaletteDisplayOptions[K]) {
-    emit("update:options", { ...props.options, [key]: value });
+  function updateSettings<K extends keyof PaletteSettings>(key: K, value: PaletteSettings[K]) {
+    emit("update:settings", new PaletteSettings({ ...props.settings, [key]: value }));
   }
 </script>

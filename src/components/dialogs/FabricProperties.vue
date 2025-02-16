@@ -87,7 +87,7 @@
       <PaletteList
         :model-value="{ name: fabric.name, color: fabric.color.toHex().substring(1).toUpperCase() }"
         :options="fabricColors"
-        :display-options="fabricColorsDisplayOptions"
+        :display-settings="FABRIC_COLORS_DISPLAY_SETTINGS"
         fluid-options
         @update:model-value="
           ({ name, color }) => {
@@ -113,9 +113,8 @@
   import { Color } from "pixi.js";
   import DialogFooter from "./DialogFooter.vue";
   import { inches2mm, mm2inches, size2stitches, stitches2inches, stitches2mm } from "#/utils/measurement";
-  import { Fabric } from "#/schemas/pattern";
+  import { Fabric, PaletteSettings } from "#/schemas/pattern";
   import PaletteList from "../palette/PaletteList.vue";
-  import type { PaletteDisplayOptions } from "#/utils/paletteItem";
 
   const dialogRef = inject<Ref<DynamicDialogInstance>>("dialogRef")!;
   const fluent = useFluent();
@@ -191,13 +190,13 @@
     { label: fluent.$t("label-kind-linen"), value: "Linen" },
   ]);
   const fabricColors = ref<{ name: string; color: string }[]>([]);
-  const fabricColorsDisplayOptions: PaletteDisplayOptions = {
-    colorOnly: true,
-    showBrand: false,
-    showNumber: false,
-    showName: false,
+  const FABRIC_COLORS_DISPLAY_SETTINGS = new PaletteSettings({
     columnsNumber: 8,
-  };
+    colorOnly: true,
+    showColorBrands: false,
+    showColorNumbers: false,
+    showColorNames: false,
+  });
 
   onMounted(async () => {
     const fabricColorsPath = await path.resolveResource("resources/fabric-colors.json");

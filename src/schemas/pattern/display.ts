@@ -296,6 +296,41 @@ export class StitchSettings {
   }
 }
 
+export class PaletteSettings {
+  @field({ type: "u8" })
+  columnsNumber: number;
+
+  @field({ type: "bool" })
+  colorOnly: boolean;
+
+  @field({ type: "bool" })
+  showColorBrands: boolean;
+
+  @field({ type: "bool" })
+  showColorNumbers: boolean;
+
+  @field({ type: "bool" })
+  showColorNames: boolean;
+
+  constructor(data: PaletteSettings) {
+    this.columnsNumber = data.columnsNumber;
+    this.colorOnly = data.colorOnly;
+    this.showColorBrands = data.showColorBrands;
+    this.showColorNumbers = data.showColorNumbers;
+    this.showColorNames = data.showColorNames;
+  }
+
+  static default(): PaletteSettings {
+    return new PaletteSettings({
+      columnsNumber: 1,
+      colorOnly: true,
+      showColorBrands: true,
+      showColorNumbers: true,
+      showColorNames: true,
+    });
+  }
+}
+
 export class DisplaySettings {
   @field({ type: "string" })
   defaultStitchFont: string;
@@ -373,6 +408,9 @@ export class DisplaySettings {
   @field({ type: StitchSettings })
   stitchSettings: StitchSettings;
 
+  @field({ type: PaletteSettings })
+  paletteSettings: PaletteSettings;
+
   constructor(data: DisplaySettings) {
     this.defaultStitchFont = data.defaultStitchFont;
     this.symbols = data.symbols;
@@ -389,6 +427,7 @@ export class DisplaySettings {
     this.outlinedStitches = data.outlinedStitches;
     this.stitchOutline = data.stitchOutline;
     this.stitchSettings = data.stitchSettings;
+    this.paletteSettings = data.paletteSettings;
   }
 }
 
