@@ -77,7 +77,7 @@ export class PatternView {
     this.#fabric = pattern.fabric;
     this.#grid = displaySettings.grid;
 
-    this.displayMode = displaySettings.displayMode === 0 ? DisplayMode.Solid : DisplayMode.Stitches;
+    this.displayMode = displaySettings.displayMode;
 
     // Save stitches in the state.
     // They will be replaced with the actual display objects when the view is initialized.

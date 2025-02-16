@@ -259,13 +259,15 @@ pub struct GridLineStyle {
 pub enum DisplayMode {
   Solid = 0,
   Stitches = 1,
+  Mixed = 2,
 }
 
 impl DisplayMode {
   pub fn from_pattern_maker(value: u16) -> Self {
     match value {
       0 => DisplayMode::Stitches,
-      _ => DisplayMode::Solid,
+      2 => DisplayMode::Solid,
+      _ => DisplayMode::Mixed,
     }
   }
 }
@@ -275,6 +277,7 @@ impl std::fmt::Display for DisplayMode {
     match self {
       DisplayMode::Solid => write!(f, "Solid"),
       DisplayMode::Stitches => write!(f, "Stitches"),
+      DisplayMode::Mixed => write!(f, "Mixed"),
     }
   }
 }
@@ -286,7 +289,8 @@ impl std::str::FromStr for DisplayMode {
     match s {
       "Solid" => Ok(DisplayMode::Solid),
       "Stitches" => Ok(DisplayMode::Stitches),
-      _ => Ok(DisplayMode::Solid),
+      "Mixed" => Ok(DisplayMode::Mixed),
+      _ => Ok(DisplayMode::Mixed),
     }
   }
 }

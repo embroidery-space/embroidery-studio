@@ -81,6 +81,7 @@ label-display-options-show-name = Відображати назву кольор
 
 ## Titles, labels and messages related to the canvas panel and its settings.
 
+label-view-as-mix = Відображати як мікс суцільного і стібків
 label-view-as-solid = Відображати як суцільне
 label-view-as-stitches = Відображати як стібки
 

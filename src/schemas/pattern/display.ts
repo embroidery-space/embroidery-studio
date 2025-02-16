@@ -312,8 +312,39 @@ export class DisplaySettings {
   @field({ type: Grid })
   grid: Grid;
 
-  @field({ type: "u8" })
-  displayMode: number;
+  @field({
+    serialize: (value, writer) => {
+      switch (value) {
+        case DisplayMode.Solid: {
+          return writer.u8(0);
+        }
+        case DisplayMode.Stitches: {
+          return writer.u8(1);
+        }
+        case DisplayMode.Mixed: {
+          return writer.u8(2);
+        }
+      }
+    },
+    deserialize: (reader) => {
+      const value = reader.u8();
+      switch (value) {
+        case 0: {
+          return DisplayMode.Solid;
+        }
+        case 1: {
+          return DisplayMode.Stitches;
+        }
+        case 2: {
+          return DisplayMode.Mixed;
+        }
+        default: {
+          return DisplayMode.Mixed;
+        }
+      }
+    },
+  })
+  displayMode: DisplayMode;
 
   @field({ type: "u16" })
   zoom: number;
@@ -376,4 +407,5 @@ export const enum LineStitchStyle {
 export const enum DisplayMode {
   Solid = "Solid",
   Stitches = "Stitches",
+  Mixed = "Mixed",
 }

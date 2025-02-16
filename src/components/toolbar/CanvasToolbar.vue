@@ -25,13 +25,14 @@
 
   const disabled = computed(() => patternsStore.pattern === undefined);
   const displayMode = computed({
-    get: () => patternsStore.pattern?.displayMode ?? DisplayMode.Solid,
+    get: () => patternsStore.pattern?.displayMode ?? DisplayMode.Mixed,
     set: async (mode) => {
       if (patternsStore.pattern?.displayMode !== mode) await patternsStore.setDisplayMode(mode);
     },
   });
 
   const patternViewOptions = ref([
+    { icon: "i-stitches:mix", label: () => fluent.$t("label-view-as-mix"), value: DisplayMode.Mixed },
     { icon: "i-stitches:square", label: () => fluent.$t("label-view-as-solid"), value: DisplayMode.Solid },
     { icon: "i-stitches:full", label: () => fluent.$t("label-view-as-stitches"), value: DisplayMode.Stitches },
   ]);

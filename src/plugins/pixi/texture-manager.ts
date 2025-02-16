@@ -42,7 +42,7 @@ export class TextureManager {
   }
 
   #createFullStitchTextures(mode: DisplayMode) {
-    if (mode === DisplayMode.Solid) {
+    if (mode === DisplayMode.Solid || mode === DisplayMode.Mixed) {
       return {
         [FullStitchKind.Full]: (() => {
           const shape = new Graphics().rect(0, 0, 100, 100).fill(0xffffff);
@@ -142,7 +142,7 @@ export class TextureManager {
             ])
             .stroke(TEXTURE_STROKE)
             .fill(0xffffff);
-          return this.#createTexture(shape, { label: "halfStitch-Stitches", width: 100, height: 100 });
+          return this.#createTexture(shape, { label: "HalfStitch-Stitches", width: 100, height: 100 });
         })(),
         [PartStitchKind.Quarter]: (() => {
           const shape = new Graphics()
