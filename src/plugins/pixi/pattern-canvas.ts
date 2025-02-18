@@ -112,7 +112,7 @@ export class PatternCanvas extends EventTarget {
   }
 
   #onPointerDown(e: FederatedPointerEvent) {
-    if (e.shiftKey) return;
+    if (e.shiftKey || e.button !== 0) return;
     const point = this.#viewport.toWorld(e.global);
     this.#startPoint = this.#pointIsOutside(point) ? undefined : point;
     if (this.#startPoint === undefined) {
@@ -125,7 +125,7 @@ export class PatternCanvas extends EventTarget {
   #onPointerUp(e: FederatedPointerEvent) {
     // If the start point is not set or the shift key is pressed, do nothing.
     // Shift key is used to pan the viewport.
-    if (e.shiftKey || this.#startPoint === undefined) {
+    if (e.shiftKey || e.button !== 0 || this.#startPoint === undefined) {
       this.#clearHint();
       return;
     }
@@ -135,7 +135,7 @@ export class PatternCanvas extends EventTarget {
   }
 
   #onPointerMove(e: FederatedPointerEvent) {
-    if (e.shiftKey || this.#startPoint === undefined) {
+    if (e.shiftKey || e.button !== 0 || this.#startPoint === undefined) {
       this.#clearHint();
       return;
     }
