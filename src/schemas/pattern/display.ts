@@ -312,8 +312,39 @@ export class DisplaySettings {
   @field({ type: Grid })
   grid: Grid;
 
-  @field({ type: "u8" })
-  view: number;
+  @field({
+    serialize: (value, writer) => {
+      switch (value) {
+        case DisplayMode.Solid: {
+          return writer.u8(0);
+        }
+        case DisplayMode.Stitches: {
+          return writer.u8(1);
+        }
+        case DisplayMode.Mixed: {
+          return writer.u8(2);
+        }
+      }
+    },
+    deserialize: (reader) => {
+      const value = reader.u8();
+      switch (value) {
+        case 0: {
+          return DisplayMode.Solid;
+        }
+        case 1: {
+          return DisplayMode.Stitches;
+        }
+        case 2: {
+          return DisplayMode.Mixed;
+        }
+        default: {
+          return DisplayMode.Mixed;
+        }
+      }
+    },
+  })
+  displayMode: DisplayMode;
 
   @field({ type: "u16" })
   zoom: number;
@@ -348,7 +379,7 @@ export class DisplaySettings {
     this.symbolSettings = data.symbolSettings;
     this.formats = data.formats;
     this.grid = data.grid;
-    this.view = data.view;
+    this.displayMode = data.displayMode;
     this.zoom = data.zoom;
     this.showGrid = data.showGrid;
     this.showRulers = data.showRulers;
@@ -373,10 +404,8 @@ export const enum LineStitchStyle {
   Morse = 8,
 }
 
-export const enum View {
-  Stitches = 0,
-  Symbols = 1,
-  Solid = 2,
-  Information = 3,
-  MachineEmbInfo = 4,
+export const enum DisplayMode {
+  Solid = "Solid",
+  Stitches = "Stitches",
+  Mixed = "Mixed",
 }

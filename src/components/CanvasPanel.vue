@@ -10,32 +10,37 @@
   import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
-  import { storeToRefs } from "pinia";
   import { Point } from "pixi.js";
-  import { AddStitchEventStage, PatternCanvas, EventType } from "#/plugins/pixi";
+  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
   import {
+    FullStitch,
+    LineStitch,
+    NodeStitch,
+    PartStitch,
     FullStitchKind,
     PartStitchKind,
     PartStitchDirection,
     LineStitchKind,
     NodeStitchKind,
   } from "#/schemas/pattern";
-  import { type Stitch, type StitchKind, FullStitch, LineStitch, NodeStitch, PartStitch } from "#/schemas/pattern";
+  import type { Stitch, StitchKind } from "#/schemas/pattern";
 
   const appStateStore = useAppStateStore();
   const patternsStore = usePatternsStore();
-  const { pattern } = storeToRefs(patternsStore);
 
   const canvas = useTemplateRef("canvas");
   const patternCanvas = new PatternCanvas();
 
-  watch(pattern, (view) => {
-    if (!view) return;
-    patternCanvas.setPatternView(view);
-  });
+  watch(
+    () => patternsStore.pattern,
+    (view) => {
+      if (!view) return;
+      patternCanvas.setPatternView(view);
+    },
+  );
 
   let prevStitchState: Stitch | undefined;
   patternCanvas.addEventListener(EventType.AddStitch, async (e) => {
@@ -105,7 +110,7 @@
         const { x: x2, y: y2 } = adjustStitchCoordinate(_end, tool);
         const line = new LineStitch({ x: [x1, x2], y: [y1, y2], palindex, kind: tool });
         if (stage === AddStitchEventStage.End) await patternsStore.addStitch(line);
-        else patternCanvas.drawLineHint(line, pattern.value!.palette[palindex]!.color);
+        else patternCanvas.drawLineHint(line, patternsStore.pattern!.palette[palindex]!.color);
         break;
       }
 
@@ -114,7 +119,7 @@
         const node = new NodeStitch({ x, y, palindex, kind: tool, rotated: alt });
         if (stage === AddStitchEventStage.End) await patternsStore.addStitch(node);
         else {
-          const palitem = pattern.value!.palette[palindex]!;
+          const palitem = patternsStore.pattern!.palette[palindex]!;
           patternCanvas.drawNodeHint(node, palitem.color, palitem.bead);
         }
         break;
@@ -182,10 +187,11 @@
 
   onMounted(async () => {
     await patternCanvas.init(canvas.value!.getBoundingClientRect(), { canvas: canvas.value! });
-    patternCanvas.setPatternView(pattern.value!);
+    patternCanvas.setPatternView(patternsStore.pattern!);
   });
 
   onUnmounted(() => {
     patternCanvas.clear();
+    TextureManager.shared.clear();
   });
 </script>

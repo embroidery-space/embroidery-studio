@@ -225,7 +225,7 @@ fn reads_pattern_settings() {
         weight: FontWeight::new(400),
         italic: false,
       },
-      view: View::Solid,
+      display_mode: DisplayMode::Solid,
       zoom: 400,
       show_grid: true,
       show_rulers: true,

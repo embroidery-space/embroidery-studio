@@ -133,7 +133,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
       symbol_settings,
       formats,
       grid,
-      view: pattern_settings.view,
+      display_mode: pattern_settings.display_mode,
       zoom: pattern_settings.zoom,
       show_grid: pattern_settings.show_grid,
       show_rulers: pattern_settings.show_rulers,
@@ -410,7 +410,7 @@ struct XsdPatternSettings {
   stitch_font_name: String,
   font: Font,
 
-  view: View,
+  display_mode: DisplayMode,
   zoom: u16,
 
   show_grid: bool,
@@ -438,7 +438,7 @@ fn read_pattern_settings<R: Read + Seek>(reader: &mut R) -> Result<XsdPatternSet
   };
   reader.seek_relative(10)?;
 
-  let view: View = reader.read_u16::<LittleEndian>()?.into();
+  let display_mode = DisplayMode::from_pattern_maker(reader.read_u16::<LittleEndian>()?);
   // Match a zoom variant into a percentage value.
   let zoom = match reader.read_u16::<LittleEndian>()? {
     0 => 400,
@@ -483,7 +483,7 @@ fn read_pattern_settings<R: Read + Seek>(reader: &mut R) -> Result<XsdPatternSet
   Ok(XsdPatternSettings {
     stitch_font_name,
     font,
-    view,
+    display_mode,
     zoom,
     show_grid,
     show_rulers,

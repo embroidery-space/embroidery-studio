@@ -51,12 +51,22 @@ export class ObjectedMap<K extends object, V> {
     this.#size = 0;
   }
 
-  /** Extract all entries from the map. */
-  extract(): Bucket<K, V> {
+  /** Get all entries in the map and clear it. */
+  entries(): Bucket<K, V> {
     const entries: Bucket<K, V> = [];
     this.#buckets.forEach((bucket) => entries.push(...bucket));
     this.clear();
     return entries;
+  }
+
+  /** Get all keys in the map. */
+  keys(): K[] {
+    return this.entries().map((entry) => entry.key);
+  }
+
+  /** Get all values in the map. */
+  values(): V[] {
+    return this.entries().map((entry) => entry.value);
   }
 
   /** A simple hash function that implements the `djb2` algorithm. */
@@ -85,6 +95,12 @@ export class ObjectedMap<K extends object, V> {
   static withCapacity<K extends object, V>(capacity: number): ObjectedMap<K, V> {
     capacity = capacity < DEFAULT_BUCKETS_COUNT ? DEFAULT_BUCKETS_COUNT : capacity;
     return new ObjectedMap(Math.ceil(capacity / DEFAULT_LOAD_FACTOR));
+  }
+
+  static withKeys<K extends object, V>(keys: K[]): ObjectedMap<K, V> {
+    const map = ObjectedMap.withCapacity<K, V>(keys.length);
+    for (const key of keys) map.set(key, undefined as V);
+    return map;
   }
 }
 

@@ -42,17 +42,35 @@ describe("ObjectedMap", () => {
     expect(map.size).toBe(0);
   });
 
-  it("should extract all entries and clear the map", () => {
+  it("should get all entries", () => {
     const map = new ObjectedMap<object, string>();
     const key1 = { id: 1 };
     const key2 = { id: 2 };
     map.set(key1, "value1");
     map.set(key2, "value2");
-    const entries = map.extract();
+    const entries = map.entries();
     expect(entries).toEqual([
       { key: key1, value: "value1" },
       { key: key2, value: "value2" },
     ]);
     expect(map.size).toBe(0);
+  });
+
+  it("should get all keys", () => {
+    const map = new ObjectedMap<object, string>();
+    const key1 = { id: 1 };
+    const key2 = { id: 2 };
+    map.set(key1, "value1");
+    map.set(key2, "value2");
+    expect(map.keys()).toEqual([key1, key2]);
+  });
+
+  it("should, get values", () => {
+    const map = new ObjectedMap<object, string>();
+    const key1 = { id: 1 };
+    const key2 = { id: 2 };
+    map.set(key1, "value1");
+    map.set(key2, "value2");
+    expect(map.values()).toEqual(["value1", "value2"]);
   });
 });

@@ -8,9 +8,9 @@ import { defineStore } from "pinia";
 import { deserialize } from "@dao-xyz/borsh";
 import { toByteArray } from "base64-js";
 import { useAppStateStore } from "./state";
-import { FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
+import { DisplayApi, FabricApi, GridApi, HistoryApi, PaletteApi, PathApi, PatternApi, StitchesApi } from "#/api";
 import { PatternView } from "#/plugins/pixi";
-import { AddedPaletteItemData, deserializeStitch, deserializeStitches } from "#/schemas/pattern";
+import { AddedPaletteItemData, deserializeStitch, deserializeStitches, DisplayMode } from "#/schemas/pattern";
 import { PaletteItem, Fabric, Grid, type Stitch } from "#/schemas/pattern";
 
 const SAVE_AS_FILTERS: DialogFilter[] = [
@@ -196,6 +196,16 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.removeStitch(stitch);
   });
 
+  function setDisplayMode(mode: DisplayMode) {
+    if (!pattern.value) return;
+    return DisplayApi.setDisplayMode(pattern.value.key, mode);
+  }
+  appWindow.listen<DisplayMode>("display:set_mode", ({ payload: mode }) => {
+    if (!pattern.value) return;
+    pattern.value.setDisplayMode(mode);
+    triggerRef(pattern);
+  });
+
   const keys = useMagicKeys();
 
   whenever(keys["Ctrl+KeyO"]!, loadPattern);
@@ -229,5 +239,6 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     removePaletteItem,
     addStitch,
     removeStitch,
+    setDisplayMode,
   };
 });

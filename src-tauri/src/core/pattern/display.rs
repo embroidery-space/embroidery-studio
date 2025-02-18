@@ -9,7 +9,7 @@ pub struct DisplaySettings {
   pub symbol_settings: SymbolSettings,
   pub formats: Vec<Formats>,
   pub grid: Grid,
-  pub view: View,
+  pub display_mode: DisplayMode,
   pub zoom: u16,
   pub show_grid: bool,
   pub show_rulers: bool,
@@ -29,7 +29,7 @@ impl Default for DisplaySettings {
       symbol_settings: SymbolSettings::default(),
       formats: Vec::new(),
       grid: Grid::default(),
-      view: View::Solid,
+      display_mode: DisplayMode::Solid,
       zoom: 100,
       show_grid: true,
       show_rulers: true,
@@ -256,23 +256,41 @@ pub struct GridLineStyle {
 
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
-pub enum View {
-  Stitches = 0,
-  Symbols = 1,
-  Solid = 2,
-  Information = 3,
-  MachineEmbInfo = 4,
+pub enum DisplayMode {
+  Solid = 0,
+  Stitches = 1,
+  Mixed = 2,
 }
 
-impl From<u16> for View {
-  fn from(value: u16) -> Self {
+impl DisplayMode {
+  pub fn from_pattern_maker(value: u16) -> Self {
     match value {
-      0 => View::Stitches,
-      1 => View::Symbols,
-      2 => View::Solid,
-      3 => View::Information,
-      5 => View::MachineEmbInfo,
-      _ => panic!("Invalid View value: {value}"),
+      0 => DisplayMode::Stitches,
+      2 => DisplayMode::Solid,
+      _ => DisplayMode::Mixed,
+    }
+  }
+}
+
+impl std::fmt::Display for DisplayMode {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      DisplayMode::Solid => write!(f, "Solid"),
+      DisplayMode::Stitches => write!(f, "Stitches"),
+      DisplayMode::Mixed => write!(f, "Mixed"),
+    }
+  }
+}
+
+impl std::str::FromStr for DisplayMode {
+  type Err = &'static str;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s {
+      "Solid" => Ok(DisplayMode::Solid),
+      "Stitches" => Ok(DisplayMode::Stitches),
+      "Mixed" => Ok(DisplayMode::Mixed),
+      _ => Ok(DisplayMode::Mixed),
     }
   }
 }
