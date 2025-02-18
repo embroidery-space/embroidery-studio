@@ -41,7 +41,6 @@ export class PatternCanvas extends EventTarget {
     this.#viewport.on("pointerdown", this.#onPointerDown, this);
     this.#viewport.on("pointermove", this.#onPointerMove, this);
     this.#viewport.on("pointerup", this.#onPointerUp, this);
-    // this.#viewport.on("rightclick", this.#onRightClick, this);
   }
 
   setPatternView(pattern: PatternView) {
