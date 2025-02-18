@@ -57,7 +57,7 @@ dyn-clone = "1.0.18"
 nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = [
   "borsh",
 ] }
-tempfile = "3.16.0"
+tempfile = "3.17.1"
 font-kit = "0.14.2"
 
 [dev-dependencies]
