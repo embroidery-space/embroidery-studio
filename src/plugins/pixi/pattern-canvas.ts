@@ -41,7 +41,6 @@ export class PatternCanvas extends EventTarget {
     this.#viewport.on("pointerdown", this.#onPointerDown, this);
     this.#viewport.on("pointermove", this.#onPointerMove, this);
     this.#viewport.on("pointerup", this.#onPointerUp, this);
-    this.#viewport.on("rightclick", this.#onRightClick, this);
   }
 
   setPatternView(pattern: PatternView) {
@@ -112,34 +111,36 @@ export class PatternCanvas extends EventTarget {
   }
 
   #onPointerDown(e: FederatedPointerEvent) {
-    if (e.shiftKey || e.button !== 0) return;
     const point = this.#viewport.toWorld(e.global);
     this.#startPoint = this.#pointIsOutside(point) ? undefined : point;
     if (this.#startPoint === undefined) {
       this.#clearHint();
       return;
     }
-    this.#fireAddStitchEvent(e, AddStitchEventStage.Start);
+    if (e.button === 0) this.#fireAddStitchEvent(e, AddStitchEventStage.Start);
+    else if (e.button === 2) this.#onRightClick(e);
   }
 
   #onPointerUp(e: FederatedPointerEvent) {
     // If the start point is not set or the shift key is pressed, do nothing.
     // Shift key is used to pan the viewport.
-    if (e.shiftKey || e.button !== 0 || this.#startPoint === undefined) {
+    if (this.#startPoint === undefined) {
       this.#clearHint();
       return;
     }
-    this.#fireAddStitchEvent(e, AddStitchEventStage.End);
+    if (e.button === 0) this.#fireAddStitchEvent(e, AddStitchEventStage.End);
+    else if (e.button === 2) this.#onRightClick(e);
     this.#startPoint = undefined;
     this.#clearHint();
   }
 
   #onPointerMove(e: FederatedPointerEvent) {
-    if (e.shiftKey || e.button !== 0 || this.#startPoint === undefined) {
+    if (this.#startPoint === undefined) {
       this.#clearHint();
       return;
     }
-    this.#fireAddStitchEvent(e, AddStitchEventStage.Continue);
+    if (e.buttons === 1) this.#fireAddStitchEvent(e, AddStitchEventStage.Continue);
+    else if (e.buttons === 2) this.#onRightClick(e);
   }
 
   #onRightClick(e: FederatedPointerEvent) {
