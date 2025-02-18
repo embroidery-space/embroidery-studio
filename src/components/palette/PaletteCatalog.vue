@@ -4,7 +4,7 @@
       :model-value="props.palette.map((pi) => ({ brand: pi.brand, number: pi.number }))"
       :options="selectedPalette"
       :option-value="(pi) => ({ brand: pi.brand, number: pi.number })"
-      :display-options="PALETTE_CATALOG_DISPLAY_OPTIONS"
+      :display-settings="PALETTE_CATALOG_DISPLAY_SETTINGS"
       multiple
       class="w-full border-0 rounded-none"
       :style="{ backgroundColor: dt('content.background') }"
@@ -20,11 +20,11 @@
         />
       </template>
 
-      <template #option="{ option, displayOptions }">
+      <template #option="{ option, displaySettings }">
         <PaletteItemComponent
           :palette-item="option"
           :selected="props.palette.find((pi) => comparePaletteItems(pi, option)) !== undefined"
-          :display-options="displayOptions"
+          :display-settings="displaySettings"
         />
       </template>
     </PaletteList>
@@ -39,8 +39,7 @@
   import { dt } from "@primevue/themes";
   import { Select } from "primevue";
   import { Color } from "pixi.js";
-  import { PaletteItem } from "#/schemas/pattern";
-  import { type PaletteDisplayOptions } from "#/utils/paletteItem";
+  import { PaletteItem, PaletteSettings } from "#/schemas/pattern";
   import PaletteList from "./PaletteList.vue";
   import PaletteItemComponent from "./PaletteItem.vue";
   import PaletteSection from "./PaletteSection.vue";
@@ -52,13 +51,13 @@
     (event: "removePaletteItem", palindex: number): void;
   }>();
 
-  const PALETTE_CATALOG_DISPLAY_OPTIONS: PaletteDisplayOptions = {
-    colorOnly: false,
-    showBrand: false,
-    showNumber: true,
-    showName: false,
+  const PALETTE_CATALOG_DISPLAY_SETTINGS = new PaletteSettings({
     columnsNumber: 4,
-  };
+    colorOnly: false,
+    showColorBrands: false,
+    showColorNumbers: true,
+    showColorNames: false,
+  });
 
   const paletteCatalog = ref<Map<string, PaletteItem[] | undefined>>(new Map());
   const selectedPaletteCatalogItem = ref("DMC");

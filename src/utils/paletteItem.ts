@@ -1,26 +1,4 @@
-import type { Blend, PaletteItem } from "#/schemas/pattern/pattern";
-
-/** Interface representing display options for a palette panel. */
-export interface PaletteDisplayOptions {
-  /** Whether to show only the item color. */
-  colorOnly: boolean;
-  /** If true, the item vendor/brand will be displayed. */
-  showBrand: boolean;
-  /** If true, the item number will be displayed. */
-  showNumber: boolean;
-  /** If true, the item name will be displayed. */
-  showName: boolean;
-  /** The number of columns in the panel grid */
-  columnsNumber: number;
-}
-
-export const DEFAULT_PALETTE_DISPLAY_OPTIONS: PaletteDisplayOptions = {
-  colorOnly: false,
-  showBrand: true,
-  showNumber: true,
-  showName: true,
-  columnsNumber: 1,
-};
+import { Blend, PaletteItem, PaletteSettings } from "#/schemas/pattern";
 
 /**
  * Composes a title for a palette item based on the provided display options.
@@ -31,10 +9,10 @@ export const DEFAULT_PALETTE_DISPLAY_OPTIONS: PaletteDisplayOptions = {
  */
 export function paletteItemTitle(
   palitem: Partial<Pick<PaletteItem, "brand" | "blends" | "number" | "name">>,
-  options: PaletteDisplayOptions = DEFAULT_PALETTE_DISPLAY_OPTIONS,
+  options = PaletteSettings.default(),
 ): string {
   const components = [];
-  if (options.showBrand && palitem.brand) components.push(palitem.brand);
+  if (options.showColorBrands && palitem.brand) components.push(palitem.brand);
   if (palitem.blends?.length) {
     components.push(
       palitem.blends
@@ -45,9 +23,9 @@ export function paletteItemTitle(
     );
     return components.join(": ");
   }
-  if (options.showNumber && palitem.number) components.push(palitem.number);
+  if (options.showColorNumbers && palitem.number) components.push(palitem.number);
   // The name can be an empty string. For example, if the palette item is blend.
-  if (options.showName && palitem.name?.length) {
+  if (options.showColorNames && palitem.name?.length) {
     if (!components.length) return palitem.name;
     return [components.join(" "), palitem.name].join(", ");
   }
@@ -61,9 +39,9 @@ export function paletteItemTitle(
  * @param options - The display options to customize the title.
  * @returns The composed title for the blend.
  */
-export function blendTitle({ brand, number }: Blend, options: PaletteDisplayOptions): string {
+export function blendTitle({ brand, number }: Blend, options: PaletteSettings): string {
   const components = [];
-  if (options.showBrand) components.push(brand);
-  if (options.showNumber) components.push(number);
+  if (options.showColorBrands) components.push(brand);
+  if (options.showColorNumbers) components.push(number);
   return components.join(" ");
 }

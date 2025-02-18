@@ -19,6 +19,7 @@ pub struct DisplaySettings {
   pub outlined_stitches: bool,
   pub stitch_outline: StitchOutline,
   pub stitch_settings: StitchSettings,
+  pub palette_settings: PaletteSettings,
 }
 
 impl Default for DisplaySettings {
@@ -39,6 +40,7 @@ impl Default for DisplaySettings {
       outlined_stitches: true,
       stitch_outline: StitchOutline::default(),
       stitch_settings: StitchSettings::default(),
+      palette_settings: PaletteSettings::default(),
     }
   }
 }
@@ -344,6 +346,27 @@ impl Default for StitchSettings {
         StitchThickness::new(7.0), // 12 strands
         StitchThickness::new(4.0), // French knot
       ],
+    }
+  }
+}
+
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
+pub struct PaletteSettings {
+  pub columns_number: u8,
+  pub color_only: bool,
+  pub show_color_brands: bool,
+  pub show_color_numbers: bool,
+  pub show_color_names: bool,
+}
+
+impl Default for PaletteSettings {
+  fn default() -> Self {
+    Self {
+      columns_number: 1,
+      color_only: false,
+      show_color_brands: true,
+      show_color_numbers: true,
+      show_color_names: true,
     }
   }
 }

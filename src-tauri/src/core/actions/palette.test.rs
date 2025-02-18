@@ -4,10 +4,13 @@ use rand::seq::SliceRandom;
 use tauri::test::{mock_builder, MockRuntime};
 use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
-use super::{Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemsAction};
+use super::{
+  Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemsAction, UpdatePaletteDisplaySettingsAction,
+};
 use crate::core::parser::oxs;
 use crate::core::pattern::display::{Formats, Symbols};
 use crate::core::pattern::{PaletteItem, PatternProject, Stitch};
+use crate::display::PaletteSettings;
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()
@@ -123,8 +126,8 @@ fn assert_revoking_remove_palette_items_action(
   window.unlisten(add_many_stitches_event_id);
 }
 
-#[test]
 /// Test removing a set of palette items against corner cases and general use cases.
+#[test]
 fn test_remove_palette_items() {
   let app = setup_app();
   let window = WebviewWindowBuilder::new(&app, "main", WebviewUrl::default())
@@ -160,8 +163,8 @@ fn test_remove_palette_items() {
   }
 }
 
-#[test]
 /// Test removing a set of palette items against random sets of palette item indixes.
+#[test]
 fn test_remove_random_palette_items() {
   let app = setup_app();
   let window = WebviewWindowBuilder::new(&app, "main", WebviewUrl::default())
@@ -204,5 +207,46 @@ fn test_remove_random_palette_items() {
       palette_size - selected_palindixes.len(),
       palette_size,
     );
+  }
+}
+
+#[test]
+fn test_update_palette_display_settings() {
+  let app = setup_app();
+  let window = WebviewWindowBuilder::new(&app, "main", WebviewUrl::default())
+    .build()
+    .unwrap();
+
+  let mut patproj = create_pattern_project();
+  let old_settings = patproj.display_settings.palette_settings.clone();
+  let new_settings = PaletteSettings {
+    columns_number: 4,
+    color_only: true,
+    show_color_brands: true,
+    show_color_names: true,
+    show_color_numbers: true,
+  };
+  let action = UpdatePaletteDisplaySettingsAction::new(new_settings.clone());
+
+  // Test executing the command.
+  {
+    let update_display_settings_event_id = window.listen("palette:update_display_settings", move |e| {
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let received_settings: PaletteSettings = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(received_settings, new_settings);
+    });
+    action.perform(&window, &mut patproj).unwrap();
+    window.unlisten(update_display_settings_event_id);
+  }
+
+  // Test revoking the command.
+  {
+    let update_display_settings_event_id = window.listen("palette:update_display_settings", move |e| {
+      let base64: &str = serde_json::from_str(e.payload()).unwrap();
+      let received_settings: PaletteSettings = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      assert_eq!(received_settings, old_settings);
+    });
+    action.revoke(&window, &mut patproj).unwrap();
+    window.unlisten(update_display_settings_event_id);
   }
 }

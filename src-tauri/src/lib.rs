@@ -77,6 +77,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
       commands::grid::update_grid,
       commands::palette::add_palette_item,
       commands::palette::remove_palette_items,
+      commands::palette::update_palette_display_settings,
       commands::stitches::add_stitch,
       commands::stitches::remove_stitch,
       commands::history::undo,

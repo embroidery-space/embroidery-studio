@@ -63,7 +63,7 @@ message-palette-empty = The palette is empty
 label-palette-edit = Edit Palette
 
 label-palette-colors = Colors
-label-palette-display-options = Display Options
+label-palette-display-options = Display Settings
 label-palette-delete-selected = { $selected ->
   [0] Delete Selected
   *[other] Delete { $selected } Selected
@@ -72,9 +72,9 @@ label-palette-select-all = Select All
 
 label-display-options-columns-number = Columns Number
 label-display-options-color-only = Color only
-label-display-options-show-brand = Show thread brand
-label-display-options-show-number = Show color number
-label-display-options-show-name = Show color name
+label-display-options-show-brand = Show thread brands
+label-display-options-show-number = Show color numbers
+label-display-options-show-name = Show color names
 
 ## Titles, labels and messages related to the canvas panel and its settings.
 

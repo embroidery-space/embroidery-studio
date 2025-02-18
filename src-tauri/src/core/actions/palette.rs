@@ -8,6 +8,7 @@ use tauri::{Emitter, WebviewWindow};
 use super::Action;
 use crate::core::pattern::display::{Formats, Symbols};
 use crate::core::pattern::{PaletteItem, PatternProject, Stitch};
+use crate::display::PaletteSettings;
 
 #[cfg(test)]
 #[path = "palette.test.rs"]
@@ -182,4 +183,51 @@ struct AddedPaletteItemData {
   palindex: u8,
   symbols: Symbols,
   formats: Formats,
+}
+
+#[derive(Clone)]
+pub struct UpdatePaletteDisplaySettingsAction {
+  settings: PaletteSettings,
+  old_settings: OnceLock<PaletteSettings>,
+}
+
+impl UpdatePaletteDisplaySettingsAction {
+  pub fn new(settings: PaletteSettings) -> Self {
+    Self {
+      settings,
+      old_settings: OnceLock::new(),
+    }
+  }
+}
+
+impl<R: tauri::Runtime> Action<R> for UpdatePaletteDisplaySettingsAction {
+  /// Update the display settings of the palette.
+  ///
+  /// **Emits:**
+  /// - `palette:update_display_settings` with the new display settings.
+  fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
+    window.emit(
+      "palette:update_display_settings",
+      STANDARD.encode(borsh::to_vec(&self.settings)?),
+    )?;
+    let old_settings = std::mem::replace(&mut patproj.display_settings.palette_settings, self.settings.clone());
+    if self.old_settings.get().is_none() {
+      self.old_settings.set(old_settings).unwrap();
+    }
+    Ok(())
+  }
+
+  /// Revert the display settings of the palette.
+  ///
+  /// **Emits:**
+  /// - `palette:update_display_settings` with the old display settings.
+  fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
+    let old_settings = self.old_settings.get().unwrap();
+    window.emit(
+      "palette:update_display_settings",
+      STANDARD.encode(borsh::to_vec(&old_settings)?),
+    )?;
+    patproj.display_settings.palette_settings = old_settings.clone();
+    Ok(())
+  }
 }
