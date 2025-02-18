@@ -1,11 +1,5 @@
 import { Container, Graphics, Particle } from "pixi.js";
-import {
-  TextureManager,
-  StitchGraphics,
-  StitchSprite,
-  STITCH_SCALE_FACTOR,
-  StitchParticleContainer,
-} from "#/plugins/pixi";
+import { TextureManager, StitchGraphics, STITCH_SCALE_FACTOR, StitchParticleContainer } from "#/plugins/pixi";
 import { ObjectedMap } from "#/utils/map";
 import { AddedPaletteItemData, FullStitchKind, PartStitchDirection, PartStitchKind } from "#/schemas/pattern";
 import { CompletePaletteItem, FullStitch, LineStitch, PartStitch, DisplayMode } from "#/schemas/pattern";
@@ -44,7 +38,7 @@ export class PatternView {
   // Complex stitches (back and straight stitches, french knots, beads and special stitches) are rendered using graphics and sprites.
   // They are more complex and require more control over their rendering.
   #lines: ObjectedMap<LineStitch, StitchGraphics | undefined>;
-  #nodes: ObjectedMap<NodeStitch, StitchSprite | undefined>;
+  #nodes: ObjectedMap<NodeStitch, StitchGraphics | undefined>;
 
   #specialstitches: SpecialStitch[];
   #specialStitchModels: SpecialStitchModel[];
@@ -278,15 +272,15 @@ export class PatternView {
   addNodeStitch(node: NodeStitch) {
     const { x, y, palindex, kind, rotated } = node;
     const palitem = this.#palette[palindex]!;
-    const sprite = new StitchSprite(node, TextureManager.shared.getNodeTexture(kind, palitem.bead));
-    sprite.eventMode = "static";
-    sprite.tint = palitem.color;
-    sprite.pivot.set(sprite.width / 2, sprite.height / 2);
-    sprite.scale.set(STITCH_SCALE_FACTOR);
-    sprite.position.set(x, y);
-    if (rotated) sprite.angle = 90;
-    this.#nodes.set(node, sprite);
-    this.#stages.nodes.addChild(sprite);
+    const graphics = new StitchGraphics(node, TextureManager.shared.getNodeTexture(kind, palitem.bead));
+    graphics.eventMode = "static";
+    graphics.tint = palitem.color;
+    graphics.pivot.set(graphics.width / 2, graphics.height / 2);
+    graphics.scale.set(STITCH_SCALE_FACTOR);
+    graphics.position.set(x, y);
+    if (rotated) graphics.angle = 90;
+    this.#nodes.set(node, graphics);
+    this.#stages.nodes.addChild(graphics);
   }
 
   removeNodeStitch(node: NodeStitch) {

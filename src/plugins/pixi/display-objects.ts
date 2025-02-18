@@ -1,4 +1,4 @@
-import { Graphics, GraphicsContext, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { Graphics, GraphicsContext, ParticleContainer } from "pixi.js";
 import type { FullStitchKind, PartStitchKind, Stitch } from "#/schemas/pattern";
 
 /** A `Graphics` object that contains a reference to the `Stitch` object it represents. */
@@ -7,16 +7,6 @@ export class StitchGraphics extends Graphics {
 
   constructor(stitch: Stitch, context?: GraphicsContext) {
     super(context);
-    this.stitch = stitch;
-  }
-}
-
-/** A `Sprite` object that contains a reference to the `Stitch` object it represents. */
-export class StitchSprite extends Sprite {
-  readonly stitch: Stitch;
-
-  constructor(stitch: Stitch, texture: Texture) {
-    super(texture);
     this.stitch = stitch;
   }
 }

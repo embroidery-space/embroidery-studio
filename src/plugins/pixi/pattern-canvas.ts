@@ -2,13 +2,7 @@ import { Application, Graphics } from "pixi.js";
 import type { ApplicationOptions, ColorSource, FederatedPointerEvent, Point } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { PatternView } from "./pattern-view";
-import {
-  TextureManager,
-  StitchGraphics,
-  StitchSprite,
-  STITCH_SCALE_FACTOR,
-  StitchParticleContainer,
-} from "#/plugins/pixi";
+import { TextureManager, StitchGraphics, STITCH_SCALE_FACTOR, StitchParticleContainer } from "#/plugins/pixi";
 import type { Bead, LineStitch, NodeStitch, Stitch, StitchKind } from "#/schemas/pattern";
 
 const DEFAULT_INIT_OPTIONS: Partial<ApplicationOptions> = {
@@ -55,7 +49,6 @@ export class PatternCanvas extends EventTarget {
 
     pattern.render();
     for (const stage of Object.values(pattern.stages)) this.#viewport.addChild(stage);
-    this.#viewport.addChild(this.#hint);
 
     const { width, height } = pattern.fabric;
     this.#viewport.worldWidth = width;
@@ -92,21 +85,23 @@ export class PatternCanvas extends EventTarget {
   drawNodeHint(node: NodeStitch, color: ColorSource, bead?: Bead) {
     const { x, y, kind, rotated } = node;
     const graphics = this.#clearHint();
-    graphics.texture(TextureManager.shared.getNodeTexture(kind, bead), color);
+    graphics.context = TextureManager.shared.getNodeTexture(kind, bead);
     graphics.pivot.set(graphics.width / 2, graphics.height / 2);
     graphics.scale.set(STITCH_SCALE_FACTOR);
     graphics.position.set(x, y);
+    graphics.tint = color;
     if (rotated) graphics.angle = 90;
   }
 
   #clearHint() {
-    const hint = this.#hint.clear().restore();
-    hint.angle = 0;
-    hint.alpha = 0.5;
-    hint.pivot.set(0, 0);
-    hint.scale.set(1, 1);
-    hint.position.set(0, 0);
-    return hint;
+    this.#hint.destroy();
+    this.#hint = new Graphics();
+    this.#hint.angle = 0;
+    this.#hint.alpha = 0.5;
+    this.#hint.pivot.set(0, 0);
+    this.#hint.scale.set(1, 1);
+    this.#hint.position.set(0, 0);
+    return this.#viewport.addChild(this.#hint);
   }
 
   #fireAddStitchEvent(e: FederatedPointerEvent, stage: AddStitchEventStage) {
@@ -149,7 +144,7 @@ export class PatternCanvas extends EventTarget {
 
   #onRightClick(e: FederatedPointerEvent) {
     if (e.shiftKey) return; // Shift key is used to pan the viewport.
-    if (e.target instanceof StitchGraphics || e.target instanceof StitchSprite) {
+    if (e.target instanceof StitchGraphics) {
       const detail: RemoveStitchData = { stitch: e.target.stitch };
       this.dispatchEvent(new CustomEvent(EventType.RemoveStitch, { detail }));
     } else {

@@ -1,6 +1,6 @@
-import { Container, Graphics, Matrix, RenderTexture } from "pixi.js";
-import type { Renderer, RenderOptions, TextureSourceOptions } from "pixi.js";
-import { TEXTURE_STROKE } from "./constants";
+import { Container, Graphics, RenderTexture } from "pixi.js";
+import { GraphicsContext, type Renderer, type RenderOptions, type TextureSourceOptions } from "pixi.js";
+import { GRAPHICS_STROKE, TEXTURE_STROKE } from "./constants";
 import { ObjectedMap } from "#/utils/map";
 import { mm2px } from "#/utils/measurement";
 import { Bead, FullStitchKind, NodeStitchKind, PartStitchKind, DisplayMode } from "#/schemas/pattern";
@@ -24,8 +24,8 @@ export class TextureManager {
   #fullstitches = new Map<DisplayMode, Record<FullStitchKind, RenderTexture>>();
   #partstitches = new Map<DisplayMode, Record<PartStitchKind, RenderTexture>>();
 
-  #frenchKnot?: RenderTexture;
-  #beads = new ObjectedMap<Bead, RenderTexture>();
+  #frenchKnot?: GraphicsContext;
+  #beads = new ObjectedMap<Bead, GraphicsContext>();
 
   init(renderer: Renderer, textureSourceOptions?: TextureSourceOptions) {
     this.#renderer = renderer;
@@ -170,22 +170,19 @@ export class TextureManager {
   }
 
   #createFrenchKnotTexture() {
-    const shape = new Graphics().circle(0, 0, 24).stroke(TEXTURE_STROKE).fill(0xffffff);
-    return this.#createTexture(
-      shape,
-      { label: "FrenchKnot", width: 50, height: 50 },
-      { transform: new Matrix(1, 0, 0, 1, 25, 25) },
-    );
+    return new GraphicsContext().circle(25, 25, 25).stroke(GRAPHICS_STROKE).fill(0xffffff);
   }
 
   #createBeadTexture(bead: Bead) {
     const width = mm2px(bead.diameter) * 10;
     const height = mm2px(bead.length) * 10;
-    const shape = new Graphics()
-      .roundRect(1, 2, width - 2, height - 4, (width - 2) * 0.4)
-      .stroke(TEXTURE_STROKE)
-      .fill(0xffffff);
-    return this.#createTexture(shape, { label: `Bead-${bead.diameter}:${bead.length}`, width, height });
+    return (
+      new GraphicsContext()
+        // Set negative coordinates to rotate elements around their center.
+        .roundRect(0, 0, width, height, width * 0.4)
+        .stroke(GRAPHICS_STROKE)
+        .fill(0xffffff)
+    );
   }
 
   #createTexture(
