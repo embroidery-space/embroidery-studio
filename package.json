@@ -38,7 +38,7 @@
     "@tsconfig/strictest": "^2.0.5",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.13.5",
-    "@unocss/eslint-config": "^65.5.0",
+    "@unocss/eslint-config": "^66.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.4.0",
