@@ -36,7 +36,7 @@
   import { readDir, readTextFile } from "@tauri-apps/plugin-fs";
   import { onMounted, ref } from "vue";
   import { computedAsync } from "@vueuse/core";
-  import { dt } from "@primevue/themes";
+  import { dt } from "@primeuix/themes";
   import { Select } from "primevue";
   import { Color } from "pixi.js";
   import { PaletteItem, PaletteSettings } from "#/schemas/pattern";

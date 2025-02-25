@@ -50,7 +50,7 @@
   import { unrefElement, useEventListener } from "@vueuse/core";
   import { Button, Menu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
-  import { dt } from "@primevue/themes";
+  import { dt } from "@primeuix/themes";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
 

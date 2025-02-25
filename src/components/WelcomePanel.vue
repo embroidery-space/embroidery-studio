@@ -66,7 +66,7 @@
 <script setup lang="ts">
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { computed } from "vue";
-  import { dt } from "@primevue/themes";
+  import { dt } from "@primeuix/themes";
   import { Button } from "primevue";
   import { useFluent } from "fluent-vue";
   import { usePreferencesStore } from "#/stores/preferences";

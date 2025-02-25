@@ -12,7 +12,7 @@
   "dependencies": {
     "@dao-xyz/borsh": "^5.2.3",
     "@fluent/bundle": "^0.18.0",
-    "@primevue/themes": "^4.3.0",
+    "@primeuix/themes": "^1.0.0",
     "@stdlib/math-base-special-roundn": "^0.2.2",
     "@tauri-apps/api": "^2.2.0",
     "@tauri-apps/plugin-dialog": "^2.2.0",

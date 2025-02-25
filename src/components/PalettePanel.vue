@@ -122,7 +122,7 @@
 <script setup lang="ts">
   import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch } from "vue";
   import { useFluent } from "fluent-vue";
-  import { dt } from "@primevue/themes";
+  import { dt } from "@primeuix/themes";
   import { Button, ContextMenu, Menu } from "primevue";
   import type { MenuItem } from "primevue/menuitem";
   import { dequal } from "dequal";
