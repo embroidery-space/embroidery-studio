@@ -368,7 +368,11 @@ fn read_partstitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Stitches<
         let palindex2: u8 = attributes.get("palindex2").unwrap().parse()?;
 
         if palindex1 != 0 {
-          let (x, y) = if direction_value == 1 { (x, y + 0.5) } else { (x, y) };
+          let (x, y) = if direction_value == 1 {
+            (x, NotNan::new(y + 0.5)?)
+          } else {
+            (x, y)
+          };
           partstitches.insert(PartStitch {
             x,
             y,
@@ -380,9 +384,9 @@ fn read_partstitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Stitches<
 
         if palindex2 != 0 {
           let (x, y) = if direction_value == 1 {
-            (x + 0.5, y)
+            (NotNan::new(x + 0.5)?, y)
           } else if direction_value == 2 {
-            (x + 0.5, y + 0.5)
+            (NotNan::new(x + 0.5)?, NotNan::new(y + 0.5)?)
           } else {
             (x, y)
           };
@@ -428,7 +432,7 @@ fn write_partstitches<W: io::Write>(writer: &mut Writer<W>, partstitches: &Stitc
                 palindexes.0 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
                 x: NotNan::new(partstitch.x.floor()).unwrap(),
-                y: partstitch.y + 0.5,
+                y: NotNan::new(partstitch.y + 0.5).unwrap(),
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
@@ -438,7 +442,7 @@ fn write_partstitches<W: io::Write>(writer: &mut Writer<W>, partstitches: &Stitc
               if partstitch.is_on_top_right() {
                 palindexes.1 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
-                x: partstitch.x + 0.5,
+                x: NotNan::new(partstitch.x + 0.5).unwrap(),
                 y: NotNan::new(partstitch.y.floor()).unwrap(),
                 ..*partstitch
               }) {
@@ -462,8 +466,8 @@ fn write_partstitches<W: io::Write>(writer: &mut Writer<W>, partstitches: &Stitc
               if partstitch.is_on_bottom_right() {
                 palindexes.1 = partstitch.palindex + 1;
               } else if let Some(partstitch) = partstitches.get(&PartStitch {
-                x: partstitch.x + 0.5,
-                y: partstitch.y + 0.5,
+                x: NotNan::new(partstitch.x + 0.5).unwrap(),
+                y: NotNan::new(partstitch.y + 0.5).unwrap(),
                 ..*partstitch
               }) {
                 seen_quarters.insert((partstitch.x, partstitch.y));
