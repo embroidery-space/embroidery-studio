@@ -52,7 +52,7 @@ anyhow = "1.0.96"
 log = "0.4.26"
 
 # Other
-ordered-float = { version = "4.6.0", features = ["borsh"] }
+ordered-float = { version = "5.0.0", features = ["borsh"] }
 dyn-clone = "1.0.18"
 nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = [
   "borsh",
