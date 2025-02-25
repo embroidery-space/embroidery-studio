@@ -384,11 +384,7 @@ fn read_font_formats<R: Read + Seek>(reader: &mut R, palette_size: usize) -> io:
 
 fn read_symbols<R: Read>(reader: &mut R, palette_size: usize) -> io::Result<Vec<Symbols>> {
   fn map_symbol(value: u16) -> Option<u16> {
-    if value == 0xFFFF {
-      None
-    } else {
-      Some(value)
-    }
+    if value == 0xFFFF { None } else { Some(value) }
   }
 
   let mut symbols = Vec::with_capacity(palette_size);

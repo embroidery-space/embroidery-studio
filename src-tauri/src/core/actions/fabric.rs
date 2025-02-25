@@ -1,13 +1,13 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
-use base64::engine::general_purpose::STANDARD;
 use base64::Engine;
+use base64::engine::general_purpose::STANDARD;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
-use crate::core::pattern::{Fabric, PatternProject};
 use crate::Stitch;
+use crate::core::pattern::{Fabric, PatternProject};
 
 #[cfg(test)]
 #[path = "fabric.test.rs"]

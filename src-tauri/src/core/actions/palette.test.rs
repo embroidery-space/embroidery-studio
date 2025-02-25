@@ -1,8 +1,8 @@
-use base64::engine::general_purpose::STANDARD;
 use base64::Engine;
+use base64::engine::general_purpose::STANDARD;
 use rand::seq::SliceRandom;
-use tauri::test::{mock_builder, MockRuntime};
-use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::test::{MockRuntime, mock_builder};
+use tauri::{App, Listener, WebviewUrl, WebviewWindow, WebviewWindowBuilder, generate_context};
 
 use super::{
   Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemsAction, UpdatePaletteDisplaySettingsAction,

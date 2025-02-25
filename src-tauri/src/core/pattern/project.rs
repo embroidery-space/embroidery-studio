@@ -1,8 +1,8 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 
+use super::Pattern;
 use super::display::DisplaySettings;
 use super::print::PrintSettings;
-use super::Pattern;
 
 #[derive(Debug, Default, Clone, BorshSerialize, BorshDeserialize)]
 pub struct PatternProject {
