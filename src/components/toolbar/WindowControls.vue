@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
   import { getCurrentWindow } from "@tauri-apps/api/window";
-  import { dt } from "@primevue/themes";
+  import { dt } from "@primeuix/themes";
   import { onUnmounted, ref } from "vue";
 
   // New window is maximized by default.

@@ -66,14 +66,15 @@ impl<T: Ord> Stitches<T> {
 
   /// Returns `true` if the set contains a stitch.
   pub fn contains(&self, stitch: &T) -> bool {
-    if let Some(contained) = self.inner.get(stitch) {
-      // We need to use the `get` method to get the actual stitch.
-      // Then we need to compare the actual stitch with the passed stitch.
-      // This is because the indexing is done only by the fields that are used for ordering (coordinates, kind, etc.).
-      // But we need to compare all the other values (mainly, palindex).
-      contained == stitch
-    } else {
-      false
+    match self.inner.get(stitch) {
+      Some(contained) => {
+        // We need to use the `get` method to get the actual stitch.
+        // Then we need to compare the actual stitch with the passed stitch.
+        // This is because the indexing is done only by the fields that are used for ordering (coordinates, kind, etc.).
+        // But we need to compare all the other values (mainly, palindex).
+        contained == stitch
+      }
+      None => false,
     }
   }
 
@@ -121,8 +122,8 @@ impl Stitches<FullStitch> {
     debug_assert_eq!(fullstitch.kind, FullStitchKind::Full);
     let mut conflicts = Vec::new();
 
-    let x = fullstitch.x + 0.5;
-    let y = fullstitch.y + 0.5;
+    let x = NotNan::new(fullstitch.x + 0.5).unwrap();
+    let y = NotNan::new(fullstitch.y + 0.5).unwrap();
     let kind = FullStitchKind::Petite;
 
     for petite in [
@@ -162,8 +163,8 @@ impl Stitches<FullStitch> {
     let mut conflicts = Vec::new();
     let fullstitch: FullStitch = partstitch.to_owned().into();
 
-    let x = partstitch.x + 0.5;
-    let y = partstitch.y + 0.5;
+    let y = NotNan::new(partstitch.y + 0.5).unwrap();
+    let x = NotNan::new(partstitch.x + 0.5).unwrap();
     let kind = FullStitchKind::Petite;
     match partstitch.direction {
       PartStitchDirection::Forward => {
@@ -235,8 +236,8 @@ impl Stitches<PartStitch> {
     let mut conflicts = Vec::new();
 
     let partstitch: PartStitch = fullstitch.to_owned().into();
-    let x = fullstitch.x + 0.5;
-    let y = fullstitch.y + 0.5;
+    let x = NotNan::new(fullstitch.x + 0.5).unwrap();
+    let y = NotNan::new(fullstitch.y + 0.5).unwrap();
 
     for partstitch in [
       PartStitch {
@@ -316,8 +317,8 @@ impl Stitches<PartStitch> {
     debug_assert_eq!(partstitch.kind, PartStitchKind::Half);
     let mut conflicts = Vec::new();
 
-    let x = partstitch.x + 0.5;
-    let y = partstitch.y + 0.5;
+    let x = NotNan::new(partstitch.x + 0.5).unwrap();
+    let y = NotNan::new(partstitch.y + 0.5).unwrap();
     let kind = PartStitchKind::Quarter;
 
     match partstitch.direction {
@@ -458,19 +459,22 @@ impl<T: Ord + PaletteIndex> Stitches<T> {
     // Then, we need to reinsert the remaining stitches into the set with the new palette item indexes.
     let mut palindexes_map = std::collections::HashMap::new();
     'outer: for mut stitch in remaining_stitches.into_iter() {
-      if let Some(&new_palindex) = palindexes_map.get(&stitch.palindex()) {
-        stitch.set_palindex(new_palindex);
-      } else {
-        for (index, &palindex) in palindexes.iter().enumerate().rev() {
-          if stitch.palindex() > palindex {
-            let new_palindex = stitch.palindex() - (index as u8) - 1;
-            palindexes_map.insert(stitch.palindex(), new_palindex);
-            stitch.set_palindex(new_palindex);
-            self.inner.insert(stitch);
-            continue 'outer;
-          }
+      match palindexes_map.get(&stitch.palindex()) {
+        Some(&new_palindex) => {
+          stitch.set_palindex(new_palindex);
         }
-        palindexes_map.insert(stitch.palindex(), stitch.palindex());
+        None => {
+          for (index, &palindex) in palindexes.iter().enumerate().rev() {
+            if stitch.palindex() > palindex {
+              let new_palindex = stitch.palindex() - (index as u8) - 1;
+              palindexes_map.insert(stitch.palindex(), new_palindex);
+              stitch.set_palindex(new_palindex);
+              self.inner.insert(stitch);
+              continue 'outer;
+            }
+          }
+          palindexes_map.insert(stitch.palindex(), stitch.palindex());
+        }
       }
       self.inner.insert(stitch);
     }

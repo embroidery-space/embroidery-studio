@@ -1,11 +1,11 @@
-use base64::engine::general_purpose::STANDARD;
 use base64::Engine;
-use tauri::test::{mock_builder, MockRuntime};
-use tauri::{generate_context, App, Listener, WebviewUrl, WebviewWindowBuilder};
+use base64::engine::general_purpose::STANDARD;
+use tauri::test::{MockRuntime, mock_builder};
+use tauri::{App, Listener, WebviewUrl, WebviewWindowBuilder, generate_context};
 
 use super::{Action, UpdateGridPropertiesAction};
-use crate::core::pattern::display::Grid;
 use crate::core::pattern::PatternProject;
+use crate::core::pattern::display::Grid;
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()

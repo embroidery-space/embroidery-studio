@@ -384,11 +384,7 @@ fn read_font_formats<R: Read + Seek>(reader: &mut R, palette_size: usize) -> io:
 
 fn read_symbols<R: Read>(reader: &mut R, palette_size: usize) -> io::Result<Vec<Symbols>> {
   fn map_symbol(value: u16) -> Option<u16> {
-    if value == 0xFFFF {
-      None
-    } else {
-      Some(value)
-    }
+    if value == 0xFFFF { None } else { Some(value) }
   }
 
   let mut symbols = Vec::with_capacity(palette_size);
@@ -723,7 +719,7 @@ fn read_small_stitch_buffers<R: Read>(reader: &mut R, small_stitches_count: usiz
   Ok(small_stitch_buffers)
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 enum XsdSmallStitchKind {
   HalfTop,
   HalfBottom,
@@ -777,7 +773,7 @@ fn map_stitches_data_into_stitches(
       (1, 4, 6, XsdSmallStitchKind::PetiteTopRight),
       (1, 8, 7, XsdSmallStitchKind::PetiteBottomRight),
     ] {
-      let (x, y) = adjust_small_stitch_coors(x, y, &kind);
+      let (x, y) = adjust_small_stitch_coors(x, y, kind)?;
       if small_stitch_buffer[significant_byte_index] & bitand_arg != 0 {
         fullstitches.push(FullStitch {
           x,
@@ -797,7 +793,7 @@ fn map_stitches_data_into_stitches(
       (0, 32, 7, XsdSmallStitchKind::QuarterBottomRight),
     ] {
       if small_stitch_buffer[significant_byte_index] & bitand_arg != 0 {
-        let (x, y) = adjust_small_stitch_coors(x, y, &kind);
+        let (x, y) = adjust_small_stitch_coors(x, y, kind.clone())?;
         let direction = match kind {
           XsdSmallStitchKind::HalfTop | XsdSmallStitchKind::QuarterTopLeft | XsdSmallStitchKind::QuarterBottomRight => {
             PartStitchDirection::Backward
@@ -825,13 +821,15 @@ fn map_stitches_data_into_stitches(
 /// Adjusts the coordinates of the small stitch.
 /// The XSD format contains coordinates without additional offsets relative to the cell.
 /// But this is important for us.
-fn adjust_small_stitch_coors(x: Coord, y: Coord, kind: &XsdSmallStitchKind) -> (Coord, Coord) {
+fn adjust_small_stitch_coors(x: Coord, y: Coord, kind: XsdSmallStitchKind) -> Result<(Coord, Coord)> {
   match kind {
-    XsdSmallStitchKind::QuarterTopLeft | XsdSmallStitchKind::PetiteTopLeft => (x, y),
-    XsdSmallStitchKind::QuarterTopRight | XsdSmallStitchKind::PetiteTopRight => (x + 0.5, y),
-    XsdSmallStitchKind::QuarterBottomLeft | XsdSmallStitchKind::PetiteBottomLeft => (x, y + 0.5),
-    XsdSmallStitchKind::QuarterBottomRight | XsdSmallStitchKind::PetiteBottomRight => (x + 0.5, y + 0.5),
-    _ => (x, y),
+    XsdSmallStitchKind::QuarterTopLeft | XsdSmallStitchKind::PetiteTopLeft => Ok((x, y)),
+    XsdSmallStitchKind::QuarterTopRight | XsdSmallStitchKind::PetiteTopRight => Ok((NotNan::new(x + 0.5)?, y)),
+    XsdSmallStitchKind::QuarterBottomLeft | XsdSmallStitchKind::PetiteBottomLeft => Ok((x, NotNan::new(y + 0.5)?)),
+    XsdSmallStitchKind::QuarterBottomRight | XsdSmallStitchKind::PetiteBottomRight => {
+      Ok((NotNan::new(x + 0.5)?, NotNan::new(y + 0.5)?))
+    }
+    _ => Ok((x, y)),
   }
 }
 
@@ -868,8 +866,8 @@ fn read_special_stitch_models<R: Read + Seek>(reader: &mut R) -> Result<Vec<Spec
       if i == 0 {
         reader.seek_relative(2)?;
         shift = (
-          NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0,
-          NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0,
+          NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?,
+          NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?,
         );
         reader.seek_relative(4)?;
       } else {
@@ -945,8 +943,8 @@ fn read_joints<R: Read + Seek>(reader: &mut R, joints_count: u16) -> io::Result<
     match joint_kind {
       XsdJointKind::FrenchKnot => {
         reader.seek_relative(2)?;
-        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
+        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
         reader.seek_relative(4)?;
         let palindex = reader.read_u8()?;
         reader.seek_relative(1)?;
@@ -961,10 +959,10 @@ fn read_joints<R: Read + Seek>(reader: &mut R, joints_count: u16) -> io::Result<
 
       XsdJointKind::Back | XsdJointKind::Straight => {
         reader.seek_relative(2)?;
-        let x1 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let y1 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let x2 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let y2 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
+        let x1 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let y1 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let x2 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let y2 = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
         let palindex = reader.read_u8()?;
         reader.seek_relative(1)?;
         let kind = if joint_kind == XsdJointKind::Back {
@@ -989,8 +987,8 @@ fn read_joints<R: Read + Seek>(reader: &mut R, joints_count: u16) -> io::Result<
         for _ in 0..points_count {
           // 15.0 is the resolution of the curve points.
           // 2.0 is the factor that is used to convert the XSD coordinates to the pattern coordinates.
-          let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 15.0 / 2.0;
-          let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 15.0 / 2.0;
+          let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 15.0 / 2.0)?;
+          let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 15.0 / 2.0)?;
           curve.points.push((x, y));
         }
         curves.push(curve);
@@ -1000,8 +998,8 @@ fn read_joints<R: Read + Seek>(reader: &mut R, joints_count: u16) -> io::Result<
         reader.seek_relative(2)?;
         let palindex = reader.read_u8()?;
         reader.seek_relative(4)?;
-        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
+        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
         let (rotation, flip) = {
           let mut flip = (false, false);
           let mut rotation = 0;
@@ -1046,8 +1044,8 @@ fn read_joints<R: Read + Seek>(reader: &mut R, joints_count: u16) -> io::Result<
 
       XsdJointKind::Bead => {
         reader.seek_relative(2)?;
-        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
-        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32)? / 2.0;
+        let x = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
+        let y = NotNan::new(reader.read_u16::<LittleEndian>()? as f32 / 2.0)?;
         let palindex = reader.read_u8()?;
         reader.seek_relative(1)?;
         let rotated = matches!(reader.read_u16::<LittleEndian>()?, 90 | 270);

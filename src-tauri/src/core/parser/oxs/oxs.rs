@@ -1,10 +1,10 @@
 use std::io;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use quick_xml::events::{BytesDecl, BytesStart, Event};
 use quick_xml::{Reader, Writer};
 
-use super::utils::{process_attributes, MapAttributes, OxsVersion, Software};
+use super::utils::{MapAttributes, OxsVersion, Software, process_attributes};
 use super::v1;
 use crate::core::pattern::PatternProject;
 use crate::display::*;

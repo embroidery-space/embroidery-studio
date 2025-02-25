@@ -1,7 +1,7 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use super::partstitch::*;
 use super::PaletteIndex;
+use super::partstitch::*;
 use crate::core::pattern::Coord;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
