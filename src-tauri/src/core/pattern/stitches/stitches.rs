@@ -66,14 +66,15 @@ impl<T: Ord> Stitches<T> {
 
   /// Returns `true` if the set contains a stitch.
   pub fn contains(&self, stitch: &T) -> bool {
-    if let Some(contained) = self.inner.get(stitch) {
-      // We need to use the `get` method to get the actual stitch.
-      // Then we need to compare the actual stitch with the passed stitch.
-      // This is because the indexing is done only by the fields that are used for ordering (coordinates, kind, etc.).
-      // But we need to compare all the other values (mainly, palindex).
-      contained == stitch
-    } else {
-      false
+    match self.inner.get(stitch) {
+      Some(contained) => {
+        // We need to use the `get` method to get the actual stitch.
+        // Then we need to compare the actual stitch with the passed stitch.
+        // This is because the indexing is done only by the fields that are used for ordering (coordinates, kind, etc.).
+        // But we need to compare all the other values (mainly, palindex).
+        contained == stitch
+      }
+      None => false,
     }
   }
 
@@ -458,19 +459,22 @@ impl<T: Ord + PaletteIndex> Stitches<T> {
     // Then, we need to reinsert the remaining stitches into the set with the new palette item indexes.
     let mut palindexes_map = std::collections::HashMap::new();
     'outer: for mut stitch in remaining_stitches.into_iter() {
-      if let Some(&new_palindex) = palindexes_map.get(&stitch.palindex()) {
-        stitch.set_palindex(new_palindex);
-      } else {
-        for (index, &palindex) in palindexes.iter().enumerate().rev() {
-          if stitch.palindex() > palindex {
-            let new_palindex = stitch.palindex() - (index as u8) - 1;
-            palindexes_map.insert(stitch.palindex(), new_palindex);
-            stitch.set_palindex(new_palindex);
-            self.inner.insert(stitch);
-            continue 'outer;
-          }
+      match palindexes_map.get(&stitch.palindex()) {
+        Some(&new_palindex) => {
+          stitch.set_palindex(new_palindex);
         }
-        palindexes_map.insert(stitch.palindex(), stitch.palindex());
+        None => {
+          for (index, &palindex) in palindexes.iter().enumerate().rev() {
+            if stitch.palindex() > palindex {
+              let new_palindex = stitch.palindex() - (index as u8) - 1;
+              palindexes_map.insert(stitch.palindex(), new_palindex);
+              stitch.set_palindex(new_palindex);
+              self.inner.insert(stitch);
+              continue 'outer;
+            }
+          }
+          palindexes_map.insert(stitch.palindex(), stitch.palindex());
+        }
       }
       self.inner.insert(stitch);
     }

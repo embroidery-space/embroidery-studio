@@ -1,6 +1,6 @@
 [package]
 name = "embroidery-studio"
-edition = "2021"
+edition = "2024"
 
 [features]
 test = []
