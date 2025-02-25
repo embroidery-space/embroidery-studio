@@ -121,8 +121,8 @@ impl Stitches<FullStitch> {
     debug_assert_eq!(fullstitch.kind, FullStitchKind::Full);
     let mut conflicts = Vec::new();
 
-    let x = fullstitch.x + 0.5;
-    let y = fullstitch.y + 0.5;
+    let x = NotNan::new(fullstitch.x + 0.5).unwrap();
+    let y = NotNan::new(fullstitch.y + 0.5).unwrap();
     let kind = FullStitchKind::Petite;
 
     for petite in [
@@ -162,8 +162,8 @@ impl Stitches<FullStitch> {
     let mut conflicts = Vec::new();
     let fullstitch: FullStitch = partstitch.to_owned().into();
 
-    let x = partstitch.x + 0.5;
-    let y = partstitch.y + 0.5;
+    let y = NotNan::new(partstitch.y + 0.5).unwrap();
+    let x = NotNan::new(partstitch.x + 0.5).unwrap();
     let kind = FullStitchKind::Petite;
     match partstitch.direction {
       PartStitchDirection::Forward => {
@@ -235,8 +235,8 @@ impl Stitches<PartStitch> {
     let mut conflicts = Vec::new();
 
     let partstitch: PartStitch = fullstitch.to_owned().into();
-    let x = fullstitch.x + 0.5;
-    let y = fullstitch.y + 0.5;
+    let x = NotNan::new(fullstitch.x + 0.5).unwrap();
+    let y = NotNan::new(fullstitch.y + 0.5).unwrap();
 
     for partstitch in [
       PartStitch {
@@ -316,8 +316,8 @@ impl Stitches<PartStitch> {
     debug_assert_eq!(partstitch.kind, PartStitchKind::Half);
     let mut conflicts = Vec::new();
 
-    let x = partstitch.x + 0.5;
-    let y = partstitch.y + 0.5;
+    let x = NotNan::new(partstitch.x + 0.5).unwrap();
+    let y = NotNan::new(partstitch.y + 0.5).unwrap();
     let kind = PartStitchKind::Quarter;
 
     match partstitch.direction {

@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
-import { defineConfig, presetIcons, presetUno } from "unocss";
+import { defineConfig, presetIcons, presetWind3 } from "unocss";
 import { FileSystemIconLoader } from "@iconify/utils/lib/loader/node-loaders";
 
 export default defineConfig({
   presets: [
-    presetUno({ dark: "media" }),
+    presetWind3({ dark: "media" }),
     presetIcons({
       scale: 1.5,
       unit: "rem",
