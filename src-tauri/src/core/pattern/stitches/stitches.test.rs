@@ -140,20 +140,20 @@ fn petites(base: NotNan<f32>) -> [FullStitch; 4] {
       kind: FullStitchKind::Petite,
     },
     FullStitch {
-      x: base + 0.5,
+      x: NotNan::new(base + 0.5).unwrap(),
       y: base,
       palindex: 0,
       kind: FullStitchKind::Petite,
     },
     FullStitch {
       x: base,
-      y: base + 0.5,
+      y: NotNan::new(base + 0.5).unwrap(),
       palindex: 0,
       kind: FullStitchKind::Petite,
     },
     FullStitch {
-      x: base + 0.5,
-      y: base + 0.5,
+      x: NotNan::new(base + 0.5).unwrap(),
+      y: NotNan::new(base + 0.5).unwrap(),
       palindex: 0,
       kind: FullStitchKind::Petite,
     },
@@ -189,7 +189,7 @@ fn quarters(base: NotNan<f32>) -> [PartStitch; 4] {
       kind: PartStitchKind::Quarter,
     },
     PartStitch {
-      x: base + 0.5,
+      x: NotNan::new(base + 0.5).unwrap(),
       y: base,
       palindex: 0,
       direction: PartStitchDirection::Forward,
@@ -197,14 +197,14 @@ fn quarters(base: NotNan<f32>) -> [PartStitch; 4] {
     },
     PartStitch {
       x: base,
-      y: base + 0.5,
+      y: NotNan::new(base + 0.5).unwrap(),
       palindex: 0,
       direction: PartStitchDirection::Forward,
       kind: PartStitchKind::Quarter,
     },
     PartStitch {
-      x: base + 0.5,
-      y: base + 0.5,
+      x: NotNan::new(base + 0.5).unwrap(),
+      y: NotNan::new(base + 0.5).unwrap(),
       palindex: 0,
       direction: PartStitchDirection::Backward,
       kind: PartStitchKind::Quarter,
@@ -214,8 +214,8 @@ fn quarters(base: NotNan<f32>) -> [PartStitch; 4] {
 
 fn line(base: NotNan<f32>, kind: LineKind) -> Line {
   Line {
-    x: (base, base + 1.0),
-    y: (base, base + 1.0),
+    x: (base, NotNan::new(base + 1.0).unwrap()),
+    y: (base, NotNan::new(base + 1.0).unwrap()),
     palindex: 0,
     kind,
   }
