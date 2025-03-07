@@ -77,7 +77,7 @@ Here is a list of the available PrimeVue components and which ones are used in t
 | `Accordion`   |         |
 | `Card`        |         |
 | `Deferred`    |         |
-| `Divider`     |         |
+| `Divider`     | ✅      |
 | `FieldSet`    | ✅      |
 | `Panel`       |         |
 | `ScrollPanel` |         |

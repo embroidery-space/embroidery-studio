@@ -1,31 +1,37 @@
 import { field, fixedArray, option, vec } from "@dao-xyz/borsh";
+import { FullStitchKind, NodeStitchKind, PartStitchKind } from "./pattern";
 
 export class Symbols {
   @field({ type: option("u16") })
-  full?: number;
+  [FullStitchKind.Full]?: number;
 
   @field({ type: option("u16") })
-  petite?: number;
+  [FullStitchKind.Petite]?: number;
 
   @field({ type: option("u16") })
-  half?: number;
+  [PartStitchKind.Half]?: number;
 
   @field({ type: option("u16") })
-  quarter?: number;
+  [PartStitchKind.Quarter]?: number;
 
   @field({ type: option("u16") })
-  frenchKnot?: number;
+  [NodeStitchKind.FrenchKnot]?: number;
 
   @field({ type: option("u16") })
-  bead?: number;
+  [NodeStitchKind.Bead]?: number;
 
   constructor(data: Symbols) {
-    this.full = data.full;
-    this.petite = data.petite;
-    this.half = data.half;
-    this.quarter = data.quarter;
-    this.frenchKnot = data.frenchKnot;
-    this.bead = data.bead;
+    this[FullStitchKind.Full] = data[FullStitchKind.Full];
+    this[FullStitchKind.Petite] = data[FullStitchKind.Petite];
+    this[PartStitchKind.Half] = data[PartStitchKind.Half];
+    this[PartStitchKind.Quarter] = data[PartStitchKind.Quarter];
+    this[NodeStitchKind.FrenchKnot] = data[NodeStitchKind.FrenchKnot];
+    this[NodeStitchKind.Bead] = data[NodeStitchKind.Bead];
+  }
+
+  getSymbol(kind: FullStitchKind | PartStitchKind | NodeStitchKind) {
+    const code = this[kind] ?? this[FullStitchKind.Full];
+    return code ? String.fromCharCode(code) : "";
   }
 }
 
@@ -381,6 +387,9 @@ export class DisplaySettings {
   })
   displayMode: DisplayMode;
 
+  @field({ type: "bool" })
+  showSymbols: boolean;
+
   @field({ type: "u16" })
   zoom: number;
 
@@ -418,6 +427,7 @@ export class DisplaySettings {
     this.formats = data.formats;
     this.grid = data.grid;
     this.displayMode = data.displayMode;
+    this.showSymbols = data.showSymbols;
     this.zoom = data.zoom;
     this.showGrid = data.showGrid;
     this.showRulers = data.showRulers;

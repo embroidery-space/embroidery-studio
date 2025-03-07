@@ -10,8 +10,8 @@
   import { onMounted, onUnmounted, useTemplateRef, watch } from "vue";
   import { useDebounceFn } from "@vueuse/core";
   import { vElementSize } from "@vueuse/components";
-  import { Point } from "pixi.js";
-  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager } from "#/plugins/pixi";
+  import { Assets, Point } from "pixi.js";
+  import { AddStitchEventStage, PatternCanvas, EventType, TextureManager, STITCH_FONT_PREFIX } from "#/plugins/pixi";
   import type { AddStitchData, CanvasSize, RemoveStitchData } from "#/plugins/pixi";
   import { useAppStateStore } from "#/stores/state";
   import { usePatternsStore } from "#/stores/patterns";
@@ -36,8 +36,9 @@
 
   watch(
     () => patternsStore.pattern,
-    (view) => {
+    async (view) => {
       if (!view) return;
+      await Assets.load(view.allStitchFonts.map((font) => `${STITCH_FONT_PREFIX}${font}`));
       patternCanvas.setPatternView(view);
     },
   );
@@ -187,10 +188,14 @@
 
   onMounted(async () => {
     await patternCanvas.init(canvas.value!.getBoundingClientRect(), { canvas: canvas.value! });
-    patternCanvas.setPatternView(patternsStore.pattern!);
+
+    const patternView = patternsStore.pattern;
+    if (!patternView) return;
+    await Assets.load(patternView.allStitchFonts.map((font) => `${STITCH_FONT_PREFIX}${font}`));
+    patternCanvas.setPatternView(patternView);
   });
 
-  onUnmounted(() => {
+  onUnmounted(async () => {
     patternCanvas.clear();
     TextureManager.shared.clear();
   });

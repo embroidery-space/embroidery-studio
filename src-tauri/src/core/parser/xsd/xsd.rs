@@ -134,6 +134,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
       formats,
       grid,
       display_mode: pattern_settings.display_mode,
+      show_symbols: Default::default(),
       zoom: pattern_settings.zoom,
       show_grid: pattern_settings.show_grid,
       show_rulers: pattern_settings.show_rulers,

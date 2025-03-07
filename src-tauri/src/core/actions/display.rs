@@ -48,3 +48,36 @@ impl<R: tauri::Runtime> Action<R> for SetDisplayModeAction {
     Ok(())
   }
 }
+
+#[derive(Clone)]
+pub struct ShowSymbolsAction {
+  value: bool,
+}
+
+impl ShowSymbolsAction {
+  pub fn new(value: bool) -> Self {
+    Self { value }
+  }
+}
+
+impl<R: tauri::Runtime> Action<R> for ShowSymbolsAction {
+  /// Updates the display setting for showing symbols.
+  ///
+  /// **Emits:**
+  /// - `display:show_symbols` with the new value.
+  fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
+    patproj.display_settings.show_symbols = self.value;
+    window.emit("display:show_symbols", self.value)?;
+    Ok(())
+  }
+
+  /// Toggles the display setting for showing symbols.
+  ///
+  /// **Emits:**
+  /// - `display:show_symbols` with the new value.
+  fn revoke(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
+    patproj.display_settings.show_symbols = !self.value;
+    window.emit("display:show_symbols", !self.value)?;
+    Ok(())
+  }
+}
