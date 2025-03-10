@@ -47,7 +47,7 @@ export class PatternCanvas extends EventTarget {
     this.clear();
 
     pattern.render();
-    for (const stage of Object.values(pattern.stages)) this.#viewport.addChild(stage);
+    this.#viewport.addChild(...pattern.stages);
 
     const { width, height } = pattern.fabric;
     this.#viewport.worldWidth = width;

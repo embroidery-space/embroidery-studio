@@ -1,7 +1,7 @@
 use tauri::test::{MockRuntime, mock_builder};
 use tauri::{App, Listener, WebviewUrl, WebviewWindowBuilder, generate_context};
 
-use super::{Action, SetDisplayModeAction};
+use super::{Action, SetDisplayModeAction, ShowSymbolsAction};
 use crate::PatternProject;
 use crate::display::DisplayMode;
 
@@ -43,5 +43,46 @@ fn test_set_display_mode() {
     });
 
     action.revoke(&window, &mut patproj).unwrap();
+  }
+}
+
+#[test]
+fn test_show_symbols() {
+  let app = setup_app();
+  let window = WebviewWindowBuilder::new(&app, "main", WebviewUrl::default())
+    .build()
+    .unwrap();
+
+  let mut patproj = PatternProject::default();
+
+  // Store the initial value and set to the opposite for our test
+  let initial_value = patproj.display_settings.show_symbols;
+  let new_value = !initial_value;
+  let action = ShowSymbolsAction::new(new_value);
+
+  // Test executing the command
+  {
+    let expected_value = new_value;
+    let event_id = window.listen("display:show_symbols", move |e| {
+      let value: bool = serde_json::from_str(e.payload()).unwrap();
+      assert_eq!(value, expected_value);
+    });
+
+    action.perform(&window, &mut patproj).unwrap();
+    assert_eq!(patproj.display_settings.show_symbols, new_value);
+    window.unlisten(event_id);
+  }
+
+  // Test revoking the command
+  {
+    let expected_value = !new_value;
+    let event_id = window.listen("display:show_symbols", move |e| {
+      let value: bool = serde_json::from_str(e.payload()).unwrap();
+      assert_eq!(value, expected_value);
+    });
+
+    action.revoke(&window, &mut patproj).unwrap();
+    assert_eq!(patproj.display_settings.show_symbols, !new_value);
+    window.unlisten(event_id);
   }
 }

@@ -215,13 +215,27 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     for (const stitch of deserializeStitches(toByteArray(payload))) pattern.value.removeStitch(stitch);
   });
 
-  function setDisplayMode(mode: DisplayMode) {
+  function setDisplayMode(mode: DisplayMode | undefined) {
     if (!pattern.value) return;
-    return DisplayApi.setDisplayMode(pattern.value.key, mode);
+    if (!mode) {
+      pattern.value.setDisplayMode(mode);
+      return triggerRef(pattern);
+    } else return DisplayApi.setDisplayMode(pattern.value.key, mode);
   }
   appWindow.listen<DisplayMode>("display:set_mode", ({ payload: mode }) => {
     if (!pattern.value) return;
     pattern.value.setDisplayMode(mode);
+    triggerRef(pattern);
+  });
+
+  function showSymbols(value: boolean) {
+    if (!pattern.value) return;
+    return DisplayApi.showSymbols(pattern.value.key, value);
+  }
+  appWindow.listen<boolean>("display:show_symbols", ({ payload: value }) => {
+    if (!pattern.value) return;
+    pattern.value.setShowSymbols(value);
+    pattern.value.setDisplayMode(pattern.value.displayMode);
     triggerRef(pattern);
   });
 
@@ -260,5 +274,6 @@ export const usePatternsStore = defineStore("pattern-project", () => {
     addStitch,
     removeStitch,
     setDisplayMode,
+    showSymbols,
   };
 });

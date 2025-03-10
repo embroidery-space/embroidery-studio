@@ -75,6 +75,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
       commands::pattern::close_pattern,
       commands::pattern::get_pattern_file_path,
       commands::display::set_display_mode,
+      commands::display::show_symbols,
       commands::fabric::update_fabric,
       commands::grid::update_grid,
       commands::palette::add_palette_item,
@@ -85,6 +86,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
       commands::history::undo,
       commands::history::redo,
       commands::fonts::get_all_text_font_families,
+      commands::fonts::load_stitch_font,
     ])
     .build(tauri::generate_context!())
     .expect("Failed to build Embroidery Studio")

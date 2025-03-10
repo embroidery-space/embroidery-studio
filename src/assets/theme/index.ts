@@ -17,6 +17,7 @@ import { toggleswitch } from "./toggleswitch";
 import { button } from "./button";
 
 // Panel components.
+import { divider } from "./divider";
 import { fieldset } from "./fieldset";
 import { splitter } from "./splitter";
 import { toolbar } from "./toolbar";
@@ -60,6 +61,7 @@ export const NordTheme = {
     button,
 
     // Panel components.
+    divider,
     fieldset,
     splitter,
     toolbar,

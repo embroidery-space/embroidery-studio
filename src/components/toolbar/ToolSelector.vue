@@ -102,7 +102,7 @@
         hasLongPressed = true;
         handleLongPress(e, hasLongPressed);
       }, 500);
-    } else handleLongPress(e, hasLongPressed);
+    }
   }
 
   function handlePointerUp(e: PointerEvent) {

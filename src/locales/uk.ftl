@@ -85,6 +85,9 @@ label-view-as-mix = Відображати як мікс суцільного і
 label-view-as-solid = Відображати як суцільне
 label-view-as-stitches = Відображати як стібки
 
+label-show-symbols = Показати символи
+label-hide-symbols = Сховати символи
+
 ## Titles, labels and messages related to the preferences dialog.
 
 title-preferences = Налаштування
