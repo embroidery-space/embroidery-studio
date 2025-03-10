@@ -1,14 +1,18 @@
+import globals from "globals";
 import js from "@eslint/js";
 import vue from "eslint-plugin-vue";
 import vuePrettierEslintConfig from "@vue/eslint-config-prettier/skip-formatting";
-import vueTypescriptEslintConfig from "@vue/eslint-config-typescript";
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
 import unocss from "@unocss/eslint-config/flat";
 
-export default [
+export default defineConfigWithVueTs(
   js.configs.recommended,
-  { files: ["src/**/*.ts", "src/**/*.vue"], languageOptions: { ecmaVersion: "latest" } },
-  ...vue.configs["flat/recommended"],
+  vue.configs["flat/recommended"],
+  {
+    files: ["src/**/*.ts", "src/**/*.vue"],
+    languageOptions: { ecmaVersion: "latest", globals: { ...globals.browser } },
+  },
   vuePrettierEslintConfig,
-  ...vueTypescriptEslintConfig(),
+  vueTsConfigs.recommended,
   unocss,
-];
+);
