@@ -50,7 +50,7 @@ pub fn setup_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R>
         log::debug!("Copying sample patterns to the app document directory");
         let patterns_path = app
           .path()
-          .resolve(format!("resources/patterns/"), tauri::path::BaseDirectory::Resource)?;
+          .resolve("resources/patterns/", tauri::path::BaseDirectory::Resource)?;
         for pattern in std::fs::read_dir(patterns_path)? {
           let pattern = pattern?.path();
           std::fs::copy(pattern.clone(), app_document_dir.join(pattern.file_name().unwrap()))?;
