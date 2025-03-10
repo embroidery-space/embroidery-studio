@@ -12,7 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest]
+        include:
+          - platform: "macos-latest" # For Arm-based Macs (M1 and above).
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest" # For Intel-based Macs.
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-latest"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -26,13 +34,15 @@ jobs:
           node-version: 20
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"
       - run: npm ci
       # We prefer to use Cargo Tauri CLI in development, but in CI, we use NPM.
       - run: npm i -g @tauri-apps/cli
-      - uses: tauri-apps/tauri-action@dev
+      - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -41,3 +51,4 @@ jobs:
           releaseDraft: true
           includeUpdaterJson: false
           tauriScript: npx tauri
+          args: ${{ matrix.args }}
