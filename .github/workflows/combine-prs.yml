@@ -1,0 +1,20 @@
+name: Combine Dependabot PRs
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+jobs:
+  combine-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/combine-prs@v5.2.0
+        with:
+          combine_branch_name: dependency-updates
+          pr_title: "Combined Dependabot PRs"
+          min_combine_number: 1
+          ci_required: false # If anything, we will resolve conflicts manually.
+          # Create a new branch for the combined PRs.
+          update_branch: false
+          create_from_scratch: true
