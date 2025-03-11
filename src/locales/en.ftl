@@ -82,6 +82,9 @@ label-view-as-mix = View as a Mix of Solid and Stitches
 label-view-as-solid = View as Solid
 label-view-as-stitches = View as Stitches
 
+label-show-symbols = Show Symbols
+label-hide-symbols = Hide Symbols
+
 ## Titles, labels and messages related to the preferences dialog.
 
 title-preferences = Preferences

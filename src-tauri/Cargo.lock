@@ -667,6 +667,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "convert_case"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baaaa0ecca5b51987b9423ccdc971514dd8b0bb7b4060b983d3664dad3f1f89f"
+dependencies = [
+ "unicode-segmentation",
+]
+
+[[package]]
 name = "cookie"
 version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1094,6 +1103,7 @@ dependencies = [
  "base64 0.22.1",
  "borsh",
  "byteorder",
+ "convert_case 0.8.0",
  "dyn-clone",
  "encoding_rs",
  "font-kit",
