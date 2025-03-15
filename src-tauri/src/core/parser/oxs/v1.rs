@@ -8,8 +8,10 @@ use quick_xml::{Reader, Writer};
 
 use super::utils::*;
 use crate::core::pattern::*;
+use crate::display::{DisplaySettings, Formats, Symbols};
+use crate::print::PrintSettings;
 
-pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Result<Pattern> {
+pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Result<PatternProject> {
   log::trace!("OXS version is 1.x in the {software:?} edition");
 
   let mut reader = Reader::from_file(&file_path)?;
@@ -18,6 +20,7 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
   reader.config_mut().trim_text(true);
 
   let mut pattern = Pattern::default();
+  let mut display_settings = DisplaySettings::default();
   let mut palette_size = None;
 
   let mut buf = Vec::new();
@@ -33,11 +36,13 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
             pattern.fabric.width = pattern_width;
             pattern.fabric.height = pattern_height;
             pattern.fabric.spi = spi;
-            palette_size = Some(palsize)
+            palette_size = Some(palsize);
+            // Reset the display settings to the actual palette size.
+            display_settings = DisplaySettings::new(palsize);
           }
           b"palette" => {
             if let Some(palette_size) = palette_size {
-              let (fabric, palette) = read_palette(&mut reader, software.clone(), palette_size)?;
+              let (fabric, palette, symbols, formats) = read_palette(&mut reader, software.clone(), palette_size)?;
               pattern.fabric = Fabric {
                 name: fabric.name,
                 color: fabric.color,
@@ -45,6 +50,8 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
                 ..pattern.fabric
               };
               pattern.palette = palette;
+              display_settings.symbols = symbols;
+              display_settings.formats = formats;
             } else {
               anyhow::bail!("Palette size is not set or the pattern properties are not read yet");
             }
@@ -73,27 +80,36 @@ pub fn parse_pattern(file_path: std::path::PathBuf, software: Software) -> Resul
     buf.clear();
   }
 
-  Ok(pattern)
+  Ok(PatternProject {
+    file_path,
+    pattern,
+    display_settings,
+    print_settings: PrintSettings::default(),
+  })
 }
 
-pub fn save_pattern(file_path: std::path::PathBuf, pattern: &Pattern, package_info: &tauri::PackageInfo) -> Result<()> {
+pub fn save_pattern(
+  file_path: std::path::PathBuf,
+  patproj: &PatternProject,
+  package_info: &tauri::PackageInfo,
+) -> Result<()> {
   let mut file = std::fs::OpenOptions::new()
     .create(true)
     .write(true)
     .truncate(true)
     .open(file_path)?;
-  save_pattern_inner(&mut file, pattern, package_info)
+  save_pattern_inner(&mut file, patproj, package_info)
 }
 
-pub fn save_pattern_to_vec(pattern: &Pattern, package_info: &tauri::PackageInfo) -> Result<Vec<u8>> {
+pub fn save_pattern_to_vec(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<Vec<u8>> {
   let mut buf = Vec::with_capacity(1024 * 128); // 128 KB is a good default size for most patterns.
-  save_pattern_inner(&mut buf, pattern, package_info)?;
+  save_pattern_inner(&mut buf, patproj, package_info)?;
   Ok(buf)
 }
 
 fn save_pattern_inner<W: io::Write>(
   writer: &mut W,
-  pattern: &Pattern,
+  patproj: &PatternProject,
   package_info: &tauri::PackageInfo,
 ) -> Result<()> {
   // In the development mode, we want to have a pretty-printed XML file for easy debugging.
@@ -106,19 +122,29 @@ fn save_pattern_inner<W: io::Write>(
   writer.create_element("chart").write_inner_content(|writer| {
     write_pattern_properties(
       writer,
-      pattern.fabric.width,
-      pattern.fabric.height,
-      &pattern.info,
-      pattern.fabric.spi,
-      pattern.palette.len(),
+      patproj.pattern.fabric.width,
+      patproj.pattern.fabric.height,
+      &patproj.pattern.info,
+      patproj.pattern.fabric.spi,
+      patproj.pattern.palette.len(),
       package_info,
     )?;
-    write_palette(writer, &pattern.palette, &pattern.fabric)?;
-    write_fullstitches(writer, &pattern.fullstitches)?;
-    write_partstitches(writer, &pattern.partstitches)?;
-    write_lines(writer, &pattern.lines)?;
-    write_ornaments(writer, &pattern.fullstitches, &pattern.nodes, &pattern.specialstitches)?;
-    write_special_stitch_models(writer, &pattern.special_stitch_models)?;
+    write_palette(
+      writer,
+      &patproj.pattern.fabric,
+      &patproj.pattern.palette,
+      &patproj.display_settings,
+    )?;
+    write_fullstitches(writer, &patproj.pattern.fullstitches)?;
+    write_partstitches(writer, &patproj.pattern.partstitches)?;
+    write_lines(writer, &patproj.pattern.lines)?;
+    write_ornaments(
+      writer,
+      &patproj.pattern.fullstitches,
+      &patproj.pattern.nodes,
+      &patproj.pattern.specialstitches,
+    )?;
+    write_special_stitch_models(writer, &patproj.pattern.special_stitch_models)?;
     Ok(())
   })?;
 
@@ -177,11 +203,12 @@ fn write_pattern_properties<W: io::Write>(
   Ok(())
 }
 
+type PaletteOutput = (Fabric, Vec<PaletteItem>, Vec<Symbols>, Vec<Formats>);
 fn read_palette<R: io::BufRead>(
   reader: &mut Reader<R>,
   software: Software,
   palette_size: usize,
-) -> Result<(Fabric, Vec<PaletteItem>)> {
+) -> Result<PaletteOutput> {
   fn parse_brand_and_number(value: &str) -> (String, String) {
     let data = value.split(' ').collect::<Vec<_>>();
     (
@@ -205,10 +232,13 @@ fn read_palette<R: io::BufRead>(
   reader.read_event_into(&mut buf)?; // end of the fabric palette item tag
 
   let mut palette = Vec::with_capacity(palette_size);
+  let mut symbols = Vec::with_capacity(palette_size);
+  let mut formats = Vec::with_capacity(palette_size);
   for _ in 0..palette_size {
     buf.clear();
     if let Event::Start(ref e) = reader.read_event_into(&mut buf)? {
       let attributes = process_attributes(e.attributes())?;
+
       let mut palette_item = {
         let (brand, number) = parse_brand_and_number(attributes.get("number").unwrap());
         PaletteItem {
@@ -221,6 +251,18 @@ fn read_palette<R: io::BufRead>(
           strands: None,
         }
       };
+
+      let mut palitem_symbols = Symbols::default();
+      if let Some(symbol) = attributes.get("symbol") {
+        if !symbol.is_empty() {
+          palitem_symbols.full = Some(symbol.to_owned().parse()?);
+        }
+      };
+
+      let mut palitem_formats = Formats::default();
+      if let Some(font_name) = attributes.get("fontname") {
+        palitem_formats.font.font_name = Some(font_name.to_owned());
+      }
 
       if software == Software::EmbroideryStudio {
         let mut buf = Vec::new();
@@ -244,6 +286,8 @@ fn read_palette<R: io::BufRead>(
       }
 
       palette.push(palette_item);
+      symbols.push(palitem_symbols);
+      formats.push(palitem_formats);
 
       // Skip the rest of the palette item tag.
       reader.read_to_end_into(e.to_end().name(), &mut Vec::new())?;
@@ -252,10 +296,15 @@ fn read_palette<R: io::BufRead>(
     }
   }
 
-  Ok((fabric, palette))
+  Ok((fabric, palette, symbols, formats))
 }
 
-fn write_palette<W: io::Write>(writer: &mut Writer<W>, palette: &[PaletteItem], fabric: &Fabric) -> io::Result<()> {
+fn write_palette<W: io::Write>(
+  writer: &mut Writer<W>,
+  fabric: &Fabric,
+  palette: &[PaletteItem],
+  display_settings: &DisplaySettings,
+) -> io::Result<()> {
   writer.create_element("palette").write_inner_content(|writer| {
     writer
       .create_element("palette_item")
@@ -268,6 +317,7 @@ fn write_palette<W: io::Write>(writer: &mut Writer<W>, palette: &[PaletteItem], 
       ])
       .write_empty()?;
 
+    let default_stitch_font = &display_settings.default_stitch_font;
     for (index, pi) in palette.iter().enumerate() {
       writer
         .create_element("palette_item")
@@ -282,6 +332,22 @@ fn write_palette<W: io::Write>(writer: &mut Writer<W>, palette: &[PaletteItem], 
               .as_ref()
               .map_or(String::from("0"), |blends| blends.len().to_string())
               .as_str(),
+          ),
+          (
+            "fontname",
+            display_settings.formats[index]
+              .font
+              .font_name
+              .as_deref()
+              .unwrap_or(default_stitch_font),
+          ),
+          (
+            "symbol",
+            match display_settings.symbols[index].full {
+              Some(symbol) => symbol.to_string(),
+              None => String::new(),
+            }
+            .as_str(),
           ),
         ])
         .write_inner_content(|writer| {

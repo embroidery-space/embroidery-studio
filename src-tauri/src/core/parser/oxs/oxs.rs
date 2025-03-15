@@ -8,7 +8,6 @@ use super::utils::{MapAttributes, OxsVersion, Software, process_attributes};
 use super::v1;
 use crate::core::pattern::PatternProject;
 use crate::display::*;
-use crate::print::PrintSettings;
 
 pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   log::info!("Parsing the OXS pattern");
@@ -39,18 +38,13 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
     log::warn!("Unknown OXS version: {uv}");
   }
 
-  let pattern = v1::parse_pattern(file_path.clone(), software)?;
-  Ok(PatternProject {
-    file_path,
-    display_settings: DisplaySettings::new(pattern.palette.len()),
-    print_settings: PrintSettings::default(),
-    pattern,
-  })
+  let patproj = v1::parse_pattern(file_path.clone(), software)?;
+  Ok(patproj)
 }
 
 pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<()> {
   log::info!("Saving the OXS pattern");
-  v1::save_pattern(patproj.file_path.clone(), &patproj.pattern, package_info)
+  v1::save_pattern(patproj.file_path.clone(), patproj, package_info)
 }
 
 pub fn parse_display_settings(file_path: std::path::PathBuf, palette_size: usize) -> Result<DisplaySettings> {
