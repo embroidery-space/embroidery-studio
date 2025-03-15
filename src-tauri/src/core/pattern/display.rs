@@ -26,7 +26,7 @@ pub struct DisplaySettings {
 impl Default for DisplaySettings {
   fn default() -> Self {
     Self {
-      default_stitch_font: String::from("CrossStitch3"),
+      default_stitch_font: String::from("Ursasoftware"),
       symbols: Vec::new(),
       symbol_settings: SymbolSettings::default(),
       formats: Vec::new(),
