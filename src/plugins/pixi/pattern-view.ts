@@ -259,10 +259,11 @@ export class PatternView {
   addSymbol(stitch: Stitch) {
     if (stitch instanceof LineStitch || stitch instanceof NodeStitch) return;
     const palitem = this.#palette[stitch.palindex]!;
+    const fontName = palitem.formats.font.fontName;
 
     const symbol = new Symbol(
       palitem.symbols.getSymbol(stitch.kind),
-      { fontFamily: palitem.formats.font.fontName ?? this.defaultStitchFont },
+      { fontFamily: fontName ? [fontName, this.defaultStitchFont] : this.defaultStitchFont },
       stitch,
     );
 

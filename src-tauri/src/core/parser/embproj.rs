@@ -4,6 +4,7 @@ use anyhow::Result;
 
 use crate::core::parser::oxs;
 use crate::core::pattern::PatternProject;
+use crate::display::DisplaySettings;
 
 pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   log::info!("Parsing the EMBPROJ pattern file");
@@ -15,13 +16,19 @@ pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {
   // so we extract all the files to a temporary directory to read them as regular files.
   zip_extract::extract(std::fs::File::open(&file_path)?, temp, true)?;
 
-  let pattern = oxs::v1::parse_pattern(temp.join("pattern.oxs"), Default::default())?;
-  Ok(PatternProject {
-    file_path,
-    display_settings: oxs::parse_display_settings(temp.join("display_settings.xml"), pattern.palette.len())?,
-    print_settings: Default::default(),
-    pattern,
-  })
+  let mut patproj = oxs::v1::parse_pattern(temp.join("pattern.oxs"), Default::default())?;
+  let DisplaySettings {
+    display_mode,
+    palette_settings,
+    grid,
+    ..
+  } = oxs::parse_display_settings(temp.join("display_settings.xml"), patproj.pattern.palette.len())?;
+
+  patproj.display_settings.display_mode = display_mode;
+  patproj.display_settings.palette_settings = palette_settings;
+  patproj.display_settings.grid = grid;
+
+  Ok(patproj)
 }
 
 pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo) -> Result<()> {
@@ -35,7 +42,7 @@ pub fn save_pattern(patproj: &PatternProject, package_info: &tauri::PackageInfo)
   let options = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Zstd);
 
   zip.start_file("pattern.oxs", options)?;
-  zip.write_all(&oxs::v1::save_pattern_to_vec(&patproj.pattern, package_info)?)?;
+  zip.write_all(&oxs::v1::save_pattern_to_vec(patproj, package_info)?)?;
 
   zip.start_file("display_settings.xml", options)?;
   zip.write_all(&oxs::save_display_settings_to_vec(&patproj.display_settings)?)?;
