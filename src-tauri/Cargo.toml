@@ -19,7 +19,7 @@ tauri-build = { version = "2.0.6", features = [] }
 tauri = { version = "2.3.1", features = ["test"] }
 tauri-plugin-dialog = "2.0.5"
 tauri-plugin-fs = "2.0.3"
-tauri-plugin-log = "2.3.0"
+tauri-plugin-log = "2.3.1"
 tauri-plugin-opener = "2.2.6"
 
 # Parsing
@@ -57,7 +57,7 @@ dyn-clone = "1.0.19"
 nutype = { git = "https://github.com/niusia-ua/nutype.git", branch = "feat/borsh", features = [
   "borsh",
 ] }
-tempfile = "3.18.0"
+tempfile = "3.19.0"
 font-kit = "0.14.2"
 convert_case = "0.8.0"
 
