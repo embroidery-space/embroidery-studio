@@ -50,10 +50,9 @@ impl PaletteIndex for FullStitch {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum FullStitchKind {
-  Full = 0,
-  Petite = 1,
+  Full,
+  Petite,
 }
 
 impl From<PartStitchKind> for FullStitchKind {

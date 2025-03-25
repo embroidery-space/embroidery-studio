@@ -81,9 +81,9 @@ export class PaletteSettings {
 }
 
 export enum DisplayMode {
-  Solid = 0,
-  Stitches = 1,
-  Mixed = 2,
+  Solid = "Solid",
+  Stitches = "Stitches",
+  Mixed = "Mixed",
 }
 
 export class DisplaySettings {

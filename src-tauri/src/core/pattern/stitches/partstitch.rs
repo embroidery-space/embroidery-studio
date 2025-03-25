@@ -53,10 +53,9 @@ impl PaletteIndex for PartStitch {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum PartStitchDirection {
-  Forward = 1,
-  Backward = 2,
+  Forward,
+  Backward,
 }
 
 impl From<(Coord, Coord)> for PartStitchDirection {
@@ -70,10 +69,9 @@ impl From<(Coord, Coord)> for PartStitchDirection {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum PartStitchKind {
-  Half = 0,
-  Quarter = 1,
+  Half,
+  Quarter,
 }
 
 impl From<FullStitchKind> for PartStitchKind {

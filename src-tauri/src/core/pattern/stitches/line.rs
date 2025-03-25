@@ -34,29 +34,7 @@ impl PaletteIndex for LineStitch {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum LineStitchKind {
-  Back = 0,
-  Straight = 1,
-}
-
-impl std::fmt::Display for LineStitchKind {
-  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-    match self {
-      LineStitchKind::Back => write!(f, "backstitch"),
-      LineStitchKind::Straight => write!(f, "straightstitch"),
-    }
-  }
-}
-
-impl std::str::FromStr for LineStitchKind {
-  type Err = &'static str;
-
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s {
-      "backstitch" => Ok(LineStitchKind::Back),
-      "straightstitch" => Ok(LineStitchKind::Straight),
-      _ => Ok(LineStitchKind::Back),
-    }
-  }
+  Back,
+  Straight,
 }

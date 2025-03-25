@@ -9,8 +9,8 @@ pub struct Pattern {
   pub palette: Vec<PaletteItem>,
   pub fullstitches: Stitches<FullStitch>,
   pub partstitches: Stitches<PartStitch>,
-  pub nodestitches: Stitches<NodeStitch>,
   pub linestitches: Stitches<LineStitch>,
+  pub nodestitches: Stitches<NodeStitch>,
   pub specialstitches: Stitches<SpecialStitch>,
   pub special_stitch_models: Vec<SpecialStitchModel>,
 }

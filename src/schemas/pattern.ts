@@ -166,8 +166,8 @@ export class PaletteItem {
 }
 
 export enum FullStitchKind {
-  Full = 0,
-  Petite = 1,
+  Full = "Full",
+  Petite = "Petite",
 }
 export class FullStitch {
   x: number;
@@ -186,12 +186,12 @@ export class FullStitch {
 }
 
 export enum PartStitchDirection {
-  Forward = 1,
-  Backward = 2,
+  Forward = "Forward",
+  Backward = "Backward",
 }
 export enum PartStitchKind {
-  Half = 0,
-  Quarter = 1,
+  Half = "Half",
+  Quarter = "Quarter",
 }
 export class PartStitch {
   x: number;
@@ -218,8 +218,8 @@ export class PartStitch {
 }
 
 export enum LineStitchKind {
-  Back = 0,
-  Straight = 1,
+  Back = "Back",
+  Straight = "Straight",
 }
 export class LineStitch {
   x: [number, number];
@@ -243,8 +243,8 @@ export class LineStitch {
 }
 
 export enum NodeStitchKind {
-  FrenchKnot = 0,
-  Bead = 1,
+  FrenchKnot = "FrenchKnot",
+  Bead = "Bead",
 }
 export class NodeStitch {
   x: number;
