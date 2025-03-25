@@ -2,13 +2,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { type PatternKey, PatternProject, Fabric } from "#/schemas/index.ts";
 
 export async function loadPattern(filePath: string) {
-  const bytes = await invoke<number[]>("load_pattern", undefined, { headers: { filePath } });
-  return PatternProject.deserialize(new Uint8Array(bytes));
+  const buffer = await invoke<ArrayBuffer>("load_pattern", undefined, { headers: { filePath } });
+  return PatternProject.deserialize(new Uint8Array(buffer));
 }
 
 export async function createPattern(fabric: Fabric) {
-  const bytes = await invoke<number[]>("create_pattern", Fabric.serialize(fabric));
-  return PatternProject.deserialize(new Uint8Array(bytes));
+  const buffer = await invoke<ArrayBuffer>("create_pattern", Fabric.serialize(fabric));
+  return PatternProject.deserialize(new Uint8Array(buffer));
 }
 
 export function savePattern(patternKey: PatternKey, filePath: string) {

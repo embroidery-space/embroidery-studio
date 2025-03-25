@@ -5,7 +5,10 @@ use crate::state::{PatternKey, PatternsState};
 use crate::utils::path::app_document_dir;
 
 #[tauri::command]
-pub fn load_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<PatternsState>) -> CommandResult<Vec<u8>> {
+pub fn load_pattern(
+  request: tauri::ipc::Request<'_>,
+  patterns: tauri::State<PatternsState>,
+) -> CommandResult<tauri::ipc::Response> {
   log::trace!("Loading pattern");
   let file_path: std::path::PathBuf = request.headers().get("filePath").unwrap().to_str().unwrap().into();
 
@@ -13,7 +16,7 @@ pub fn load_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<Pat
   let pattern_key = PatternKey::from(&file_path);
   if let Some(pattern) = patterns.get(&pattern_key) {
     log::trace!("Pattern loaded");
-    return Ok(borsh::to_vec(&(pattern_key, pattern))?);
+    return Ok(tauri::ipc::Response::new(borsh::to_vec(&(pattern_key, pattern))?));
   }
 
   // Change the original file path with the path to `.embproj` file.
@@ -31,7 +34,7 @@ pub fn load_pattern(request: tauri::ipc::Request<'_>, patterns: tauri::State<Pat
   patterns.insert(pattern_key, pattern);
 
   log::trace!("Pattern loaded");
-  Ok(result)
+  Ok(tauri::ipc::Response::new(result))
 }
 
 #[tauri::command]
@@ -39,9 +42,7 @@ pub fn create_pattern<R: tauri::Runtime>(
   request: tauri::ipc::Request<'_>,
   app_handle: tauri::AppHandle<R>,
   patterns: tauri::State<PatternsState>,
-) -> CommandResult<Vec<u8>> {
-  // println!("Name {}", app_handle.package_info().name);
-  // println!("Version {}", app_handle.package_info().version.to_string());
+) -> CommandResult<tauri::ipc::Response> {
   if let tauri::ipc::InvokeBody::Raw(data) = request.body() {
     log::trace!("Creating new pattern");
 
@@ -60,7 +61,7 @@ pub fn create_pattern<R: tauri::Runtime>(
     patterns.insert(pattern_key, patproj);
 
     log::trace!("Pattern has been created");
-    Ok(result)
+    Ok(tauri::ipc::Response::new(result))
   } else {
     Err(anyhow::anyhow!("Invalid request body").into())
   }
