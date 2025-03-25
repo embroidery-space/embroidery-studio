@@ -13,24 +13,6 @@ pub struct PartStitch {
   pub kind: PartStitchKind,
 }
 
-impl PartStitch {
-  pub fn is_on_top_left(&self) -> bool {
-    self.x.fract() < 0.5 && self.y.fract() < 0.5
-  }
-
-  pub fn is_on_top_right(&self) -> bool {
-    self.x.fract() >= 0.5 && self.y.fract() < 0.5
-  }
-
-  pub fn is_on_bottom_right(&self) -> bool {
-    self.x.fract() >= 0.5 && self.y.fract() >= 0.5
-  }
-
-  pub fn is_on_bottom_left(&self) -> bool {
-    self.x.fract() < 0.5 && self.y.fract() >= 0.5
-  }
-}
-
 impl PartialOrd for PartStitch {
   fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
     Some(self.cmp(other))
@@ -71,10 +53,9 @@ impl PaletteIndex for PartStitch {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum PartStitchDirection {
-  Forward = 1,
-  Backward = 2,
+  Forward,
+  Backward,
 }
 
 impl From<(Coord, Coord)> for PartStitchDirection {
@@ -88,10 +69,9 @@ impl From<(Coord, Coord)> for PartStitchDirection {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum PartStitchKind {
-  Half = 0,
-  Quarter = 1,
+  Half,
+  Quarter,
 }
 
 impl From<FullStitchKind> for PartStitchKind {

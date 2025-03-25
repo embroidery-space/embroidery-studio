@@ -4,8 +4,7 @@ use tauri::test::{MockRuntime, mock_builder};
 use tauri::{App, Listener, WebviewUrl, WebviewWindowBuilder, generate_context};
 
 use super::{Action, UpdateGridPropertiesAction};
-use crate::core::pattern::PatternProject;
-use crate::core::pattern::display::Grid;
+use crate::core::pattern::{Grid, PatternProject};
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()

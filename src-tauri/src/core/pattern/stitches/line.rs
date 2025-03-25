@@ -4,26 +4,26 @@ use super::PaletteIndex;
 use crate::core::pattern::Coord;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
-pub struct Line {
+pub struct LineStitch {
   pub x: (Coord, Coord),
   pub y: (Coord, Coord),
   pub palindex: u8,
-  pub kind: LineKind,
+  pub kind: LineStitchKind,
 }
 
-impl PartialOrd for Line {
+impl PartialOrd for LineStitch {
   fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
     Some(self.cmp(other))
   }
 }
 
-impl Ord for Line {
+impl Ord for LineStitch {
   fn cmp(&self, other: &Self) -> std::cmp::Ordering {
     self.y.cmp(&other.y).then(self.x.cmp(&other.x))
   }
 }
 
-impl PaletteIndex for Line {
+impl PaletteIndex for LineStitch {
   fn palindex(&self) -> u8 {
     self.palindex
   }
@@ -34,29 +34,7 @@ impl PaletteIndex for Line {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
-pub enum LineKind {
-  Back = 0,
-  Straight = 1,
-}
-
-impl std::fmt::Display for LineKind {
-  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-    match self {
-      LineKind::Back => write!(f, "backstitch"),
-      LineKind::Straight => write!(f, "straightstitch"),
-    }
-  }
-}
-
-impl std::str::FromStr for LineKind {
-  type Err = &'static str;
-
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s {
-      "backstitch" => Ok(LineKind::Back),
-      "straightstitch" => Ok(LineKind::Straight),
-      _ => Ok(LineKind::Back),
-    }
-  }
+pub enum LineStitchKind {
+  Back,
+  Straight,
 }
