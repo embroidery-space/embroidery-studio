@@ -1,6 +1,4 @@
 use crate::core::parser::{self, PatternFormat};
-use crate::core::pattern::display::DisplaySettings;
-use crate::core::pattern::print::PrintSettings;
 use crate::core::pattern::{Fabric, Pattern, PatternProject};
 use crate::error::CommandResult;
 use crate::state::{PatternKey, PatternsState};
@@ -52,8 +50,7 @@ pub fn create_pattern<R: tauri::Runtime>(
     let patproj = PatternProject {
       file_path: app_document_dir(&app_handle)?.join(format!("{}.{}", pattern.info.title, PatternFormat::default())),
       pattern,
-      display_settings: DisplaySettings::new(2),
-      print_settings: PrintSettings::default(),
+      display_settings: Default::default(),
     };
 
     let pattern_key = PatternKey::from(&patproj.file_path);

@@ -4,27 +4,27 @@ use super::PaletteIndex;
 use crate::core::pattern::Coord;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
-pub struct Node {
+pub struct NodeStitch {
   pub x: Coord,
   pub y: Coord,
   pub rotated: bool,
   pub palindex: u8,
-  pub kind: NodeKind,
+  pub kind: NodeStitchKind,
 }
 
-impl PartialOrd for Node {
+impl PartialOrd for NodeStitch {
   fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
     Some(self.cmp(other))
   }
 }
 
-impl Ord for Node {
+impl Ord for NodeStitch {
   fn cmp(&self, other: &Self) -> std::cmp::Ordering {
     self.y.cmp(&other.y).then(self.x.cmp(&other.x))
   }
 }
 
-impl PaletteIndex for Node {
+impl PaletteIndex for NodeStitch {
   fn palindex(&self) -> u8 {
     self.palindex
   }
@@ -36,30 +36,30 @@ impl PaletteIndex for Node {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
-pub enum NodeKind {
+pub enum NodeStitchKind {
   FrenchKnot = 0,
   Bead = 1,
 }
 
-impl std::fmt::Display for NodeKind {
+impl std::fmt::Display for NodeStitchKind {
   fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
     match self {
-      NodeKind::FrenchKnot => write!(f, "knot"),
-      NodeKind::Bead => write!(f, "bead"),
+      NodeStitchKind::FrenchKnot => write!(f, "knot"),
+      NodeStitchKind::Bead => write!(f, "bead"),
     }
   }
 }
 
-impl std::str::FromStr for NodeKind {
+impl std::str::FromStr for NodeStitchKind {
   type Err = &'static str;
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     if s == "knot" {
-      return Ok(NodeKind::FrenchKnot);
+      return Ok(NodeStitchKind::FrenchKnot);
     }
 
     if s.starts_with("bead") {
-      return Ok(NodeKind::Bead);
+      return Ok(NodeStitchKind::Bead);
     }
 
     Err("Unknown node kind")

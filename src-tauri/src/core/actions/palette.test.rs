@@ -8,9 +8,7 @@ use super::{
   Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemsAction, UpdatePaletteDisplaySettingsAction,
 };
 use crate::core::parser::oxs;
-use crate::core::pattern::display::{Formats, Symbols};
-use crate::core::pattern::{PaletteItem, PatternProject, Stitch};
-use crate::display::PaletteSettings;
+use crate::core::pattern::{PaletteItem, PaletteSettings, PatternProject, Stitch};
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()
@@ -36,7 +34,8 @@ fn test_add_palette_item() {
     color: String::from("F5BA82"),
     blends: None,
     bead: None,
-    strands: None,
+    symbol_font: None,
+    symbol: None,
   };
   let action = AddPaletteItemAction::new(palitem.clone());
 
@@ -50,8 +49,6 @@ fn test_add_palette_item() {
         AddedPaletteItemData {
           palitem: palitem.clone(),
           palindex: 7,
-          symbols: Symbols::default(),
-          formats: Formats::default(),
         }
       );
     });

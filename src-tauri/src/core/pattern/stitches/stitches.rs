@@ -15,8 +15,8 @@ pub type Coord = ordered_float::NotNan<f32>;
 pub enum Stitch {
   Full(FullStitch),
   Part(PartStitch),
-  Line(Line),
-  Node(Node),
+  Line(LineStitch),
+  Node(NodeStitch),
 }
 
 impl From<FullStitch> for Stitch {
@@ -31,15 +31,14 @@ impl From<PartStitch> for Stitch {
   }
 }
 
-impl From<Node> for Stitch {
-  fn from(node: Node) -> Self {
-    Self::Node(node)
+impl From<LineStitch> for Stitch {
+  fn from(linestitch: LineStitch) -> Self {
+    Self::Line(linestitch)
   }
 }
-
-impl From<Line> for Stitch {
-  fn from(line: Line) -> Self {
-    Self::Line(line)
+impl From<NodeStitch> for Stitch {
+  fn from(nodestitch: NodeStitch) -> Self {
+    Self::Node(nodestitch)
   }
 }
 
@@ -398,8 +397,8 @@ impl Stitches<PartStitch> {
   }
 }
 
-impl Stitches<Line> {
-  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<Line> {
+impl Stitches<LineStitch> {
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<LineStitch> {
     let mut conflicts = Vec::new();
     for line in std::mem::take(&mut self.inner).into_iter() {
       if line.x.0 < x.into()
@@ -420,8 +419,8 @@ impl Stitches<Line> {
   }
 }
 
-impl Stitches<Node> {
-  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<Node> {
+impl Stitches<NodeStitch> {
+  pub fn remove_stitches_outside_bounds(&mut self, x: u16, y: u16, width: u16, height: u16) -> Vec<NodeStitch> {
     let mut conflicts = Vec::new();
     for node in std::mem::take(&mut self.inner).into_iter() {
       if node.x < x.into() || node.x >= (x + width).into() || node.y < y.into() || node.y >= (y + height).into() {
