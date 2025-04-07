@@ -30,11 +30,11 @@ hex = "0.4.3"
 quick-xml = "0.37.3"
 
 # Zipping
-zip = { version = "2.5.0", features = [
+zip = { version = "2.6.1", features = [
   "zstd",
   "time",
 ], default-features = false }
-zip-extract = { version = "0.2.1", features = [
+zip-extract = { version = "0.2.2", features = [
   "zstd",
   "time",
 ], default-features = false }
