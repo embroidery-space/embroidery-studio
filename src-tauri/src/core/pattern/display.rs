@@ -53,11 +53,10 @@ pub struct GridLine {
 }
 
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
-#[borsh(use_discriminant = true)]
 pub enum DisplayMode {
-  Solid = 0,
-  Stitches = 1,
-  Mixed = 2,
+  Solid,
+  Stitches,
+  Mixed,
 }
 
 impl DisplayMode {
@@ -102,14 +101,22 @@ pub struct PaletteSettings {
   pub show_color_names: bool,
 }
 
+impl PaletteSettings {
+  pub const DEFAULT_COLUMNS_NUMBER: u8 = 1;
+  pub const DEFAULT_COLOR_ONLY: bool = false;
+  pub const DEFAULT_SHOW_COLOR_BRANDS: bool = true;
+  pub const DEFAULT_SHOW_COLOR_NUMBERS: bool = true;
+  pub const DEFAULT_SHOW_COLOR_NAMES: bool = true;
+}
+
 impl Default for PaletteSettings {
   fn default() -> Self {
     Self {
-      columns_number: 1,
-      color_only: false,
-      show_color_brands: true,
-      show_color_numbers: true,
-      show_color_names: true,
+      columns_number: PaletteSettings::DEFAULT_COLUMNS_NUMBER,
+      color_only: PaletteSettings::DEFAULT_COLOR_ONLY,
+      show_color_brands: PaletteSettings::DEFAULT_SHOW_COLOR_BRANDS,
+      show_color_numbers: PaletteSettings::DEFAULT_SHOW_COLOR_NUMBERS,
+      show_color_names: PaletteSettings::DEFAULT_SHOW_COLOR_NAMES,
     }
   }
 }

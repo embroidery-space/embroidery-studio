@@ -8,7 +8,7 @@ pub struct NodeStitch {
   pub x: Coord,
   pub y: Coord,
   pub rotated: bool,
-  pub palindex: u8,
+  pub palindex: u32,
   pub kind: NodeStitchKind,
 }
 
@@ -25,11 +25,11 @@ impl Ord for NodeStitch {
 }
 
 impl PaletteIndex for NodeStitch {
-  fn palindex(&self) -> u8 {
+  fn palindex(&self) -> u32 {
     self.palindex
   }
 
-  fn set_palindex(&mut self, palindex: u8) {
+  fn set_palindex(&mut self, palindex: u32) {
     self.palindex = palindex;
   }
 }
@@ -38,4 +38,29 @@ impl PaletteIndex for NodeStitch {
 pub enum NodeStitchKind {
   FrenchKnot,
   Bead,
+}
+
+impl std::fmt::Display for NodeStitchKind {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      NodeStitchKind::FrenchKnot => write!(f, "knot"),
+      NodeStitchKind::Bead => write!(f, "bead"),
+    }
+  }
+}
+
+impl std::str::FromStr for NodeStitchKind {
+  type Err = anyhow::Error;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    if s == "knot" {
+      return Ok(NodeStitchKind::FrenchKnot);
+    }
+
+    if s.starts_with("bead") {
+      return Ok(NodeStitchKind::Bead);
+    }
+
+    Err(anyhow::anyhow!("Unknown node kind: {s}"))
+  }
 }

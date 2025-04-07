@@ -34,7 +34,7 @@ impl<R: tauri::Runtime> Action<R> for AddPaletteItemAction {
       "palette:add_palette_item",
       STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
         palitem: self.palitem.clone(),
-        palindex: (patproj.pattern.palette.len() - 1) as u8,
+        palindex: (patproj.pattern.palette.len() - 1) as u32,
       })?),
     )?;
     Ok(())
@@ -53,7 +53,7 @@ impl<R: tauri::Runtime> Action<R> for AddPaletteItemAction {
 
 #[derive(Clone)]
 pub struct RemovePaletteItemsAction {
-  palindexes: Vec<u8>,
+  palindexes: Vec<u32>,
   metadata: OnceLock<RemovePaletteItemActionMetadata>,
 }
 
@@ -64,7 +64,7 @@ struct RemovePaletteItemActionMetadata {
 }
 
 impl RemovePaletteItemsAction {
-  pub fn new(palindexes: Vec<u8>) -> Self {
+  pub fn new(palindexes: Vec<u32>) -> Self {
     let mut palindexes = palindexes.clone();
     palindexes.sort();
     Self {
@@ -123,7 +123,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
     patproj.pattern.restore_stitches(
       metadata.conflicts.clone(),
       &self.palindexes,
-      patproj.pattern.palette.len() as u8,
+      patproj.pattern.palette.len() as u32,
     );
     window.emit(
       "stitches:add_many",
@@ -138,7 +138,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
 #[cfg_attr(test, derive(PartialEq, borsh::BorshDeserialize))]
 struct AddedPaletteItemData {
   palitem: PaletteItem,
-  palindex: u8,
+  palindex: u32,
 }
 
 #[derive(Clone)]

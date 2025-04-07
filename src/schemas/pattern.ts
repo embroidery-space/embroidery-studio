@@ -64,7 +64,7 @@ export class Fabric {
   }
 
   static default() {
-    return new Fabric({ width: 60, height: 80, spi: [14, 14], name: "White", color: "FFFFFF", kind: "Aida" });
+    return new Fabric({ width: 100, height: 100, spi: [14, 14], name: "White", color: "FFFFFF", kind: "Aida" });
   }
 }
 
@@ -182,7 +182,7 @@ export class FullStitch {
     this.kind = data.kind;
   }
 
-  static readonly schema = b.struct({ x: b.f32(), y: b.f32(), palindex: b.u8(), kind: b.nativeEnum(FullStitchKind) });
+  static readonly schema = b.struct({ x: b.f32(), y: b.f32(), palindex: b.u32(), kind: b.nativeEnum(FullStitchKind) });
 }
 
 export enum PartStitchDirection {
@@ -211,7 +211,7 @@ export class PartStitch {
   static readonly schema = b.struct({
     x: b.f32(),
     y: b.f32(),
-    palindex: b.u8(),
+    palindex: b.u32(),
     direction: b.nativeEnum(PartStitchDirection),
     kind: b.nativeEnum(PartStitchKind),
   });
@@ -237,7 +237,7 @@ export class LineStitch {
   static readonly schema = b.struct({
     x: b.tuple(b.f32(), b.f32()),
     y: b.tuple(b.f32(), b.f32()),
-    palindex: b.u8(),
+    palindex: b.u32(),
     kind: b.nativeEnum(LineStitchKind),
   });
 }
@@ -265,7 +265,7 @@ export class NodeStitch {
     x: b.f32(),
     y: b.f32(),
     rotated: b.bool(),
-    palindex: b.u8(),
+    palindex: b.u32(),
     kind: b.nativeEnum(NodeStitchKind),
   });
 }
@@ -302,14 +302,16 @@ export class SpecialStitch {
     y: b.f32(),
     rotation: b.u16(),
     flip: b.tuple(b.bool(), b.bool()),
-    palindex: b.u8(),
-    modindex: b.u8(),
+    palindex: b.u32(),
+    modindex: b.u32(),
   });
 }
 
 export class SpecialStitchModel {
   uniqueName: string;
   name: string;
+  width: number;
+  height: number;
   nodestitches: NodeStitch[];
   linestitches: LineStitch[];
   curvedstitches: CurvedStitch[];
@@ -317,6 +319,8 @@ export class SpecialStitchModel {
   constructor(data: b.infer<typeof SpecialStitchModel.schema>) {
     this.uniqueName = data.uniqueName;
     this.name = data.name;
+    this.width = data.width;
+    this.height = data.height;
     this.nodestitches = data.nodestitches.map((stitch) => new NodeStitch(stitch));
     this.linestitches = data.linestitches.map((stitch) => new LineStitch(stitch));
     this.curvedstitches = data.curvedstitches.map((stitch) => new CurvedStitch(stitch));
@@ -325,6 +329,8 @@ export class SpecialStitchModel {
   static readonly schema = b.struct({
     uniqueName: b.string(),
     name: b.string(),
+    width: b.f32(),
+    height: b.f32(),
     nodestitches: b.vec(NodeStitch.schema),
     linestitches: b.vec(LineStitch.schema),
     curvedstitches: b.vec(CurvedStitch.schema),

@@ -8,9 +8,27 @@ use crate::core::pattern::Coord;
 pub struct PartStitch {
   pub x: Coord,
   pub y: Coord,
-  pub palindex: u8,
+  pub palindex: u32,
   pub direction: PartStitchDirection,
   pub kind: PartStitchKind,
+}
+
+impl PartStitch {
+  pub fn is_on_top_left(&self) -> bool {
+    self.x.fract() < 0.5 && self.y.fract() < 0.5
+  }
+
+  pub fn is_on_top_right(&self) -> bool {
+    self.x.fract() >= 0.5 && self.y.fract() < 0.5
+  }
+
+  pub fn is_on_bottom_right(&self) -> bool {
+    self.x.fract() >= 0.5 && self.y.fract() >= 0.5
+  }
+
+  pub fn is_on_bottom_left(&self) -> bool {
+    self.x.fract() < 0.5 && self.y.fract() >= 0.5
+  }
 }
 
 impl PartialOrd for PartStitch {
@@ -43,11 +61,11 @@ impl From<FullStitch> for PartStitch {
 }
 
 impl PaletteIndex for PartStitch {
-  fn palindex(&self) -> u8 {
+  fn palindex(&self) -> u32 {
     self.palindex
   }
 
-  fn set_palindex(&mut self, palindex: u8) {
+  fn set_palindex(&mut self, palindex: u32) {
     self.palindex = palindex;
   }
 }

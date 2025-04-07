@@ -48,10 +48,15 @@ pub struct Stitches<T: Ord> {
   inner: BTreeSet<T>,
 }
 
-impl<T: Ord> Stitches<T> {
-  #[allow(clippy::new_without_default)]
-  pub fn new() -> Self {
+impl<T: Ord> Default for Stitches<T> {
+  fn default() -> Self {
     Self { inner: BTreeSet::new() }
+  }
+}
+
+impl<T: Ord> Stitches<T> {
+  pub fn new() -> Self {
+    Self::default()
   }
 
   pub fn iter(&self) -> impl Iterator<Item = &T> {
@@ -96,10 +101,6 @@ impl<T: Ord> Stitches<T> {
   pub fn get(&self, stitch: &T) -> Option<&T> {
     self.inner.get(stitch)
   }
-
-  pub fn extend(&mut self, stitches: Stitches<T>) {
-    self.inner.extend(stitches.inner);
-  }
 }
 
 impl<T: Ord> FromIterator<T> for Stitches<T> {
@@ -108,9 +109,9 @@ impl<T: Ord> FromIterator<T> for Stitches<T> {
   }
 }
 
-impl<T: Ord> Default for Stitches<T> {
-  fn default() -> Self {
-    Self::new()
+impl<T: Ord> Extend<T> for Stitches<T> {
+  fn extend<I: IntoIterator<Item = T>>(&mut self, iter: I) {
+    self.inner.extend(iter);
   }
 }
 
@@ -437,12 +438,12 @@ impl Stitches<NodeStitch> {
 // Just defines some common methods to work with the palette item indexes.
 // That allows to share some logic across different stitch types.
 pub trait PaletteIndex {
-  fn palindex(&self) -> u8;
-  fn set_palindex(&mut self, palindex: u8);
+  fn palindex(&self) -> u32;
+  fn set_palindex(&mut self, palindex: u32);
 }
 
 impl<T: Ord + PaletteIndex> Stitches<T> {
-  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u8]) -> Vec<T> {
+  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u32]) -> Vec<T> {
     let mut remaining_stitches = Vec::new();
     let mut removed_stitches = Vec::new();
 
@@ -465,7 +466,7 @@ impl<T: Ord + PaletteIndex> Stitches<T> {
         None => {
           for (index, &palindex) in palindexes.iter().enumerate().rev() {
             if stitch.palindex() > palindex {
-              let new_palindex = stitch.palindex() - (index as u8) - 1;
+              let new_palindex = stitch.palindex() - (index as u32) - 1;
               palindexes_map.insert(stitch.palindex(), new_palindex);
               stitch.set_palindex(new_palindex);
               self.inner.insert(stitch);
@@ -481,7 +482,7 @@ impl<T: Ord + PaletteIndex> Stitches<T> {
     removed_stitches
   }
 
-  pub fn restore_stitches(&mut self, stitches: Vec<T>, palindexes: &[u8], palsize: u8) {
+  pub fn restore_stitches(&mut self, stitches: Vec<T>, palindexes: &[u32], palsize: u32) {
     // First, we need to create a map of the old palette item indexes to the new ones.
     // We do this by iterating over the complete range of current palette item indexes
     // and incrementing those that are greater than the removed ones.

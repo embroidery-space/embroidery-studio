@@ -74,12 +74,12 @@ fn assert_executing_remove_palette_items_action(
   action: &RemovePaletteItemsAction,
   window: &WebviewWindow<tauri::test::MockRuntime>,
   patproj: &mut PatternProject,
-  expected_palindexes: Vec<u8>,
+  expected_palindexes: Vec<u32>,
   initial_palsize: usize,
   expected_palsize: usize,
 ) {
   let remove_palette_items_event_id = window.listen("palette:remove_palette_items", move |e| {
-    let received_palindexes = serde_json::from_str::<Vec<u8>>(e.payload()).unwrap();
+    let received_palindexes = serde_json::from_str::<Vec<u32>>(e.payload()).unwrap();
     assert_eq!(received_palindexes, expected_palindexes);
   });
   let remove_many_stitches_event_id = window.listen("stitches:remove_many", move |e| {
@@ -100,7 +100,7 @@ fn assert_revoking_remove_palette_items_action(
   action: &RemovePaletteItemsAction,
   window: &WebviewWindow<tauri::test::MockRuntime>,
   patproj: &mut PatternProject,
-  expected_palindexes: Vec<u8>,
+  expected_palindexes: Vec<u32>,
   initial_palsize: usize,
   expected_palsize: usize,
 ) {
@@ -172,7 +172,7 @@ fn test_remove_random_palette_items() {
   let palette_size = patproj.pattern.palette.len();
 
   let mut rng = rand::rng();
-  let palindexes: Vec<u8> = (0..(palette_size as u8)).collect();
+  let palindexes: Vec<u32> = (0..(palette_size as u32)).collect();
   for size in 1..(palette_size + 1) {
     let mut selected_palindixes = palindexes.clone();
     selected_palindixes.shuffle(&mut rng);
@@ -181,7 +181,6 @@ fn test_remove_random_palette_items() {
     let action = RemovePaletteItemsAction::new(selected_palindixes.clone());
 
     // Test executing the command.
-
     assert_executing_remove_palette_items_action(
       &action,
       &window,

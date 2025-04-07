@@ -10,7 +10,7 @@ export class AddedPaletteItemData {
     this.palindex = data.palindex;
   }
 
-  static readonly schema = b.struct({ palitem: PaletteItem.schema, palindex: b.u8() });
+  static readonly schema = b.struct({ palitem: PaletteItem.schema, palindex: b.u32() });
 
   static deserialize(data: Uint8Array) {
     return new AddedPaletteItemData(AddedPaletteItemData.schema.deserialize(data));

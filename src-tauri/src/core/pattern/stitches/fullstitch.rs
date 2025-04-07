@@ -8,7 +8,7 @@ use crate::core::pattern::Coord;
 pub struct FullStitch {
   pub x: Coord,
   pub y: Coord,
-  pub palindex: u8,
+  pub palindex: u32,
   pub kind: FullStitchKind,
 }
 
@@ -40,11 +40,11 @@ impl From<PartStitch> for FullStitch {
 }
 
 impl PaletteIndex for FullStitch {
-  fn palindex(&self) -> u8 {
+  fn palindex(&self) -> u32 {
     self.palindex
   }
 
-  fn set_palindex(&mut self, palindex: u8) {
+  fn set_palindex(&mut self, palindex: u32) {
     self.palindex = palindex;
   }
 }

@@ -190,7 +190,7 @@ impl Pattern {
   }
 
   /// Removes and returns all stitches with a given palette index from the pattern.
-  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u8]) -> Vec<Stitch> {
+  pub fn remove_stitches_by_palindexes(&mut self, palindexes: &[u32]) -> Vec<Stitch> {
     log::trace!("Removing stitches by palette index");
     let mut conflicts = Vec::new();
     conflicts.extend(
@@ -259,7 +259,7 @@ impl Pattern {
     conflicts
   }
 
-  pub fn restore_stitches(&mut self, stitches: Vec<Stitch>, palindexes: &[u8], palsize: u8) {
+  pub fn restore_stitches(&mut self, stitches: Vec<Stitch>, palindexes: &[u32], palsize: u32) {
     let mut fullstitches = Vec::new();
     let mut partstitches = Vec::new();
     let mut linestitches = Vec::new();
@@ -329,25 +329,63 @@ pub enum Symbol {
   Char(String),
 }
 
+impl std::fmt::Display for Symbol {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      Symbol::Code(code) => write!(f, "{}", code),
+      Symbol::Char(ch) => write!(f, "{}", ch),
+    }
+  }
+}
+
+impl std::str::FromStr for Symbol {
+  type Err = anyhow::Error;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    if let Ok(code) = s.parse::<u16>() {
+      return Ok(Symbol::Code(code));
+    }
+
+    if s.len() == 1 {
+      return Ok(Symbol::Char(s.to_string()));
+    }
+
+    Err(anyhow::anyhow!(
+      "Invalid symbol: {s}. Must be a single character or a number"
+    ))
+  }
+}
+
+pub type StitchesPerInch = (u8, u8);
+
 #[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct Fabric {
   pub width: u16,
   pub height: u16,
-  pub spi: (u8, u8),
+  pub spi: StitchesPerInch,
   pub kind: String,
   pub name: String,
   pub color: String,
 }
 
+impl Fabric {
+  pub const DEFAULT_WIDTH: u16 = 100;
+  pub const DEFAULT_HEIGHT: u16 = 100;
+  pub const DEFAULT_SPI: u8 = 14;
+  pub const DEFAULT_KIND: &'static str = "Aida";
+  pub const DEFAULT_NAME: &'static str = "White";
+  pub const DEFAULT_COLOR: &'static str = "FFFFFF";
+}
+
 impl Default for Fabric {
   fn default() -> Self {
     Self {
-      width: 60,
-      height: 80,
-      spi: (14, 14),
-      kind: String::from("Aida"),
-      name: String::from("White"),
-      color: String::from("FFFFFF"),
+      width: Fabric::DEFAULT_WIDTH,
+      height: Fabric::DEFAULT_HEIGHT,
+      spi: (Fabric::DEFAULT_SPI, Fabric::DEFAULT_SPI),
+      kind: String::from(Fabric::DEFAULT_KIND),
+      name: String::from(Fabric::DEFAULT_NAME),
+      color: String::from(Fabric::DEFAULT_COLOR),
     }
   }
 }

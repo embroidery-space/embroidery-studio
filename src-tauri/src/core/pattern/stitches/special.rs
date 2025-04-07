@@ -9,8 +9,8 @@ pub struct SpecialStitch {
   pub y: Coord,
   pub rotation: u16,
   pub flip: (bool, bool),
-  pub palindex: u8,
-  pub modindex: u8,
+  pub palindex: u32,
+  pub modindex: u32,
 }
 
 impl PartialOrd for SpecialStitch {
@@ -25,10 +25,12 @@ impl Ord for SpecialStitch {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct SpecialStitchModel {
   pub unique_name: String,
   pub name: String,
+  pub width: f32,
+  pub height: f32,
   pub nodestitches: Vec<NodeStitch>,
   pub linestitches: Vec<LineStitch>,
   pub curvedstitches: Vec<CurvedStitch>,

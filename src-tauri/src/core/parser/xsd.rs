@@ -162,7 +162,7 @@ impl TryFrom<xsd::FullStitch> for FullStitch {
     Ok(Self {
       x: Coord::new(fullstitch.x)?,
       y: Coord::new(fullstitch.y)?,
-      palindex: fullstitch.palindex,
+      palindex: fullstitch.palindex as u32,
       kind: fullstitch.kind.into(),
     })
   }
@@ -184,7 +184,7 @@ impl TryFrom<xsd::PartStitch> for PartStitch {
     Ok(Self {
       x: Coord::new(partstitch.x)?,
       y: Coord::new(partstitch.y)?,
-      palindex: partstitch.palindex,
+      palindex: partstitch.palindex as u32,
       direction: partstitch.direction.into(),
       kind: partstitch.kind.into(),
     })
@@ -216,7 +216,7 @@ impl TryFrom<xsd::LineStitch> for LineStitch {
     Ok(Self {
       x: (Coord::new(linestitch.x.0)?, Coord::new(linestitch.x.1)?),
       y: (Coord::new(linestitch.y.0)?, Coord::new(linestitch.y.1)?),
-      palindex: linestitch.palindex,
+      palindex: linestitch.palindex as u32,
       kind: linestitch.kind.into(),
     })
   }
@@ -239,7 +239,7 @@ impl TryFrom<xsd::NodeStitch> for NodeStitch {
       x: Coord::new(nodestitch.x)?,
       y: Coord::new(nodestitch.y)?,
       rotated: nodestitch.rotated,
-      palindex: nodestitch.palindex,
+      palindex: nodestitch.palindex as u32,
       kind: nodestitch.kind.into(),
     })
   }
@@ -263,8 +263,8 @@ impl TryFrom<xsd::SpecialStitch> for SpecialStitch {
       y: Coord::new(special_stitch.y)?,
       rotation: special_stitch.rotation,
       flip: special_stitch.flip,
-      palindex: special_stitch.palindex,
-      modindex: special_stitch.modindex,
+      palindex: special_stitch.palindex as u32,
+      modindex: special_stitch.modindex as u32,
     })
   }
 }
@@ -272,21 +272,23 @@ impl TryFrom<xsd::SpecialStitch> for SpecialStitch {
 impl TryFrom<xsd::SpecialStitchModel> for SpecialStitchModel {
   type Error = anyhow::Error;
 
-  fn try_from(specialstitchmodel: xsd::SpecialStitchModel) -> Result<Self, Self::Error> {
+  fn try_from(spsmodel: xsd::SpecialStitchModel) -> Result<Self, Self::Error> {
     Ok(Self {
-      unique_name: specialstitchmodel.unique_name,
-      name: specialstitchmodel.name,
-      nodestitches: specialstitchmodel
+      unique_name: spsmodel.unique_name,
+      name: spsmodel.name,
+      width: spsmodel.width,
+      height: spsmodel.height,
+      nodestitches: spsmodel
         .nodestitches
         .into_iter()
         .map(NodeStitch::try_from)
         .collect::<Result<Vec<_>, _>>()?,
-      linestitches: specialstitchmodel
+      linestitches: spsmodel
         .linestitches
         .into_iter()
         .map(LineStitch::try_from)
         .collect::<Result<Vec<_>, _>>()?,
-      curvedstitches: specialstitchmodel
+      curvedstitches: spsmodel
         .curvedstitches
         .into_iter()
         .map(CurvedStitch::try_from)

@@ -7,7 +7,7 @@ use crate::core::pattern::Coord;
 pub struct LineStitch {
   pub x: (Coord, Coord),
   pub y: (Coord, Coord),
-  pub palindex: u8,
+  pub palindex: u32,
   pub kind: LineStitchKind,
 }
 
@@ -24,11 +24,11 @@ impl Ord for LineStitch {
 }
 
 impl PaletteIndex for LineStitch {
-  fn palindex(&self) -> u8 {
+  fn palindex(&self) -> u32 {
     self.palindex
   }
 
-  fn set_palindex(&mut self, palindex: u8) {
+  fn set_palindex(&mut self, palindex: u32) {
     self.palindex = palindex;
   }
 }
@@ -37,4 +37,25 @@ impl PaletteIndex for LineStitch {
 pub enum LineStitchKind {
   Back,
   Straight,
+}
+
+impl std::fmt::Display for LineStitchKind {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    match self {
+      LineStitchKind::Back => write!(f, "backstitch"),
+      LineStitchKind::Straight => write!(f, "straightstitch"),
+    }
+  }
+}
+
+impl std::str::FromStr for LineStitchKind {
+  type Err = anyhow::Error;
+
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s {
+      "backstitch" => Ok(LineStitchKind::Back),
+      "straightstitch" => Ok(LineStitchKind::Straight),
+      _ => Ok(LineStitchKind::Back),
+    }
+  }
 }
