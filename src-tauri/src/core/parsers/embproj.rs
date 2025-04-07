@@ -2,7 +2,7 @@ use std::io::Write;
 
 use anyhow::Result;
 
-use crate::core::parser::oxs;
+use crate::core::parsers::oxs;
 use crate::core::pattern::{DisplaySettings, PatternProject};
 
 pub fn parse_pattern(file_path: std::path::PathBuf) -> Result<PatternProject> {

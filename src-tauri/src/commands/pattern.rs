@@ -1,4 +1,4 @@
-use crate::core::parser::{self, PatternFormat};
+use crate::core::parsers::{self, PatternFormat};
 use crate::core::pattern::{Fabric, Pattern, PatternProject};
 use crate::error::CommandResult;
 use crate::state::{PatternKey, PatternsState};
@@ -24,9 +24,9 @@ pub fn load_pattern(
   new_file_path.set_extension(PatternFormat::default().to_string());
 
   let mut pattern = match PatternFormat::try_from(file_path.extension())? {
-    PatternFormat::Xsd => parser::xsd::parse_pattern(file_path)?,
-    PatternFormat::Oxs => parser::oxs::parse_pattern(file_path)?,
-    PatternFormat::EmbProj => parser::embproj::parse_pattern(file_path)?,
+    PatternFormat::Xsd => parsers::xsd::parse_pattern(file_path)?,
+    PatternFormat::Oxs => parsers::oxs::parse_pattern(file_path)?,
+    PatternFormat::EmbProj => parsers::embproj::parse_pattern(file_path)?,
   };
   pattern.file_path = new_file_path;
 
@@ -83,8 +83,8 @@ pub fn save_pattern<R: tauri::Runtime>(
   patproj.file_path = file_path;
   match PatternFormat::try_from(patproj.file_path.extension())? {
     PatternFormat::Xsd => Err(anyhow::anyhow!("The XSD format is not supported for saving.")),
-    PatternFormat::Oxs => parser::oxs::save_pattern(patproj, app_handle.package_info()),
-    PatternFormat::EmbProj => parser::embproj::save_pattern(patproj, app_handle.package_info()),
+    PatternFormat::Oxs => parsers::oxs::save_pattern(patproj, app_handle.package_info()),
+    PatternFormat::EmbProj => parsers::embproj::save_pattern(patproj, app_handle.package_info()),
   }?;
 
   log::trace!("Pattern saved");

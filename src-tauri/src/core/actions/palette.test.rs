@@ -7,7 +7,7 @@ use tauri::{App, Listener, WebviewUrl, WebviewWindow, WebviewWindowBuilder, gene
 use super::{
   Action, AddPaletteItemAction, AddedPaletteItemData, RemovePaletteItemsAction, UpdatePaletteDisplaySettingsAction,
 };
-use crate::core::parser::oxs;
+use crate::core::parsers::oxs;
 use crate::core::pattern::{PaletteItem, PaletteSettings, PatternProject, Stitch};
 
 fn setup_app() -> App<MockRuntime> {
