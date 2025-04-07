@@ -20,10 +20,10 @@ You can also join the [Telegram chat](https://t.me/embroidery_space), where we w
 <details>
 <summary>Screenshots</summary>
 
-![Embroidery Studio interface start screen](./images/first-screen.png)
+![Embroidery Studio interface start screen](./images/start-screen.png)
 ![Embroidery Studio interface with a sample pattern opened](./images/opened-pattern.png)
-![Embroidery Studio interface with Palette Editing enabled and Canvas Settings popup visible](./images/palette-canvas-properties.png)
-![Embroidery Studio view styles collage](./images/styles.png)
+![Embroidery Studio interface with Palette Editing enabled and Fabric Properties popup visible](./images/palette-editing-and-fabric-properties.png)
+![Embroidery Studio stitches display modes collage](./images/stitches-display-modes.png)
 
 </details>
 
