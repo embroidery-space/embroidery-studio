@@ -1,12 +1,11 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
-use base64::Engine;
-use base64::engine::general_purpose::STANDARD;
 use tauri::{Emitter, WebviewWindow};
 
 use super::Action;
 use crate::core::pattern::{PaletteItem, PaletteSettings, PatternProject, Stitch};
+use crate::utils::base64;
 
 #[cfg(test)]
 #[path = "palette.test.rs"]
@@ -32,7 +31,7 @@ impl<R: tauri::Runtime> Action<R> for AddPaletteItemAction {
     patproj.pattern.palette.push(self.palitem.clone());
     window.emit(
       "palette:add_palette_item",
-      STANDARD.encode(borsh::to_vec(&AddedPaletteItemData {
+      base64::encode(borsh::to_vec(&AddedPaletteItemData {
         palitem: self.palitem.clone(),
         palindex: (patproj.pattern.palette.len() - 1) as u32,
       })?),
@@ -91,7 +90,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
     palitems.reverse();
 
     let conflicts = patproj.pattern.remove_stitches_by_palindexes(&self.palindexes);
-    window.emit("stitches:remove_many", STANDARD.encode(borsh::to_vec(&conflicts)?))?;
+    window.emit("stitches:remove_many", base64::encode(borsh::to_vec(&conflicts)?))?;
 
     if self.metadata.get().is_none() {
       self
@@ -116,7 +115,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
 
       window.emit(
         "palette:add_palette_item",
-        STANDARD.encode(borsh::to_vec(&AddedPaletteItemData { palindex, palitem })?),
+        base64::encode(borsh::to_vec(&AddedPaletteItemData { palindex, palitem })?),
       )?;
     }
 
@@ -125,10 +124,7 @@ impl<R: tauri::Runtime> Action<R> for RemovePaletteItemsAction {
       &self.palindexes,
       patproj.pattern.palette.len() as u32,
     );
-    window.emit(
-      "stitches:add_many",
-      STANDARD.encode(borsh::to_vec(&metadata.conflicts)?),
-    )?;
+    window.emit("stitches:add_many", base64::encode(borsh::to_vec(&metadata.conflicts)?))?;
 
     Ok(())
   }
@@ -164,7 +160,7 @@ impl<R: tauri::Runtime> Action<R> for UpdatePaletteDisplaySettingsAction {
   fn perform(&self, window: &WebviewWindow<R>, patproj: &mut PatternProject) -> Result<()> {
     window.emit(
       "palette:update_display_settings",
-      STANDARD.encode(borsh::to_vec(&self.settings)?),
+      base64::encode(borsh::to_vec(&self.settings)?),
     )?;
     let old_settings = std::mem::replace(&mut patproj.display_settings.palette_settings, self.settings.clone());
     if self.old_settings.get().is_none() {
@@ -181,7 +177,7 @@ impl<R: tauri::Runtime> Action<R> for UpdatePaletteDisplaySettingsAction {
     let old_settings = self.old_settings.get().unwrap();
     window.emit(
       "palette:update_display_settings",
-      STANDARD.encode(borsh::to_vec(&old_settings)?),
+      base64::encode(borsh::to_vec(&old_settings)?),
     )?;
     patproj.display_settings.palette_settings = old_settings.clone();
     Ok(())

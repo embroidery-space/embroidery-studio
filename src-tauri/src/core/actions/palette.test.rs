@@ -1,5 +1,3 @@
-use base64::Engine;
-use base64::engine::general_purpose::STANDARD;
 use rand::seq::SliceRandom;
 use tauri::test::{MockRuntime, mock_builder};
 use tauri::{App, Listener, WebviewUrl, WebviewWindow, WebviewWindowBuilder, generate_context};
@@ -9,6 +7,7 @@ use super::{
 };
 use crate::core::parsers::oxs;
 use crate::core::pattern::{PaletteItem, PaletteSettings, PatternProject, Stitch};
+use crate::utils::base64;
 
 fn setup_app() -> App<MockRuntime> {
   mock_builder().build(generate_context!()).unwrap()
@@ -43,7 +42,7 @@ fn test_add_palette_item() {
   {
     window.listen("palette:add_palette_item", move |e| {
       let base64: &str = serde_json::from_str(e.payload()).unwrap();
-      let expected: AddedPaletteItemData = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      let expected: AddedPaletteItemData = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
       assert_eq!(
         expected,
         AddedPaletteItemData {
@@ -84,7 +83,7 @@ fn assert_executing_remove_palette_items_action(
   });
   let remove_many_stitches_event_id = window.listen("stitches:remove_many", move |e| {
     let base64: &str = serde_json::from_str(e.payload()).unwrap();
-    let conflicts: Vec<Stitch> = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+    let conflicts: Vec<Stitch> = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
     assert_eq!(conflicts.is_empty(), false);
   });
 
@@ -106,12 +105,12 @@ fn assert_revoking_remove_palette_items_action(
 ) {
   let add_palette_item_event_id = window.listen("palette:add_palette_item", move |e| {
     let base64: &str = serde_json::from_str(e.payload()).unwrap();
-    let expected: AddedPaletteItemData = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+    let expected: AddedPaletteItemData = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
     assert!(expected_palindexes.contains(&expected.palindex));
   });
   let add_many_stitches_event_id = window.listen("stitches:add_many", move |e| {
     let base64: &str = serde_json::from_str(e.payload()).unwrap();
-    let conflicts: Vec<Stitch> = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+    let conflicts: Vec<Stitch> = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
     assert_eq!(conflicts.is_empty(), false);
   });
 
@@ -228,7 +227,7 @@ fn test_update_palette_display_settings() {
   {
     let update_display_settings_event_id = window.listen("palette:update_display_settings", move |e| {
       let base64: &str = serde_json::from_str(e.payload()).unwrap();
-      let received_settings: PaletteSettings = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      let received_settings: PaletteSettings = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
       assert_eq!(received_settings, new_settings);
     });
     action.perform(&window, &mut patproj).unwrap();
@@ -239,7 +238,7 @@ fn test_update_palette_display_settings() {
   {
     let update_display_settings_event_id = window.listen("palette:update_display_settings", move |e| {
       let base64: &str = serde_json::from_str(e.payload()).unwrap();
-      let received_settings: PaletteSettings = borsh::from_slice(&STANDARD.decode(base64).unwrap()).unwrap();
+      let received_settings: PaletteSettings = borsh::from_slice(&base64::decode(base64).unwrap()).unwrap();
       assert_eq!(received_settings, old_settings);
     });
     action.revoke(&window, &mut patproj).unwrap();
