@@ -1,6 +1,5 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use super::PaletteIndex;
 use crate::core::pattern::Coord;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
@@ -21,16 +20,6 @@ impl PartialOrd for NodeStitch {
 impl Ord for NodeStitch {
   fn cmp(&self, other: &Self) -> std::cmp::Ordering {
     self.y.cmp(&other.y).then(self.x.cmp(&other.x))
-  }
-}
-
-impl PaletteIndex for NodeStitch {
-  fn palindex(&self) -> u32 {
-    self.palindex
-  }
-
-  fn set_palindex(&mut self, palindex: u32) {
-    self.palindex = palindex;
   }
 }
 

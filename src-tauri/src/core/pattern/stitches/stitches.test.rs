@@ -522,3 +522,89 @@ fn node_conflicts_with_node() {
   let bead = node(NotNan::new(1.0).unwrap(), NodeStitchKind::Bead);
   assert!(TEST_NODES.get(&bead).is_some());
 }
+
+#[test]
+fn test_remove_stitches_by_palindexes() {
+  let mut stitches = Stitches::from_iter([
+    FullStitch {
+      x: NotNan::new(0.0).unwrap(),
+      y: NotNan::new(0.0).unwrap(),
+      palindex: 0,
+      kind: FullStitchKind::Full,
+    },
+    FullStitch {
+      x: NotNan::new(1.0).unwrap(),
+      y: NotNan::new(1.0).unwrap(),
+      palindex: 1,
+      kind: FullStitchKind::Full,
+    },
+    FullStitch {
+      x: NotNan::new(2.0).unwrap(),
+      y: NotNan::new(2.0).unwrap(),
+      palindex: 2,
+      kind: FullStitchKind::Full,
+    },
+    FullStitch {
+      x: NotNan::new(3.0).unwrap(),
+      y: NotNan::new(3.0).unwrap(),
+      palindex: 3,
+      kind: FullStitchKind::Full,
+    },
+  ]);
+
+  let removed = stitches.remove_stitches_by_palindexes(&[1, 2]);
+
+  // Check that the correct stitches were removed.
+  assert_eq!(removed.len(), 2);
+  assert!(removed.iter().any(|s| s.palindex == 1));
+  assert!(removed.iter().any(|s| s.palindex == 2));
+
+  // Check that the remaining stitches have updated palindex values.
+  assert_eq!(stitches.len(), 2);
+  let remaining: Vec<_> = stitches.iter().collect();
+  assert_eq!(remaining[0].palindex, 0); // palindex 0 stays as 0.
+  assert_eq!(remaining[1].palindex, 1); // palindex 3 becomes 1.
+}
+
+#[test]
+fn test_restore_stitches() {
+  let mut stitches = Stitches::from_iter([
+    FullStitch {
+      x: NotNan::new(0.0).unwrap(),
+      y: NotNan::new(0.0).unwrap(),
+      palindex: 0,
+      kind: FullStitchKind::Full,
+    },
+    FullStitch {
+      x: NotNan::new(3.0).unwrap(),
+      y: NotNan::new(3.0).unwrap(),
+      palindex: 1,
+      kind: FullStitchKind::Full,
+    },
+  ]);
+
+  let stitches_to_restore = vec![
+    FullStitch {
+      x: NotNan::new(1.0).unwrap(),
+      y: NotNan::new(1.0).unwrap(),
+      palindex: 1,
+      kind: FullStitchKind::Full,
+    },
+    FullStitch {
+      x: NotNan::new(2.0).unwrap(),
+      y: NotNan::new(2.0).unwrap(),
+      palindex: 2,
+      kind: FullStitchKind::Full,
+    },
+  ];
+
+  stitches.restore_stitches(stitches_to_restore, &[1, 2], 4);
+
+  // Check that all stitches are present with correct palindex values.
+  assert_eq!(stitches.len(), 4);
+  let all_stitches: Vec<_> = stitches.iter().collect();
+  assert_eq!(all_stitches[0].palindex, 0);
+  assert_eq!(all_stitches[1].palindex, 1);
+  assert_eq!(all_stitches[2].palindex, 2);
+  assert_eq!(all_stitches[3].palindex, 3);
+}

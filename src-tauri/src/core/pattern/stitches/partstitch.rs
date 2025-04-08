@@ -1,6 +1,5 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use super::PaletteIndex;
 use super::fullstitch::*;
 use crate::core::pattern::Coord;
 
@@ -57,16 +56,6 @@ impl From<FullStitch> for PartStitch {
       direction: PartStitchDirection::from((fullstitch.x, fullstitch.y)),
       kind: fullstitch.kind.into(),
     }
-  }
-}
-
-impl PaletteIndex for PartStitch {
-  fn palindex(&self) -> u32 {
-    self.palindex
-  }
-
-  fn set_palindex(&mut self, palindex: u32) {
-    self.palindex = palindex;
   }
 }
 
