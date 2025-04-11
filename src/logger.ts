@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { warn, debug, trace, info, error, type LogOptions } from "@tauri-apps/plugin-log";
 
 declare global {
