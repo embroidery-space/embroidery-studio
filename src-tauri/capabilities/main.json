@@ -12,6 +12,7 @@
     "dialog:allow-open",
     "dialog:allow-save",
     "opener:default",
+    "log:default",
     { "identifier": "fs:allow-read-dir", "allow": [{ "path": "$RESOURCE/**/*" }] },
     { "identifier": "fs:allow-read-text-file", "allow": [{ "path": "$RESOURCE/**/*" }] },
     { "identifier": "fs:allow-read-file", "allow": [{ "path": "$RESOURCE/**/*" }] }
