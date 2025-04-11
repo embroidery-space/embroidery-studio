@@ -2,11 +2,18 @@ use std::str::FromStr as _;
 
 use tauri_plugin_log::{Target, TargetKind};
 
+const LOGGING_ENV_VAR_NAME: &str = "EMBROIDERY_STUDIO_LOG";
+const LOGGING_ENV_VAR_DEFAULT: &str = "INFO";
+
+const DEFAULT_LOG_LEVEL: log::Level = log::Level::Info;
+
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
   log_panics::init();
 
-  let log_level = std::env::var("RUST_LOG").unwrap_or(String::from("INFO"));
-  let log_level = log::Level::from_str(&log_level).unwrap();
+  let app_log_level = {
+    let log_level = std::env::var(LOGGING_ENV_VAR_NAME).unwrap_or(LOGGING_ENV_VAR_DEFAULT.to_string());
+    log::Level::from_str(&log_level).unwrap()
+  };
 
   tauri_plugin_log::Builder::default()
     .clear_targets()
@@ -23,6 +30,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
       #[cfg(not(debug_assertions))]
       Target::new(TargetKind::LogDir { file_name: None }),
     ])
-    .level(log_level.to_level_filter())
+    .level(DEFAULT_LOG_LEVEL.to_level_filter())
+    .level_for("embroidery_studio", app_log_level.to_level_filter())
     .build()
 }
