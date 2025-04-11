@@ -8,7 +8,9 @@ test = []
 [profile.release]
 opt-level = "s"
 lto = true
-debug = "full"
+debug = "limited"
+strip = "debuginfo"
+split-debuginfo = "packed"
 
 [build-dependencies]
 tauri-build = { version = "2.1.1", features = [] }
