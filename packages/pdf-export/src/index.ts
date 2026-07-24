@@ -11,7 +11,7 @@ export async function exportPatternAsPdf(input: ExportInput) {
     const transferables: Transferable[] = [
       input.pattern.buffer as ArrayBuffer,
       input.options.buffer as ArrayBuffer,
-      ...input.fonts.map((f) => f.buffer as ArrayBuffer),
+      ...input.symbolFonts.map((f) => f.buffer as ArrayBuffer),
     ];
     return await api.export(Comlink.transfer(input, transferables));
   } finally {

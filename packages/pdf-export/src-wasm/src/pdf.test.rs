@@ -83,7 +83,15 @@ mod export {
     let embproj = load_fixture();
     let fonts = vec![
       std::fs::read(
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../app/public/fonts/Ursasoftware.ttf"),
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../app/public/fonts/FixelVariable.ttf"),
+      )
+      .unwrap(),
+      std::fs::read(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../app/public/fonts/FixelVariableItalic.ttf"),
+      )
+      .unwrap(),
+      std::fs::read(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../app/public/symbols/Ursasoftware.ttf"),
       )
       .unwrap(),
     ];

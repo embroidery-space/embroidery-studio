@@ -18,9 +18,10 @@
 // 1px black outline shared by full/part stitches and french knots/beads.
 #let outline = px + rgb("000000")
 
-// Grid line numbers: bold labels placed just outside the pattern area, with a small gap.
-#let grid-label-gap = 0.3 * cell
-#let grid-label(n) = text(weight: "bold", size: 0.8 * cell, str(n))
+// Grid line numbers: bold labels placed just outside the pattern area, with a small gap and padding.
+#let grid-label-gap = 0.4 * cell
+#let grid-label-pad = 0.2 * cell
+#let grid-label(n) = text(weight: "semibold", size: 0.8 * cell, str(n))
 
 // Draws a palette symbol centered at (cx, cy), if the palette item has one.
 #let draw-symbol(cx, cy, symbol, size) = {
@@ -367,7 +368,7 @@
     let max-label = calc.max(bounds.x + bounds.width, bounds.y + bounds.height)
     let size = measure(grid-label(max-label))
     margin = (
-      x: calc.max(cell, size.width + grid-label-gap),
+      x: calc.max(cell, size.width + grid-label-gap + grid-label-pad),
       y: calc.max(cell, size.height + grid-label-gap),
     )
   }
