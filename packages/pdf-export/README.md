@@ -10,5 +10,6 @@ The worker is spawned per call and terminated after execution, so memory usage s
 
 The document processing pipeline is served by [Typst](https://typst.app) under the hood.
 
-The [Libertinus Serif](https://fonts.google.com/specimen/Libertinus+Serif) font is embedded directly in the Wasm module and registered with the engine automatically.
-Only the symbol fonts referenced by the pattern palette must be provided by the caller, as they cannot be bundled ahead of time .
+No fonts are bundled in the Wasm module.
+The [Fixel](https://fixel.macpaw.com/) variable font used by the document template is fetched by the Web Worker at runtime from the app's static resources (`/fonts/FixelVariable.ttf`).
+The caller must additionally provide the raw bytes of every symbol font referenced by the pattern palette, since those cannot be known ahead of time.

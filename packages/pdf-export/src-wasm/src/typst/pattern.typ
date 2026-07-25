@@ -59,7 +59,7 @@
     #emph[#pattern.info.title] #h(1fr) #emph[#pattern.info.author]
   ],
 )
-#set text(font: "Libertinus Serif", size: 14pt)
+#set text(font: "Fixel", size: 14pt)
 
 // Render the pattern information.
 // Example:
