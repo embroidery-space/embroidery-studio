@@ -295,7 +295,7 @@ export const usePatternFileStore = defineStore(
         const pdfBytes = await exportPatternAsPdf({
           pattern: patternData,
           options: PdfExportOptions.schema.serialize(pattern.pdfExportOptions),
-          fonts: await Promise.all(pattern.palette.usedSymbolFonts.map((name) => files.loadFontContent(name))),
+          symbolFonts: await Promise.all(pattern.palette.usedSymbolFonts.map((name) => files.loadFontContent(name))),
           variant,
         });
 

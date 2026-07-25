@@ -7,14 +7,6 @@ use crate::PdfVariant;
 #[path = "pdf.test.rs"]
 mod tests;
 
-const FONTS: &[&[u8]] = &[
-  include_bytes!("../assets/fonts/LibertinusSerif-Italic.ttf"),
-  include_bytes!("../assets/fonts/LibertinusSerif-Regular.ttf"),
-  include_bytes!("../assets/fonts/LibertinusSerif-SemiBold.ttf"),
-  include_bytes!("../assets/fonts/LibertinusSerif-SemiBoldItalic.ttf"),
-  include_bytes!("../assets/fonts/LibertinusSerif-Bold.ttf"),
-  include_bytes!("../assets/fonts/LibertinusSerif-BoldItalic.ttf"),
-];
 const TEMPLATE: &str = include_str!("./typst/pattern.typ");
 const DRAWING_MODULE: &str = include_str!("./typst/draw.typ");
 
@@ -22,12 +14,12 @@ pub fn export_pattern(
   embproj: EmbroiderlyProject,
   options: PdfExportOptions,
   variant: PdfVariant,
-  symbol_font_data: Vec<Vec<u8>>,
+  font_data: Vec<Vec<u8>>,
 ) -> Result<Vec<u8>> {
   let typst_template = typst_as_lib::TypstEngine::builder()
     .main_file(TEMPLATE)
     .with_static_source_file_resolver([("draw.typ", DRAWING_MODULE)])
-    .fonts(FONTS.iter().copied().chain(symbol_font_data.iter().map(Vec::as_slice)))
+    .fonts(font_data.iter().map(Vec::as_slice))
     .with_static_file_resolver([("pattern.json", compose_pattern_json(&embproj, options)?)])
     .build();
 
