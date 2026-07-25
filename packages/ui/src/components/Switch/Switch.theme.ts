@@ -20,7 +20,7 @@ export const SwitchTheme = tv({
     wrapper: "ms-2 w-full",
     label: `
       block font-medium text-default
-      not-disabled:hover:cursor-pointer
+      hover:cursor-pointer
     `,
     description: "text-muted",
   },
@@ -66,7 +66,10 @@ export const SwitchTheme = tv({
       true: {
         root: "opacity-75",
         base: "cursor-not-allowed",
-        label: "cursor-not-allowed",
+        label: `
+          cursor-not-allowed
+          hover:cursor-not-allowed
+        `,
         description: "cursor-not-allowed",
       },
     },
