@@ -20,7 +20,7 @@ const grid = defineModel<Grid>({ required: true });
     </div>
 
     <FormFieldSet :legend="$t('grid-major-lines')">
-      <div class="grid grid-cols-2 gap-4 pt-1">
+      <div class="grid grid-cols-2 gap-4">
         <Checkbox v-bind="$ta('grid-pixel-line')" v-model="grid.majorLines.pixelLine" class="col-span-2" />
 
         <FormField :label="$t('grid-thickness')">
@@ -43,7 +43,7 @@ const grid = defineModel<Grid>({ required: true });
     </FormFieldSet>
 
     <FormFieldSet :legend="$t('grid-minor-lines')">
-      <div class="grid grid-cols-2 gap-4 pt-1">
+      <div class="grid grid-cols-2 gap-4">
         <Checkbox v-bind="$ta('grid-pixel-line')" v-model="grid.minorLines.pixelLine" class="col-span-2" />
 
         <FormField :label="$t('grid-thickness')">
