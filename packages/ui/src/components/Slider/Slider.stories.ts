@@ -64,8 +64,24 @@ export const Sizes: Story = {
   }),
 };
 
+export const States: Story = {
+  render: () => ({
+    components: { Slider },
+    template: `
+      <div class="flex w-64 flex-col gap-4">
+        <Slider :model-value="50" />
+        <Slider :model-value="50" disabled />
+      </div>
+    `,
+  }),
+};
+
 export const Changed: Story = {
-  args: { modelValue: 50, "onUpdate:modelValue": fn() },
+  args: {
+    modelValue: 50,
+    "onUpdate:modelValue": fn(),
+  },
+  tags: ["!autodocs"],
   render: (args) => ({
     components: { Slider },
     setup: () => ({ args }),
@@ -76,7 +92,6 @@ export const Changed: Story = {
     `,
   }),
   async play({ canvas, userEvent, args }) {
-    // Focus the thumb directly: clicking the slider triggers `setPointerCapture` with an invalid pointer id in the test browser.
     canvas.getByRole("slider").focus();
     await userEvent.keyboard("{ArrowRight}");
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalledWith(51);

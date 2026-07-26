@@ -61,7 +61,6 @@ export interface ButtonSlots {
 const props = withDefaults(defineProps<ButtonProps>(), {
   color: "primary",
   variant: "solid",
-  size: "md",
 });
 defineSlots<ButtonSlots>();
 

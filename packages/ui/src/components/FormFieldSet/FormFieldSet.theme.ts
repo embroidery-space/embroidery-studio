@@ -3,7 +3,7 @@ import type { VariantProps } from "tailwind-variants";
 
 export const FormFieldSetTheme = tv({
   slots: {
-    root: "mt-2 rounded-md border border-default px-4 pb-4",
+    root: "mt-2 rounded-md border border-default px-4 pt-2 pb-4",
     legend: "font-medium text-default",
     content: `
       overflow-hidden

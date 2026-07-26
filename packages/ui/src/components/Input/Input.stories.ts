@@ -133,6 +133,7 @@ export const FieldGroup: Story = {
 
 export const Filled: Story = {
   args: { "onUpdate:modelValue": fn() },
+  tags: ["!autodocs"],
   async play({ canvas, userEvent, args }) {
     await userEvent.type(canvas.getByRole("textbox"), "qwerty");
     await expect(args["onUpdate:modelValue"]).toHaveBeenLastCalledWith("qwerty");

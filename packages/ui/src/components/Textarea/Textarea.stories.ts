@@ -87,6 +87,7 @@ export const States: Story = {
 
 export const Filled: Story = {
   args: { "onUpdate:modelValue": fn() },
+  tags: ["!autodocs"],
   async play({ canvas, userEvent, args }) {
     await userEvent.type(canvas.getByRole("textbox"), "Hello, World!");
     await expect(args["onUpdate:modelValue"]).toHaveBeenLastCalledWith("Hello, World!");

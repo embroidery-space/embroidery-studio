@@ -22,7 +22,7 @@ export default {
     () => ({
       components: { App },
       template: `
-        <App :portal="false" :toaster="null">
+        <App :toaster="null">
           <div data-vis-subject>
             <story />
           </div>
