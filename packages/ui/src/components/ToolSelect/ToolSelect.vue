@@ -51,6 +51,12 @@ export interface ToolSelectProps<T extends ToolSelectItem = ToolSelectItem> exte
   /** Whether the tool select is disabled. */
   disabled?: boolean;
 
+  /**
+   * The open state of the variants dropdown when it is initially rendered.
+   * @default false
+   */
+  defaultOpen?: boolean;
+
   class?: any;
   ui?: ToolSelectThemeSlots;
 }
@@ -107,7 +113,7 @@ const ui = computed(() => {
 const mainButton = useTemplateRef("main-button");
 const dropdownButton = useTemplateRef("dropdown-button") as MaybeRefOrGetter;
 const dropdownButtonElement = computed(() => unrefElement(dropdownButton));
-const dropdownMenuOpen = ref(false);
+const dropdownMenuOpen = ref(props.defaultOpen ?? false);
 
 let timeout: ReturnType<typeof setTimeout> | undefined;
 let hasLongPressed = false;

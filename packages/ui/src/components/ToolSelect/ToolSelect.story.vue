@@ -73,5 +73,14 @@ defineExpose({ state, value });
         </template>
       </div>
     </Variant>
+
+    <Variant id="opened" title="Opened" auto-props-disabled>
+      <ToolSelect
+        v-model="value"
+        :items="multipleItems"
+        default-open
+        @update:model-value="logEvent('update:model-value', { value: $event })"
+      />
+    </Variant>
   </Story>
 </template>
