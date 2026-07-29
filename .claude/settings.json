@@ -27,8 +27,6 @@
       "Bash(cargo fmt)",
       "Bash(cargo fmt:*)",
       "Bash(cargo test:*)",
-      "Read(**/node_modules/**)",
-      "Read(**/target/**)",
       "Read(**/dist/**)",
       "Read(**/pkg/**)",
       "Read(**/gen/**)",
@@ -46,6 +44,15 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/block-locale-reads.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep|Glob|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-package-artifact-reads.sh"
           }
         ]
       }
