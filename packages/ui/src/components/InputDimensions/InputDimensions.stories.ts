@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect } from "storybook/test";
 
 import InputDimensions from "./InputDimensions.vue";
@@ -33,6 +34,20 @@ export const Demo: Story = {
 
     widthFieldOptions: { label: "Width" },
     heightFieldOptions: { label: "Height" },
+  },
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { InputDimensions },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <InputDimensions
+          v-bind="args"
+          @update:width="(value) => updateArgs({ width: value })"
+          @update:height="(value) => updateArgs({ height: value })"
+        />
+      `,
+    };
   },
 };
 

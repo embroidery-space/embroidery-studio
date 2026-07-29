@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
 
 import FormField from "../FormField/FormField.vue";
@@ -27,15 +28,18 @@ export const Demo: Story = {
     size: "md",
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, Switch },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <Switch v-bind="args" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, Switch },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <Switch v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {

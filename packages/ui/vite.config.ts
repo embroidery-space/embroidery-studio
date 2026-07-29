@@ -17,6 +17,8 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   resolve: {
     alias: {
+      "~storybook-utils": path.join(import.meta.dirname, ".storybook/utils"),
+
       // This is needed for runtime compilation of string templates in tests.
       vue: "vue/dist/vue.esm-bundler.js",
     },

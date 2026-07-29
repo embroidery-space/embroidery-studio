@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
 
 import Button from "../Button/Button.vue";
@@ -38,15 +39,18 @@ export const Demo: Story = {
     loading: false,
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, Input },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <Input v-bind="args" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, Input },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <Input v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {

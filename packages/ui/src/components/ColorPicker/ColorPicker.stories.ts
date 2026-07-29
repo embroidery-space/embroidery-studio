@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
 
 import ColorPicker from "./ColorPicker.vue";
@@ -27,15 +28,18 @@ export const Demo: Story = {
 
     disabled: false,
   },
-  render: (args) => ({
-    components: { ColorPicker },
-    setup: () => ({ args }),
-    template: `
-      <div class="w-64">
-        <ColorPicker v-bind="args" />
-      </div>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { ColorPicker },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <div class="w-64">
+          <ColorPicker v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+        </div>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {

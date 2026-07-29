@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
-import { ref } from "vue";
+
+import { renderWithLocalModel } from "~storybook-utils/render-with-local-model";
 
 import Button from "../Button/Button.vue";
 import FormField from "../FormField/FormField.vue";
@@ -27,18 +29,6 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/**
- * Storybook never writes `update:modelValue` back into `args`.
- * A story that passes both `modelValue` and an `onUpdate:modelValue` spy renders a fully controlled input that never changes.
- * Therefpre, its visual baseline would capture the state *before* the interaction.
- * Binding a local model on top keeps the spy (handlers are merged, not overwritten) while letting the rendered value follow the interaction.
- */
-const renderWithLocalModel: Story["render"] = (args) => ({
-  components: { InputNumber },
-  setup: () => ({ args, value: ref(args.modelValue) }),
-  template: `<InputNumber v-bind="args" v-model="value" />`,
-});
-
 export const Demo: Story = {
   args: {
     modelValue: 5,
@@ -55,15 +45,18 @@ export const Demo: Story = {
 
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, InputNumber },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <InputNumber v-bind="args" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, InputNumber },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <InputNumber v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {
@@ -121,7 +114,7 @@ export const FieldGroup: Story = {
 export const Filled: Story = {
   args: { "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
-  render: renderWithLocalModel,
+  render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     const input = canvas.getByRole("spinbutton");
 
@@ -136,7 +129,7 @@ export const Filled: Story = {
 export const Incremented: Story = {
   args: { modelValue: 5, "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
-  render: renderWithLocalModel,
+  render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("button", { name: "Increment" }));
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalledWith(6);
@@ -146,7 +139,7 @@ export const Incremented: Story = {
 export const Decremented: Story = {
   args: { modelValue: 5, "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
-  render: renderWithLocalModel,
+  render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("button", { name: "Decrement" }));
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalledWith(4);

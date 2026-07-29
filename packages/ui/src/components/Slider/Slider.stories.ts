@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
+
+import { renderWithLocalModel } from "~storybook-utils/render-with-local-model";
 
 import FormField from "../FormField/FormField.vue";
 
@@ -34,17 +37,20 @@ export const Demo: Story = {
     tooltip: false,
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, Slider },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <div class="w-64">
-          <Slider v-bind="args" />
-        </div>
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, Slider },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <div class="w-64">
+            <Slider v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+          </div>
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {
@@ -82,15 +88,7 @@ export const Changed: Story = {
     "onUpdate:modelValue": fn(),
   },
   tags: ["!autodocs"],
-  render: (args) => ({
-    components: { Slider },
-    setup: () => ({ args }),
-    template: `
-      <div class="w-64">
-        <Slider v-bind="args" />
-      </div>
-    `,
-  }),
+  render: renderWithLocalModel(Slider, "Slider", { wrapperClass: "w-64" }),
   async play({ canvas, userEvent, args }) {
     canvas.getByRole("slider").focus();
     await userEvent.keyboard("{ArrowRight}");

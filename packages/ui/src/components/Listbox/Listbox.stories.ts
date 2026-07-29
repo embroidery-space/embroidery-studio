@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
 import { computed, ref } from "vue";
 
@@ -38,11 +39,21 @@ export const Demo: Story = {
     size: "md",
     color: "primary",
   },
-  render: (args) => ({
-    components: { Listbox },
-    setup: () => ({ args, flatItems }),
-    template: `<Listbox v-bind="args" :items="flatItems" class="w-56" />`,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { Listbox },
+      setup: () => ({ args, flatItems, updateArgs }),
+      template: `
+        <Listbox
+          v-bind="args"
+          :items="flatItems"
+          class="w-56"
+          @update:model-value="(value) => updateArgs({ modelValue: value })"
+        />
+      `,
+    };
+  },
 };
 
 export const Grouped: Story = {

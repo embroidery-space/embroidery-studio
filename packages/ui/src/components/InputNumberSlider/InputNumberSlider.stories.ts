@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
-import { ref } from "vue";
+
+import { renderWithLocalModel } from "~storybook-utils/render-with-local-model";
 
 import FormField from "../FormField/FormField.vue";
 
@@ -23,18 +25,6 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/**
- * Storybook never writes `update:modelValue` back into `args`.
- * A story that passes both `modelValue` and an `onUpdate:modelValue` spy renders a fully controlled input that never changes.
- * Therefpre, its visual baseline would capture the state *before* the interaction.
- * Binding a local model on top keeps the spy (handlers are merged, not overwritten) while letting the rendered value follow the interaction.
- */
-const renderWithLocalModel: Story["render"] = (args) => ({
-  components: { InputNumberSlider },
-  setup: () => ({ args, value: ref(args.modelValue) }),
-  template: `<InputNumberSlider v-bind="args" v-model="value" class="w-96" />`,
-});
-
 export const Demo: Story = {
   args: {
     modelValue: 50,
@@ -52,21 +42,28 @@ export const Demo: Story = {
 
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, InputNumberSlider },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <InputNumberSlider v-bind="args" class="w-96" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, InputNumberSlider },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <InputNumberSlider
+            v-bind="args"
+            class="w-96"
+            @update:model-value="(value) => updateArgs({ modelValue: value })"
+          />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Filled: Story = {
   args: { modelValue: 50, min: 0, max: 100, "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
-  render: renderWithLocalModel,
+  render: renderWithLocalModel(InputNumberSlider, "InputNumberSlider", { attrs: 'class="w-96"' }),
   async play({ canvas, userEvent, args }) {
     const input = canvas.getByRole("spinbutton");
 
@@ -81,7 +78,7 @@ export const Filled: Story = {
 export const Changed: Story = {
   args: { modelValue: 50, min: 0, max: 100, "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
-  render: renderWithLocalModel,
+  render: renderWithLocalModel(InputNumberSlider, "InputNumberSlider", { attrs: 'class="w-96"' }),
   async play({ canvas, userEvent, args }) {
     canvas.getByRole("slider").focus();
     await userEvent.keyboard("{ArrowRight}");

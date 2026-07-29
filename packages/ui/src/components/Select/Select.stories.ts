@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
 
 import FormField from "../FormField/FormField.vue";
@@ -55,15 +56,23 @@ export const Demo: Story = {
     searchInput: false,
     placeholder: "Select a status...",
   },
-  render: (args) => ({
-    components: { FormField, Select },
-    setup: () => ({ args, richItems }),
-    template: `
-      <FormField>
-        <Select v-bind="args" :items="richItems" class="w-48" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, Select },
+      setup: () => ({ args, richItems, updateArgs }),
+      template: `
+        <FormField>
+          <Select
+            v-bind="args"
+            :items="richItems"
+            class="w-48"
+            @update:model-value="(value) => updateArgs({ modelValue: value })"
+          />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {

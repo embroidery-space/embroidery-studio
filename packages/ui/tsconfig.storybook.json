@@ -8,6 +8,10 @@
     "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
 
+    "paths": {
+      "~storybook-utils/*": ["./.storybook/utils/*"]
+    },
+
     "types": ["vite/client"]
   }
 }

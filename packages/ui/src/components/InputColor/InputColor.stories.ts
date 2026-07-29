@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { useArgs } from "storybook/preview-api";
 import { expect, fn } from "storybook/test";
+
+import { renderWithLocalModel } from "~storybook-utils/render-with-local-model";
 
 import FormField from "../FormField/FormField.vue";
 
@@ -25,15 +28,18 @@ export const Demo: Story = {
     size: "md",
     disabled: false,
   },
-  render: (args) => ({
-    components: { FormField, InputColor },
-    setup: () => ({ args }),
-    template: `
-      <FormField>
-        <InputColor v-bind="args" />
-      </FormField>
-    `,
-  }),
+  render: (args) => {
+    const [, updateArgs] = useArgs();
+    return {
+      components: { FormField, InputColor },
+      setup: () => ({ args, updateArgs }),
+      template: `
+        <FormField>
+          <InputColor v-bind="args" @update:model-value="(value) => updateArgs({ modelValue: value })" />
+        </FormField>
+      `,
+    };
+  },
 };
 
 export const Sizes: Story = {
@@ -65,6 +71,7 @@ export const States: Story = {
 export const Updated: Story = {
   args: { modelValue: "FF0000", "onUpdate:modelValue": fn() },
   tags: ["!autodocs"],
+  render: renderWithLocalModel(InputColor, "InputColor"),
   async play({ canvas, userEvent, args }) {
     const input = canvas.getByRole("textbox");
     await userEvent.clear(input);
