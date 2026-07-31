@@ -19,3 +19,5 @@ worker-configuration.d.ts
 
 .claude/settings.local.json
 CLAUDE.local.md
+
+.codegraph/

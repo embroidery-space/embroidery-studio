@@ -21,7 +21,8 @@
       "Bash(just fmt:*)",
       "Bash(just lint:*)",
       "Bash(just test:*)",
-      "Bash(just all:*)"
+      "Bash(just all:*)",
+      "Bash(codegraph explore:*)"
     ],
     "deny": [
       "Bash(cargo fmt)",
@@ -53,6 +54,16 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/block-package-artifact-reads.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
           }
         ]
       }
