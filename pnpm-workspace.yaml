@@ -12,7 +12,7 @@ cleanupUnusedCatalogs: true
 catalog:
   # Tauri
   "@tauri-apps/api": 2.11.1
-  "@tauri-apps/cli-cef": 3.0.0-alpha.6
+  "@tauri-apps/cli-cef": 3.0.0-alpha.7
   ## Official Tauri plugins
   "@tauri-apps/plugin-fs": 2.5.1
   "@tauri-apps/plugin-opener": 2.5.4
@@ -25,7 +25,7 @@ catalog:
   "@vueuse/components": 14.3.0
   "@vueuse/integrations": 14.3.0
   "vue": 3.5.40
-  "vue-component-type-helpers": 3.3.7
+  "vue-component-type-helpers": 3.3.8
   "pinia": 4.0.2
   "pinia-plugin-persistedstate": 4.7.1
   "reka-ui": 2.10.1
@@ -33,12 +33,12 @@ catalog:
   # Styling
   "tailwindcss": 4.3.3
   "tailwind-merge": 3.6.0
-  "tailwind-variants": 3.2.2
+  "tailwind-variants": 3.3.0
 
   # Icons
   "@iconify/vue": 5.0.1
-  "@iconify-json/lucide": 1.2.118
-  "@iconify-json/material-symbols": 1.2.86
+  "@iconify-json/lucide": 1.2.120
+  "@iconify-json/material-symbols": 1.2.87
   "@iconify-json/mdi": 1.2.3
   "unplugin-icons": 23.0.1
 
@@ -54,9 +54,9 @@ catalog:
   "@zorsh/zorsh": 0.5.0
 
   # Telemetry
-  "@sentry/core": 10.67.0
-  "@sentry/vue": 10.67.0
-  "posthog-js": 1.406.2
+  "@sentry/core": 10.68.0
+  "@sentry/vue": 10.68.0
+  "posthog-js": 1.407.5
 
   # Onboarding
   "driver.js": 1.8.0
@@ -65,7 +65,7 @@ catalog:
   "color-convert": 3.1.3
   "comlink": 4.4.2
   "defu": 6.1.7
-  "es-toolkit": 1.49.0
+  "es-toolkit": 1.50.0
   "eventemitter3": 5.0.4
   "fuse.js": 7.5.0
   "sharp": 0.35.3
@@ -78,39 +78,39 @@ catalog:
   # Documentation
   "@cssnr/vitepress-swiper": 0.3.1
   "@vite-pwa/vitepress": 1.1.0
-  "swiper": 14.0.6
+  "swiper": 14.0.7
   "vitepress": 2.0.0-alpha.18
-  "vitepress-plugin-llms": 1.13.3
+  "vitepress-plugin-llms": 1.13.4
 
   # Code Quality
   "eslint": 10.7.0
   "@intlify/eslint-plugin-vue-i18n": 4.5.1
-  "@vitest/eslint-plugin": 1.6.23
+  "@vitest/eslint-plugin": 1.6.24
   "@vue/eslint-config-prettier": 10.2.0
   "@vue/eslint-config-typescript": 14.9.0
   "eslint-plugin-better-tailwindcss": 4.7.0
   "eslint-plugin-import-x": 4.17.1
   "eslint-plugin-no-only-tests": 3.4.0
-  "eslint-plugin-oxlint": 1.73.0
+  "eslint-plugin-oxlint": 1.76.0
   "eslint-plugin-vue": 10.10.0
   "eslint-plugin-wdio": 9.29.1
   "eslint-plugin-yml": 3.6.0
-  "markdownlint-cli2": 0.23.1
-  "oxfmt": 0.60.0
-  "oxlint": 1.75.0
+  "markdownlint-cli2": 0.23.2
+  "oxfmt": 0.61.0
+  "oxlint": 1.76.0
   "husky": 9.1.7
-  "lint-staged": 17.1.0
+  "lint-staged": 17.2.0
 
   # Build tools
-  "concurrently": 10.0.3
+  "concurrently": 10.0.4
   "vite": 8.1.5
   "vite-plugin-compression2": 2.5.3
   "vite-plugin-pwa": 1.3.0
-  "vite-plugin-vue-devtools": 8.1.5
+  "vite-plugin-vue-devtools": 8.2.1
   "@vite-pwa/assets-generator": 1.0.2
   "@vitejs/plugin-vue": 6.0.8
   "@tailwindcss/vite": 4.3.3
-  "wrangler": 4.113.0
+  "wrangler": 4.115.0
 
   # PWA
   "workbox-precaching": 7.4.1
@@ -129,7 +129,7 @@ catalog:
 
   # TypeScript
   "typescript": 6.0.3
-  "vue-tsc": 3.3.7
+  "vue-tsc": 3.3.8
   "@tsconfig/node24": 24.0.4
   "@tsconfig/strictest": 2.0.8
   "@vue/tsconfig": 0.9.1
