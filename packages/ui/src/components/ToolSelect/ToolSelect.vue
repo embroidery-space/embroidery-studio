@@ -57,6 +57,12 @@ export interface ToolSelectProps<T extends ToolSelectItem = ToolSelectItem> exte
    */
   defaultOpen?: boolean;
 
+  /**
+   * Render the tool select menu and the tooltip in a portal.
+   * @default true
+   */
+  portal?: boolean | string | HTMLElement;
+
   class?: any;
   ui?: ToolSelectThemeSlots;
 }
@@ -64,6 +70,7 @@ export interface ToolSelectProps<T extends ToolSelectItem = ToolSelectItem> exte
 const model = defineModel<unknown>();
 const props = withDefaults(defineProps<ToolSelectProps<T>>(), {
   size: "md",
+  portal: true,
 });
 
 const { icons } = useComponentIcons();
@@ -172,6 +179,7 @@ function handleKeydown(e: KeyboardEvent) {
       :shortcut="currentOption.shortcut"
       :delay-duration="delayDuration"
       :disabled="props.disabled"
+      :portal="props.portal"
     >
       <button
         ref="main-button"
@@ -202,6 +210,7 @@ function handleKeydown(e: KeyboardEvent) {
       :size="size"
       :content="dropdownOptions"
       :reference="mainButton"
+      :portal="props.portal"
     >
       <button
         v-if="items.length > 1"
