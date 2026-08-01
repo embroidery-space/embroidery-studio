@@ -52,8 +52,8 @@ catalogs:
       specifier: 2.11.1
       version: 2.11.1
     '@tauri-apps/cli-cef':
-      specifier: 3.0.0-alpha.6
-      version: 3.0.0-alpha.6
+      specifier: 3.0.0-alpha.7
+      version: 3.0.0-alpha.7
     '@tauri-apps/plugin-fs':
       specifier: 2.5.1
       version: 2.5.1
@@ -307,12 +307,17 @@ importers:
     devDependencies:
       '@intlify/eslint-plugin-vue-i18n':
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 4.5.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(jsonc-eslint-parser@2.4.2)(supports-color@10.2.2)(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2))(yaml-eslint-parser@2.0.0)
+=======
+        version: 4.5.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(jsonc-eslint-parser@2.4.2)(supports-color@8.1.1)(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2))(yaml-eslint-parser@2.0.0)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       '@tauri-apps/cli-cef':
         specifier: 'catalog:'
-        version: 3.0.0-alpha.6
+        version: 3.0.0-alpha.7
       '@vitest/eslint-plugin':
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 1.6.24(@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.10)
       '@vue/eslint-config-prettier':
         specifier: 'catalog:'
@@ -329,6 +334,24 @@ importers:
       eslint-plugin-import-x:
         specifier: 'catalog:'
         version: 4.17.1(@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
+=======
+        version: 1.6.23(@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.10)
+      '@vue/eslint-config-prettier':
+        specifier: 'catalog:'
+        version: 10.2.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.8.1)
+      '@vue/eslint-config-typescript':
+        specifier: 'catalog:'
+        version: 14.9.0(eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      eslint:
+        specifier: 'catalog:'
+        version: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      eslint-plugin-better-tailwindcss:
+        specifier: 'catalog:'
+        version: 4.7.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(oxlint@1.75.0)(tailwindcss@4.3.3)(typescript@6.0.3)
+      eslint-plugin-import-x:
+        specifier: 'catalog:'
+        version: 4.17.1(@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       eslint-plugin-no-only-tests:
         specifier: 'catalog:'
         version: 3.4.0
@@ -337,6 +360,7 @@ importers:
         version: 1.76.0(oxlint@1.76.0)
       eslint-plugin-vue:
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2))
       eslint-plugin-wdio:
         specifier: 'catalog:'
@@ -344,6 +368,15 @@ importers:
       eslint-plugin-yml:
         specifier: 'catalog:'
         version: 3.6.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
+=======
+        version: 10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2))
+      eslint-plugin-wdio:
+        specifier: 'catalog:'
+        version: 9.29.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(globals@16.5.0)(typescript-eslint@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))
+      eslint-plugin-yml:
+        specifier: 'catalog:'
+        version: 3.6.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       husky:
         specifier: 'catalog:'
         version: 9.1.7
@@ -352,7 +385,11 @@ importers:
         version: 17.2.0
       markdownlint-cli2:
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 0.23.2(supports-color@10.2.2)
+=======
+        version: 0.23.1(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       oxfmt:
         specifier: 'catalog:'
         version: 0.61.0
@@ -539,7 +576,11 @@ importers:
         version: 1.3.0(@vite-pwa/assets-generator@1.0.2(@types/node@24.13.3))(supports-color@8.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(workbox-build@7.4.1(supports-color@8.1.1))(workbox-window@7.4.1)
       vite-plugin-vue-devtools:
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 8.2.1(supports-color@8.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+=======
+        version: 8.1.5(supports-color@8.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       vitest:
         specifier: 'catalog:'
         version: 4.1.10(@types/node@24.13.3)(@vitest/browser-webdriverio@4.1.10)(jsdom@27.4.0(supports-color@8.1.1))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
@@ -624,7 +665,11 @@ importers:
         version: 2.0.0-alpha.18(@types/node@24.13.3)(change-case@5.4.4)(esbuild@0.28.1)(fuse.js@7.5.0)(jiti@2.7.0)(postcss@8.5.22)(sortablejs@1.15.7)(terser@5.48.0)(tsx@4.21.0)(typescript@6.0.3)(yaml@2.9.0)
       vitepress-plugin-llms:
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 1.13.4(supports-color@10.2.2)
+=======
+        version: 1.13.3(supports-color@10.2.2)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       wrangler:
         specifier: 'catalog:'
         version: 4.115.0
@@ -717,7 +762,11 @@ importers:
     devDependencies:
       '@histoire/plugin-vue':
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 1.0.0-beta.1(histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+=======
+        version: 1.0.0-beta.1(histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       '@iconify-json/lucide':
         specifier: 'catalog:'
         version: 1.2.120
@@ -747,7 +796,11 @@ importers:
         version: 0.9.1(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3))
       histoire:
         specifier: 'catalog:'
+<<<<<<< HEAD
         version: 1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+=======
+        version: 1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -3448,79 +3501,79 @@ packages:
   '@tauri-apps/api@2.11.1':
     resolution: {integrity: sha512-M2FPuYND2m+wh5hfW9ZpSdxMPdEJovPBWwoHJmwUpysTYNHaOkVFN419m/K0LIgjb/7KU2vBgsUepJWugQCvAA==}
 
-  '@tauri-apps/cli-cef-darwin-arm64@3.0.0-alpha.6':
-    resolution: {integrity: sha512-j6XHXCku1q82SXSXlQdzT7MbgOBX/ziOD+Z4c+B5D51zsaP3h6kcefpMzs71n9ZUegdw6AXpZpk+c+knOh2trQ==}
+  '@tauri-apps/cli-cef-darwin-arm64@3.0.0-alpha.7':
+    resolution: {integrity: sha512-BdefvrNVAdbJglgdBwvvv5MGmOUMQgBr8VAXmsWTzsbB1L679ej0ZguUTG573vCeuFc8bwh8252w8S1Xp7lIfQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@tauri-apps/cli-cef-darwin-x64@3.0.0-alpha.6':
-    resolution: {integrity: sha512-zBNxrXomAXSZPCYspOjvoi8aVAnJtkSOy3cVD+9aYDpf2zZL4R7VQXcY4M76PvqbGUmCOXT9ztzxV2MyWnBoDQ==}
+  '@tauri-apps/cli-cef-darwin-x64@3.0.0-alpha.7':
+    resolution: {integrity: sha512-Li2yitYVBo9KVph/7RHYfC/1HuhBRxJx9AcuqBsrxzx9jH87yIzA7byG8IdnBflZlxNvMLK4xndEUYmI5ZEi/Q==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@tauri-apps/cli-cef-linux-arm-gnueabihf@3.0.0-alpha.6':
-    resolution: {integrity: sha512-EcNXX9xsAZj0BuRXBwliR35XML6B5aIbgH8blbEGAr3pDaSCBnNyS/dpORgSdCKuysLidBT7K8fer5mMtbSoUQ==}
+  '@tauri-apps/cli-cef-linux-arm-gnueabihf@3.0.0-alpha.7':
+    resolution: {integrity: sha512-/5f2YmxpleoOHamCAx4IFJxijfgSq5gHal2WULpzp8lmAmxxyBkfUjvdJAuIUKN7Jvd+n2V01+m6BXzDwYCYng==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@tauri-apps/cli-cef-linux-arm64-gnu@3.0.0-alpha.6':
-    resolution: {integrity: sha512-/AwSRWuE5UKGumrXdpRnIBDWVjFAMEMkSFbB/vpFx9PogQ/A0R+i6+zuBh7JPV7FKmyRzVJuNxZ8EmZ319Ir8g==}
+  '@tauri-apps/cli-cef-linux-arm64-gnu@3.0.0-alpha.7':
+    resolution: {integrity: sha512-PgHbygI8DETBAukFbgJzD8fAd7f9IXRb9/Ez4PVnxxE2yUf6Ve05crAvyEGX9ab63zI4seBoj0ZcWIfnUOouFQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@tauri-apps/cli-cef-linux-arm64-musl@3.0.0-alpha.6':
-    resolution: {integrity: sha512-OZ5gjROy4/TlaYQ33roxQYcFIFJH+HZMER9gwTkWxfYUC1gTLLhsBeIYUZzWqm1NQiIc07likg081wsHkCRrWw==}
+  '@tauri-apps/cli-cef-linux-arm64-musl@3.0.0-alpha.7':
+    resolution: {integrity: sha512-RBlD/Ed2j+S7jixM9+owc8QobynLrfikJy5kPwRSMtxoaHCuHzZrOQH5hJeT7DZGdDQMnvllkmAuFjsEJrJOiQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@tauri-apps/cli-cef-linux-riscv64-gnu@3.0.0-alpha.6':
-    resolution: {integrity: sha512-r9TQKmN4KfeXiiusn0cppRxljKsf96vTsC1ehYi4beh+6JlmGR4pK7eb+LuOGJscnjurAA9b153fpeYO/O1PTw==}
+  '@tauri-apps/cli-cef-linux-riscv64-gnu@3.0.0-alpha.7':
+    resolution: {integrity: sha512-1CknhJSJCf3hYU5jm76ZXIw8tofJZqqETU8zsTOk0QqxVUcZgsYeTG80DbtE0aGLUUqDVCUma+Bpmwdn6nacKQ==}
     engines: {node: '>= 10'}
     cpu: [riscv64]
     os: [linux]
     libc: [glibc]
 
-  '@tauri-apps/cli-cef-linux-x64-gnu@3.0.0-alpha.6':
-    resolution: {integrity: sha512-9rrMBVlqbNlp8nTJuZIDQ7iKFwGaVMRCNPIsUIZ56DiaCLoP4po+yvR48n+TyRPZYp1sb3q2Nr/5/zI2q/jFAQ==}
+  '@tauri-apps/cli-cef-linux-x64-gnu@3.0.0-alpha.7':
+    resolution: {integrity: sha512-sje2yv1kJQy7wkOe2hnGGkzoOSXA+JFL7D93TtnhaVxXiG4myxzWJNvq16BljQp+abKeYSemAIp3M3mMe6usOQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@tauri-apps/cli-cef-linux-x64-musl@3.0.0-alpha.6':
-    resolution: {integrity: sha512-pcFL71xscjEM/03lrH/GiqIr4SwBWlbvaRh8GxDePJqqrQojNn+kTzVvqowaXVbTrNr5rbHbXzY4rC/5/1Tbsw==}
+  '@tauri-apps/cli-cef-linux-x64-musl@3.0.0-alpha.7':
+    resolution: {integrity: sha512-L5sq1Hk33f+CJmtmxczbqNDfpk1/P37ih+HKUYy4uDppCoZ2d3ztHuH2xzTIwLTXSu1Bsx6hTIh9/ruyl0/rSw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@tauri-apps/cli-cef-win32-arm64-msvc@3.0.0-alpha.6':
-    resolution: {integrity: sha512-IrMgveBs0HNO7C7BaZCUHGtO9jPbop/iU/5XWNqBx7uYHJL565+yIlpzWPoXhT3qbt8h8FQFO6SU3N+zfvLipA==}
+  '@tauri-apps/cli-cef-win32-arm64-msvc@3.0.0-alpha.7':
+    resolution: {integrity: sha512-CItQZapE0oC9sqgGZA9BWj1hI+DH/Xr7NVaBMDqg8RBK9LS+dyH7XVEhlU1jUBUGcYcdiebPOJb5x6tZJhVj/Q==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@tauri-apps/cli-cef-win32-ia32-msvc@3.0.0-alpha.6':
-    resolution: {integrity: sha512-qA/VaRdRwdMt9L2oDGNZPur108mUleKRUSCk6X8sVPcnPjzMfN4/aESeOKsW+zHXN/VhZbV3UieEg4IcYeI2RQ==}
+  '@tauri-apps/cli-cef-win32-ia32-msvc@3.0.0-alpha.7':
+    resolution: {integrity: sha512-JZCIXrbORQj8XbeT5weONfoOWPq0vpmCoOK/nrl/J7i/x327iyQak9rigwULwnnbUOJzSDHZWX3IhPSXeJ+puQ==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  '@tauri-apps/cli-cef-win32-x64-msvc@3.0.0-alpha.6':
-    resolution: {integrity: sha512-EzlhstDVyvHy3M5ieSoH3VBlikgqQS99vFEDKFoy16mwIWUrTG1LkoSI0mKbqmO8DWIEzeSV17XiCw2XEcYslQ==}
+  '@tauri-apps/cli-cef-win32-x64-msvc@3.0.0-alpha.7':
+    resolution: {integrity: sha512-knFDdwRY4aUfQ3vd8EDMFFAzhJPLPHX68SnsVBU9VQECWkaoV0nNGOFmos3oApSOpRJcuYPd/zRtSAeX5gH3Fw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@tauri-apps/cli-cef@3.0.0-alpha.6':
-    resolution: {integrity: sha512-4Y52FZZuK6rpDDsJgxMp5q85QpQjf7Yo5IvLZs/CUBaIuMkGBDguDRcfkxhMJlu9qM/cLlBRW27OtqNdOW730w==}
+  '@tauri-apps/cli-cef@3.0.0-alpha.7':
+    resolution: {integrity: sha512-miY4ZKTHMcHQa260RYTSxSDuhOSTjLHZAy3HCtL9Ld31GvP4/UooFMfd5y3TpKyubNg2EQ8keXSzWTwKWWWBnA==}
     engines: {node: '>= 10'}
     hasBin: true
 
@@ -9885,14 +9938,24 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
+<<<<<<< HEAD
   '@eslint-community/eslint-utils@4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))':
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  '@eslint-community/eslint-utils@4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))':
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
 
+<<<<<<< HEAD
   '@eslint/config-array@0.23.5(supports-color@10.2.2)':
+=======
+  '@eslint/config-array@0.23.5(supports-color@8.1.1)':
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@eslint/object-schema': 3.0.5
       debug: 4.4.3(supports-color@10.2.2)
@@ -9913,7 +9976,11 @@ snapshots:
       mdn-data: 2.28.1
       source-map-js: 1.2.1
 
+<<<<<<< HEAD
   '@eslint/eslintrc@3.3.6(supports-color@10.2.2)':
+=======
+  '@eslint/eslintrc@3.3.6(supports-color@8.1.1)':
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       ajv: 6.14.0
       debug: 4.4.3(supports-color@10.2.2)
@@ -9986,14 +10053,22 @@ snapshots:
     transitivePeerDependencies:
       - vite
 
+<<<<<<< HEAD
   '@histoire/plugin-vue@1.0.0-beta.1(histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))':
+=======
+  '@histoire/plugin-vue@1.0.0-beta.1(histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))':
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@histoire/controls': 1.0.0-beta.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
       '@histoire/shared': 1.0.0-beta.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
       '@histoire/vendors': 1.0.0-beta.1
       change-case: 5.4.4
       globby: 14.1.0
+<<<<<<< HEAD
       histoire: 1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+=======
+      histoire: 1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       launch-editor: 2.13.0
       pathe: 1.1.2
       vue: 3.5.40(typescript@6.0.3)
@@ -10475,6 +10550,7 @@ snapshots:
       '@intlify/message-compiler': 11.2.8
       '@intlify/shared': 11.2.8
 
+<<<<<<< HEAD
   '@intlify/eslint-plugin-vue-i18n@4.5.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(jsonc-eslint-parser@2.4.2)(supports-color@10.2.2)(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2))(yaml-eslint-parser@2.0.0)':
     dependencies:
       '@eslint/eslintrc': 3.3.6(supports-color@10.2.2)
@@ -10483,6 +10559,16 @@ snapshots:
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-compat-utils: 0.6.5(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
+=======
+  '@intlify/eslint-plugin-vue-i18n@4.5.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(jsonc-eslint-parser@2.4.2)(supports-color@8.1.1)(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2))(yaml-eslint-parser@2.0.0)':
+    dependencies:
+      '@eslint/eslintrc': 3.3.6(supports-color@8.1.1)
+      '@intlify/core-base': 11.2.8
+      '@intlify/message-compiler': 11.2.8
+      debug: 4.4.3(supports-color@8.1.1)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      eslint-compat-utils: 0.6.5(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       glob: 10.5.0
       globals: 17.6.0
       ignore: 7.0.5
@@ -10494,7 +10580,11 @@ snapshots:
       parse5: 7.3.0
       semver: 7.8.5
       synckit: 0.11.13
+<<<<<<< HEAD
       vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
+=======
+      vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       yaml-eslint-parser: 2.0.0
     transitivePeerDependencies:
       - supports-color
@@ -11237,52 +11327,52 @@ snapshots:
 
   '@tauri-apps/api@2.11.1': {}
 
-  '@tauri-apps/cli-cef-darwin-arm64@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-darwin-arm64@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-darwin-x64@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-darwin-x64@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-arm-gnueabihf@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-arm-gnueabihf@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-arm64-gnu@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-arm64-gnu@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-arm64-musl@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-arm64-musl@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-riscv64-gnu@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-riscv64-gnu@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-x64-gnu@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-x64-gnu@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-linux-x64-musl@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-linux-x64-musl@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-win32-arm64-msvc@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-win32-arm64-msvc@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-win32-ia32-msvc@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-win32-ia32-msvc@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef-win32-x64-msvc@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef-win32-x64-msvc@3.0.0-alpha.7':
     optional: true
 
-  '@tauri-apps/cli-cef@3.0.0-alpha.6':
+  '@tauri-apps/cli-cef@3.0.0-alpha.7':
     optionalDependencies:
-      '@tauri-apps/cli-cef-darwin-arm64': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-darwin-x64': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-arm-gnueabihf': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-arm64-gnu': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-arm64-musl': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-riscv64-gnu': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-x64-gnu': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-linux-x64-musl': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-win32-arm64-msvc': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-win32-ia32-msvc': 3.0.0-alpha.6
-      '@tauri-apps/cli-cef-win32-x64-msvc': 3.0.0-alpha.6
+      '@tauri-apps/cli-cef-darwin-arm64': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-darwin-x64': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-arm-gnueabihf': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-arm64-gnu': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-arm64-musl': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-riscv64-gnu': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-x64-gnu': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-linux-x64-musl': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-win32-arm64-msvc': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-win32-ia32-msvc': 3.0.0-alpha.7
+      '@tauri-apps/cli-cef-win32-x64-msvc': 3.0.0-alpha.7
 
   '@tauri-apps/plugin-fs@2.5.1':
     dependencies:
@@ -11428,6 +11518,7 @@ snapshots:
       '@types/node': 26.0.1
     optional: true
 
+<<<<<<< HEAD
   '@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
@@ -11437,6 +11528,17 @@ snapshots:
       '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.60.1
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  '@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)':
+    dependencies:
+      '@eslint-community/regexpp': 4.12.2
+      '@typescript-eslint/parser': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/scope-manager': 8.60.1
+      '@typescript-eslint/type-utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/visitor-keys': 8.60.1
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       ignore: 7.0.5
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
@@ -11444,14 +11546,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+<<<<<<< HEAD
   '@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
+=======
+  '@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)':
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@typescript-eslint/scope-manager': 8.60.1
       '@typescript-eslint/types': 8.60.1
       '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.60.1
       debug: 4.4.3(supports-color@10.2.2)
+<<<<<<< HEAD
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -11474,6 +11584,7 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
+<<<<<<< HEAD
   '@typescript-eslint/type-utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/types': 8.60.1
@@ -11481,6 +11592,15 @@ snapshots:
       '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  '@typescript-eslint/type-utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/types': 8.60.1
+      '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      debug: 4.4.3(supports-color@10.2.2)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -11495,7 +11615,11 @@ snapshots:
       '@typescript-eslint/types': 8.60.1
       '@typescript-eslint/visitor-keys': 8.60.1
       debug: 4.4.3(supports-color@10.2.2)
+<<<<<<< HEAD
       minimatch: 10.2.6
+=======
+      minimatch: 10.2.5
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       semver: 7.8.5
       tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
@@ -11503,6 +11627,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+<<<<<<< HEAD
   '@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
@@ -11510,6 +11635,15 @@ snapshots:
       '@typescript-eslint/types': 8.60.1
       '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  '@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)':
+    dependencies:
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+      '@typescript-eslint/scope-manager': 8.60.1
+      '@typescript-eslint/types': 8.60.1
+      '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -11676,6 +11810,7 @@ snapshots:
       - vite
     optional: true
 
+<<<<<<< HEAD
   '@vitest/eslint-plugin@1.6.24(@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.10)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.60.1
@@ -11683,6 +11818,15 @@ snapshots:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
+=======
+  '@vitest/eslint-plugin@1.6.23(@typescript-eslint/eslint-plugin@8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.10)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.60.1
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       typescript: 6.0.3
       vitest: 4.1.10(@types/node@26.0.1)(@vitest/browser-webdriverio@4.1.10)(jsdom@27.4.0(supports-color@10.2.2))(vite@8.1.5(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
     transitivePeerDependencies:
@@ -11838,15 +11982,24 @@ snapshots:
 
   '@vue/devtools-shared@8.2.1': {}
 
+<<<<<<< HEAD
   '@vue/eslint-config-prettier@10.2.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(prettier@3.8.1)':
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-config-prettier: 10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
       eslint-plugin-prettier: 5.5.4(eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2)))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(prettier@3.8.1)
+=======
+  '@vue/eslint-config-prettier@10.2.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.8.1)':
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      eslint-config-prettier: 10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+      eslint-plugin-prettier: 5.5.4(eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1)))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.8.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       prettier: 3.8.1
     transitivePeerDependencies:
       - '@types/eslint'
 
+<<<<<<< HEAD
   '@vue/eslint-config-typescript@14.9.0(eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
@@ -11855,6 +12008,16 @@ snapshots:
       fast-glob: 3.3.3
       typescript-eslint: 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
+=======
+  '@vue/eslint-config-typescript@14.9.0(eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      eslint-plugin-vue: 10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2))
+      fast-glob: 3.3.3
+      typescript-eslint: 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -13268,6 +13431,7 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
+<<<<<<< HEAD
   eslint-compat-utils@0.6.5(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2)):
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -13276,6 +13440,16 @@ snapshots:
   eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2)):
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  eslint-compat-utils@0.6.5(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1)):
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      semver: 7.8.5
+
+  eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1)):
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
 
   eslint-import-context@0.1.9(unrs-resolver@1.11.1):
     dependencies:
@@ -13284,7 +13458,11 @@ snapshots:
     optionalDependencies:
       unrs-resolver: 1.11.1
 
+<<<<<<< HEAD
   eslint-plugin-better-tailwindcss@4.7.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(oxlint@1.76.0)(tailwindcss@4.3.3)(typescript@6.0.3):
+=======
+  eslint-plugin-better-tailwindcss@4.7.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(oxlint@1.75.0)(tailwindcss@4.3.3)(typescript@6.0.3):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@eslint/css-tree': 4.0.4
       '@valibot/to-json-schema': 1.7.1(valibot@1.4.2(typescript@6.0.3))
@@ -13296,18 +13474,32 @@ snapshots:
       tsconfig-paths-webpack-plugin: 4.2.0
       valibot: 1.4.2(typescript@6.0.3)
     optionalDependencies:
+<<<<<<< HEAD
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
       oxlint: 1.76.0
+=======
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      oxlint: 1.75.0
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     transitivePeerDependencies:
       - '@eslint/css'
       - typescript
 
+<<<<<<< HEAD
   eslint-plugin-import-x@4.17.1(@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       '@typescript-eslint/types': 8.60.1
       comment-parser: 1.4.1
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  eslint-plugin-import-x@4.17.1(@typescript-eslint/utils@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1):
+    dependencies:
+      '@typescript-eslint/types': 8.60.1
+      comment-parser: 1.4.1
+      debug: 4.4.3(supports-color@8.1.1)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       eslint-import-context: 0.1.9(unrs-resolver@1.11.1)
       is-glob: 4.0.3
       minimatch: 10.2.5
@@ -13315,7 +13507,11 @@ snapshots:
       stable-hash-x: 0.2.0
       unrs-resolver: 1.11.1
     optionalDependencies:
+<<<<<<< HEAD
       '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
+=======
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     transitivePeerDependencies:
       - supports-color
 
@@ -13326,23 +13522,39 @@ snapshots:
       jsonc-parser: 3.3.1
       oxlint: 1.76.0
 
+<<<<<<< HEAD
   eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2)))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(prettier@3.8.1):
     dependencies:
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1)))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.8.1):
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       prettier: 3.8.1
       prettier-linter-helpers: 1.0.1
       synckit: 0.11.13
     optionalDependencies:
+<<<<<<< HEAD
       eslint-config-prettier: 10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
 
   eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+      eslint-config-prettier: 10.1.8(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+
+  eslint-plugin-vue@10.10.0(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)):
+    dependencies:
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       natural-compare: 1.4.0
       nth-check: 2.1.1
       postcss-selector-parser: 7.1.4
       semver: 7.8.5
+<<<<<<< HEAD
       vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
       xml-name-validator: 5.0.0
     optionalDependencies:
@@ -13356,13 +13568,32 @@ snapshots:
       typescript-eslint: 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
 
   eslint-plugin-yml@3.6.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2)):
+=======
+      vue-eslint-parser: 10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)
+      xml-name-validator: 5.0.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+
+  eslint-plugin-wdio@9.29.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(globals@16.5.0)(typescript-eslint@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)):
+    dependencies:
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+      globals: 16.5.0
+    optionalDependencies:
+      typescript-eslint: 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+
+  eslint-plugin-yml@3.6.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1)):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
       '@ota-meshi/ast-token-store': 0.3.0
       diff-sequences: 29.6.3
       escape-string-regexp: 5.0.0
+<<<<<<< HEAD
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       natural-compare: 1.4.0
       yaml-eslint-parser: 2.0.0
 
@@ -13379,11 +13610,19 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
+<<<<<<< HEAD
   eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))
       '@eslint-community/regexpp': 4.12.2
       '@eslint/config-array': 0.23.5(supports-color@10.2.2)
+=======
+  eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1):
+    dependencies:
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))
+      '@eslint-community/regexpp': 4.12.2
+      '@eslint/config-array': 0.23.5(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       '@eslint/config-helpers': 0.6.0
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
@@ -13926,7 +14165,11 @@ snapshots:
 
   he@1.2.0: {}
 
+<<<<<<< HEAD
   histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0):
+=======
+  histoire@1.0.0-beta.1(@types/node@24.13.3)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@akryum/tinypool': 0.3.1
       '@histoire/app': 1.0.0-beta.1(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
@@ -13957,7 +14200,11 @@ snapshots:
       shiki: 3.22.0
       sirv: 3.0.2
       vite: 8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+<<<<<<< HEAD
       vite-node: 3.2.4(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+=======
+      vite-node: 3.2.4(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     transitivePeerDependencies:
       - '@noble/hashes'
       - '@types/node'
@@ -14654,27 +14901,46 @@ snapshots:
 
   markdown-title@1.0.2: {}
 
+<<<<<<< HEAD
   markdownlint-cli2-formatter-default@0.0.6(markdownlint-cli2@0.23.2(supports-color@10.2.2)):
     dependencies:
       markdownlint-cli2: 0.23.2(supports-color@10.2.2)
 
   markdownlint-cli2@0.23.2(supports-color@10.2.2):
+=======
+  markdownlint-cli2-formatter-default@0.0.6(markdownlint-cli2@0.23.1(supports-color@8.1.1)):
+    dependencies:
+      markdownlint-cli2: 0.23.1(supports-color@8.1.1)
+
+  markdownlint-cli2@0.23.1(supports-color@8.1.1):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       globby: 16.2.2
       js-yaml: 5.2.2
       jsonc-parser: 3.3.1
       jsonpointer: 5.0.1
       markdown-it: 14.3.0
+<<<<<<< HEAD
       markdownlint: 0.41.1(supports-color@10.2.2)
       markdownlint-cli2-formatter-default: 0.0.6(markdownlint-cli2@0.23.2(supports-color@10.2.2))
+=======
+      markdownlint: 0.41.1(supports-color@8.1.1)
+      markdownlint-cli2-formatter-default: 0.0.6(markdownlint-cli2@0.23.1(supports-color@8.1.1))
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       micromatch: 4.0.8
       smol-toml: 1.7.0
     transitivePeerDependencies:
       - supports-color
 
+<<<<<<< HEAD
   markdownlint@0.41.1(supports-color@10.2.2):
     dependencies:
       micromark: 4.0.2(supports-color@10.2.2)
+=======
+  markdownlint@0.41.1(supports-color@8.1.1):
+    dependencies:
+      micromark: 4.0.2(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       micromark-core-commonmark: 2.0.3
       micromark-extension-directive: 4.0.0
       micromark-extension-gfm-autolink-literal: 2.1.0
@@ -14922,6 +15188,31 @@ snapshots:
   micromark-util-types@2.0.2: {}
 
   micromark@4.0.2(supports-color@10.2.2):
+<<<<<<< HEAD
+=======
+    dependencies:
+      '@types/debug': 4.1.12
+      debug: 4.4.3(supports-color@10.2.2)
+      decode-named-character-reference: 1.3.0
+      devlop: 1.1.0
+      micromark-core-commonmark: 2.0.3
+      micromark-factory-space: 2.0.1
+      micromark-util-character: 2.1.1
+      micromark-util-chunked: 2.0.1
+      micromark-util-combine-extensions: 2.0.1
+      micromark-util-decode-numeric-character-reference: 2.0.2
+      micromark-util-encode: 2.0.1
+      micromark-util-normalize-identifier: 2.0.1
+      micromark-util-resolve-all: 2.0.1
+      micromark-util-sanitize-uri: 2.0.1
+      micromark-util-subtokenize: 2.1.0
+      micromark-util-symbol: 2.0.1
+      micromark-util-types: 2.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  micromark@4.0.2(supports-color@8.1.1):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@types/debug': 4.1.12
       debug: 4.4.3(supports-color@10.2.2)
@@ -16393,6 +16684,7 @@ snapshots:
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
 
+<<<<<<< HEAD
   typescript-eslint@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
@@ -16400,6 +16692,15 @@ snapshots:
       '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
       '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  typescript-eslint@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.60.1(@typescript-eslint/parser@8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/typescript-estree': 8.60.1(supports-color@10.2.2)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.60.1(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2)(typescript@6.0.3)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -16611,7 +16912,11 @@ snapshots:
     dependencies:
       vite: 8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
 
+<<<<<<< HEAD
   vite-node@3.2.4(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@10.2.2)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0):
+=======
+  vite-node@3.2.4(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@8.1.1)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       cac: 6.7.14
       debug: 4.4.3(supports-color@10.2.2)
@@ -16668,6 +16973,22 @@ snapshots:
       - supports-color
 
   vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2(@types/node@24.13.3))(supports-color@8.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(workbox-build@7.4.1(supports-color@8.1.1))(workbox-window@7.4.1):
+<<<<<<< HEAD
+=======
+    dependencies:
+      debug: 4.4.3(supports-color@8.1.1)
+      pretty-bytes: 6.1.1
+      tinyglobby: 0.2.17
+      vite: 8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+      workbox-build: 7.4.1(supports-color@8.1.1)
+      workbox-window: 7.4.1
+    optionalDependencies:
+      '@vite-pwa/assets-generator': 1.0.2(@types/node@24.13.3)
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-vue-devtools@8.1.5(supports-color@8.1.1)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3)):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       pretty-bytes: 6.1.1
@@ -16759,7 +17080,11 @@ snapshots:
       yaml: 2.9.0
     optional: true
 
+<<<<<<< HEAD
   vitepress-plugin-llms@1.13.4(supports-color@10.2.2):
+=======
+  vitepress-plugin-llms@1.13.3(supports-color@10.2.2):
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
     dependencies:
       '@11ty/gray-matter': 2.1.0
       markdown-it: 14.3.0
@@ -16769,10 +17094,17 @@ snapshots:
       minimatch: 10.2.6
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
+<<<<<<< HEAD
       pretty-bytes: 7.1.1
       remark: 15.0.1(supports-color@10.2.2)
       remark-frontmatter: 5.0.0(supports-color@10.2.2)
       tokenx: 1.6.0
+=======
+      pretty-bytes: 7.1.0
+      remark: 15.0.1(supports-color@10.2.2)
+      remark-frontmatter: 5.0.0(supports-color@10.2.2)
+      tokenx: 1.3.0
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       unist-util-remove: 4.0.0
       unist-util-visit: 5.1.0
     transitivePeerDependencies:
@@ -16931,10 +17263,17 @@ snapshots:
     dependencies:
       vue: 3.5.40(typescript@6.0.3)
 
+<<<<<<< HEAD
   vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@10.2.2)
+=======
+  vue-eslint-parser@10.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@10.2.2):
+    dependencies:
+      debug: 4.4.3(supports-color@10.2.2)
+      eslint: 10.7.0(jiti@2.7.0)(supports-color@8.1.1)
+>>>>>>> origin/dependabot/npm_and_yarn/tauri-apps/cli-cef-3.0.0-alpha.7
       eslint-scope: 9.1.2
       eslint-visitor-keys: 5.0.1
       espree: 11.2.0
