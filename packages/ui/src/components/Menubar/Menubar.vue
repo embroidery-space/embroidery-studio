@@ -68,6 +68,9 @@ export interface MenubarMenu<T extends MenubarItem = MenubarItem> {
 }
 
 export interface MenubarProps<T extends MenubarItem = MenubarItem> {
+  /** The label of the menu that should be open when initially rendered. */
+  defaultValue?: string;
+
   /** The menus to display in the menubar. */
   menus?: MenubarMenu<T>[];
 
@@ -120,8 +123,13 @@ const ui = computed(() => MenubarTheme({ size: props.size }));
 </script>
 
 <template>
-  <Menubar.Root v-model="modelValue" data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })">
-    <Menubar.Menu v-for="(menu, index) in menus?.filter((menu) => !menu.hidden)" :key="index">
+  <Menubar.Root
+    v-model="modelValue"
+    :default-value="defaultValue"
+    data-slot="root"
+    :class="ui.root({ class: [props.ui?.root, props.class] })"
+  >
+    <Menubar.Menu v-for="menu in menus?.filter((menu) => !menu.hidden)" :key="menu.label" :value="menu.label">
       <Menubar.Trigger as-child :disabled="menu.disabled">
         <Button
           color="neutral"

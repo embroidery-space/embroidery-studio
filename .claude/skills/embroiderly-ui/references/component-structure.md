@@ -2,12 +2,11 @@
 
 Each component lives in its own folder: `packages/ui/src/components/ComponentName/`.
 
-| File                      | Purpose                 |
-| ------------------------- | ----------------------- |
-| `ComponentName.vue`       | Source code             |
-| `ComponentName.theme.ts`  | Tailwind Variants theme |
-| `ComponentName.spec.ts`   | Vitest tests            |
-| `ComponentName.story.vue` | Histoire story          |
+| File                       | Purpose                 |
+| -------------------------- | ----------------------- |
+| `ComponentName.vue`        | Source code             |
+| `ComponentName.theme.ts`   | Tailwind Variants theme |
+| `ComponentName.stories.ts` | Storybook story + tests |
 
 ## Reka UI Namespaced Components
 

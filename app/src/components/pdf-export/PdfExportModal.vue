@@ -55,7 +55,7 @@ async function exportPattern(variant: PdfVariant) {
 </script>
 
 <template>
-  <Dialog :title="$t('pdf-export')">
+  <Dialog :title="$t('pdf-export')" class="w-xl">
     <template #body>
       <RadioGroup v-model="variant" :items="variantItems" orientation="horizontal" />
       <PdfExportOptionsForm
