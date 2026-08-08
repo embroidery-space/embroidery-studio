@@ -34,11 +34,7 @@ jobs:
 
   # We intentionally run only unit tests, as we were unsuccessfull in achieving 100% match between local and CI snapshots for component tests.
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-node
