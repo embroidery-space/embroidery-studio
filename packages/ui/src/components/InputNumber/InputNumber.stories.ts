@@ -113,7 +113,7 @@ export const FieldGroup: Story = {
 
 export const Filled: Story = {
   args: { "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     const input = canvas.getByRole("spinbutton");
@@ -128,7 +128,7 @@ export const Filled: Story = {
 
 export const Incremented: Story = {
   args: { modelValue: 5, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("button", { name: "Increment" }));
@@ -138,7 +138,7 @@ export const Incremented: Story = {
 
 export const Decremented: Story = {
   args: { modelValue: 5, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: renderWithLocalModel(InputNumber, "InputNumber"),
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("button", { name: "Decrement" }));

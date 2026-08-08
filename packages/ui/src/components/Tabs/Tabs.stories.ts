@@ -71,7 +71,7 @@ export const Sizes: Story = {
 
 export const Selected: Story = {
   args: { items, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("tab", { name: "Tab 2" }));
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalledWith("1");

@@ -62,7 +62,7 @@ export const Demo: Story = {
 
 export const Filled: Story = {
   args: { modelValue: 50, min: 0, max: 100, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: renderWithLocalModel(InputNumberSlider, "InputNumberSlider", { attrs: 'class="w-96"' }),
   async play({ canvas, userEvent, args }) {
     const input = canvas.getByRole("spinbutton");
@@ -77,7 +77,7 @@ export const Filled: Story = {
 
 export const Changed: Story = {
   args: { modelValue: 50, min: 0, max: 100, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: renderWithLocalModel(InputNumberSlider, "InputNumberSlider", { attrs: 'class="w-96"' }),
   async play({ canvas, userEvent, args }) {
     canvas.getByRole("slider").focus();

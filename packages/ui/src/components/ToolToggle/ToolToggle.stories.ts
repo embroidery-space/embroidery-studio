@@ -88,7 +88,7 @@ export const States: Story = {
 
 export const ShortcutToggled: Story = {
   args: { icon: "lucide:eye", tooltip: "Show", shortcut: "S", "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ userEvent, args }) {
     await userEvent.keyboard("s");
     await expect(args["onUpdate:modelValue"]).toHaveBeenLastCalledWith(true);
@@ -97,7 +97,7 @@ export const ShortcutToggled: Story = {
 
 export const DisabledShortcutIgnored: Story = {
   args: { icon: "lucide:eye", tooltip: "Show", shortcut: "S", disabled: true, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   parameters: { snapshot: { enable: false } },
   async play({ userEvent, args }) {
     await userEvent.keyboard("s");

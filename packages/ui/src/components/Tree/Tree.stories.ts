@@ -124,7 +124,7 @@ export const States: Story = {
 
 export const Selected: Story = {
   args: { items, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent, args }) {
     await userEvent.click(canvas.getByRole("treeitem", { name: "Reference Image" }));
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalled();
@@ -133,7 +133,7 @@ export const Selected: Story = {
 
 export const Toggled: Story = {
   args: { items: nestedItems, "onUpdate:expanded": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent, args }) {
     const button = within(canvas.getByRole("treeitem", { name: "Button" })).getByRole("button");
     await userEvent.click(button);

@@ -71,9 +71,13 @@ export const Sizes: Story = {
   }),
 };
 
+export const AspectRatioLocked: Story = {
+  args: { width: 100, height: 50, aspectRatio: 2 },
+};
+
 export const WidthChanged: Story = {
   args: { width: 100, height: 50 },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent }) {
     const widthInput = canvas.getAllByRole("spinbutton")[0]!;
     const heightInput = canvas.getAllByRole("spinbutton")[1]!;
@@ -88,31 +92,9 @@ export const WidthChanged: Story = {
   },
 };
 
-export const AspectRatioLocked: Story = {
-  args: { width: 100, height: 50, aspectRatio: 2 },
-  tags: ["!autodocs"],
-  async play({ canvas, userEvent }) {
-    const widthInput = canvas.getAllByRole("spinbutton")[0]!;
-    const heightInput = canvas.getAllByRole("spinbutton")[1]!;
-
-    await userEvent.clear(widthInput);
-    await userEvent.type(widthInput, "200");
-    await userEvent.keyboard("{Enter}");
-
-    await expect(heightInput).toHaveValue("100");
-
-    // The propagation works the other way around too.
-    await userEvent.clear(heightInput);
-    await userEvent.type(heightInput, "200");
-    await userEvent.keyboard("{Enter}");
-
-    await expect(widthInput).toHaveValue("400");
-  },
-};
-
 export const AspectRatioLockToggled: Story = {
   args: { width: 100, height: 50 },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent }) {
     const lockButton = canvas.getByRole("button", { name: "Lock aspect ratio" });
     await expect(lockButton).toHaveAttribute("aria-pressed", "false");

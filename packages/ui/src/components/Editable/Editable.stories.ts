@@ -43,7 +43,7 @@ export const Editing: Story = {
     defaultValue: "Hello World!",
     activationMode: "dblclick",
   },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ canvas, userEvent }) {
     await userEvent.click(canvas.getByText("Hello World!"));
     await userEvent.keyboard("{F2}");

@@ -72,7 +72,7 @@ export const Collapsed: Story = {
 
 export const Collapsible: Story = {
   args: { legend: "Legend", collapsible: true },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => ({
     components: { FormFieldSet, Input },
     setup: () => ({ args }),

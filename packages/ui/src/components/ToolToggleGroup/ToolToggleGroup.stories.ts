@@ -98,7 +98,7 @@ export const States: Story = {
 
 export const Selected: Story = {
   args: { items: itemsWithShortcuts, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   async play({ userEvent, args }) {
     await userEvent.keyboard("m");
     await expect(args["onUpdate:modelValue"]).toHaveBeenCalledWith("mixed");

@@ -1,5 +1,8 @@
-import { vis } from "storybook-addon-vis/vitest-setup";
+import { setProjectAnnotations } from "@storybook/vue3-vite";
+import { vis, visAnnotations } from "storybook-addon-vis/vitest-setup";
 import { beforeAll } from "vitest";
+
+import * as previewAnnotations from "./preview.ts";
 
 vis.setup({
   auto: {
@@ -11,6 +14,10 @@ vis.setup({
     },
   },
 });
+
+// Wires `!snapshot`/`snapshot` tags to storybook-addon-vis's auto-snapshot matcher.
+// Storybook may suggest removing this call — don't: its own auto-provisioning doesn't include `visAnnotations`, so removing it silently disables tag-based snapshot control.
+beforeAll(setProjectAnnotations([previewAnnotations, visAnnotations]).beforeAll);
 
 beforeAll(() => {
   const style = document.createElement("style");

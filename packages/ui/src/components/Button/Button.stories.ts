@@ -108,6 +108,7 @@ export const AutoLoading: Story = {
     // oxlint-disable-next-line no-promise-executor-return
     onClick: fn(() => new Promise<void>((resolve) => setTimeout(resolve, 300))),
   },
+  tags: ["!snapshot"],
   async play({ canvas, userEvent, args }) {
     const button = canvas.getByRole("button");
 

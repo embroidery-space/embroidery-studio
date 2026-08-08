@@ -112,7 +112,7 @@ export const Open: Story = {
 
 export const Selected: Story = {
   args: { items: multipleItems, portal: false, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => ({
     components: { ToolSelect },
     setup: () => ({ args, multipleItems }),
@@ -127,7 +127,7 @@ export const Selected: Story = {
 
 export const ShortcutSelected: Story = {
   args: { items: multipleItems, "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => ({
     components: { ToolSelect },
     setup: () => ({ args, multipleItems }),

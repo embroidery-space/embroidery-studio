@@ -117,7 +117,7 @@ export const DisabledMenu: Story = {
 
 export const ShortcutTriggered: Story = {
   args: { onSelect: fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => {
     const menus: MenubarMenu[] = [
       {

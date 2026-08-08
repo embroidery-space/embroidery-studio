@@ -89,7 +89,7 @@ export const Disabled: Story = {
 
 export const SelectorDragged: Story = {
   args: { modelValue: "#FF0000", "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => ({
     components: { ColorPicker },
     setup: () => ({ args }),
@@ -118,7 +118,7 @@ export const SelectorDragged: Story = {
 
 export const TrackDragged: Story = {
   args: { modelValue: "#FF0000", "onUpdate:modelValue": fn() },
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "!snapshot"],
   render: (args) => ({
     components: { ColorPicker },
     setup: () => ({ args }),
