@@ -22,7 +22,6 @@ export default defineConfig({
     },
   },
   test: {
-    bail: isCI ? 1 : 0,
     reporters: isCI ? ["verbose", "github-actions"] : ["verbose"],
     projects: [
       {
