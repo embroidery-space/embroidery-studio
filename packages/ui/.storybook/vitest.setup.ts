@@ -19,6 +19,9 @@ vis.setup({
 // Storybook may suggest removing this call — don't: its own auto-provisioning doesn't include `visAnnotations`, so removing it silently disables tag-based snapshot control.
 beforeAll(setProjectAnnotations([previewAnnotations, visAnnotations]).beforeAll);
 
+// Wait for the Fixel font to finish loading so visual snapshots don't capture the fallback font.
+beforeAll(() => document.fonts.ready);
+
 beforeAll(() => {
   const style = document.createElement("style");
   style.innerHTML = `
