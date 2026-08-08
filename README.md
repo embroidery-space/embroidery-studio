@@ -15,7 +15,7 @@ A free, open-source, cross-platform desktop application for designing cross-stit
 [Changelog]: https://docs.embroiderly.niusia.me/resources/changelog
 
 > [!IMPORTANT]
-> **Maintenance Mode:** This project evolves slowly, yet steadily.
+> **Maintenance Status:** This project evolves slowly, yet steadily.
 > Unfortunately, due to my main work, I can’t devote much time to this project.
 > Expect new releases every 3-6 months at best.
 >
