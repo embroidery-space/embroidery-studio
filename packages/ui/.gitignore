@@ -3,5 +3,5 @@ storybook-static/
 *storybook.log
 
 # Visual testing (only baselines are committed)
-__vis__/__results__/
-__vis__/__diffs__/
+__vis__/*/__results__/
+__vis__/*/__diffs__/

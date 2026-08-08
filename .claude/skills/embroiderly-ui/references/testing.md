@@ -87,7 +87,8 @@ See `Button.stories.ts` for a full `play` example with a `fn()` spy.
 
 ## Visual snapshots
 
-Baselines live at `packages/ui/__vis__/__baselines__/<Component>/<story-kebab>-{light,dark}.png` and are committed; `__results__`/`__diffs__` are gitignored.
+Every story is captured in both Firefox and Edge, headless, on every platform --- baselines are scoped per browser, not per OS, so a contributor on any OS produces the same files CI checks against.
+Baselines live at `packages/ui/__vis__/<firefox|edge>/__baselines__/<Component>/<story-kebab>-{light,dark}.png` and are committed; `__results__`/`__diffs__` are gitignored.
 
 ```bash
 # A story with no baseline fails with "has no baseline image" instead of comparing.
@@ -97,7 +98,7 @@ pnpm --filter @embroiderly/ui test
 pnpm --filter @embroiderly/ui test -u
 ```
 
-The run opens a headed Firefox window locally (headless only in CI) --- expected, not a hang.
+Both browsers run headless, even locally --- headed vs. headless rendering of the same browser produces slightly different anti-aliasing, so headless is used everywhere to keep local and CI captures identical.
 
 ## Unit tests (composables & utils)
 

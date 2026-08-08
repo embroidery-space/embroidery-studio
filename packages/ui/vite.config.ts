@@ -39,7 +39,8 @@ export default defineConfig({
           storybookTest({ configDir: path.join(import.meta.dirname, ".storybook") }),
           storybookVis({
             subject: "[data-vis-subject]",
-            snapshotRootDir: ({ rootDir }) => rootDir,
+            // Baselines are captured per browser, not per OS/CI-platform.
+            snapshotRootDir: ({ rootDir, browserName }) => path.join(rootDir, browserName ?? "unknown"),
             // Flatten the baseline path down to just the component name, so that `src/components/Separator/Separator.stories.ts` becomes `Separator/`.
             snapshotSubpath: ({ subpath }) => {
               const segments = subpath.split("/");
@@ -61,21 +62,14 @@ export default defineConfig({
           retry: 3,
           browser: {
             enabled: true,
-            headless: isCI,
+            headless: true,
             provider: webdriverio({
               capabilities: {
                 "ms:edgeOptions": { args: ["--force-device-scale-factor=1"] },
                 "moz:firefoxOptions": { prefs: { "layout.css.devPixelsPerPx": "1.0" } },
               },
             }),
-            instances: [
-              (() => {
-                if (process.platform === "win32") return { browser: "edge" };
-                if (process.platform === "linux") return { browser: "firefox" };
-                if (process.platform === "darwin") return { browser: "safari" };
-                throw new Error("Unsupported platform for browser testing");
-              })(),
-            ],
+            instances: [{ browser: "firefox" }, { browser: "edge" }],
           },
         },
       },
