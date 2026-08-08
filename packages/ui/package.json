@@ -13,9 +13,6 @@
     "dev": "storybook dev -p 6006",
     "build": "storybook build",
     "preview": "vite preview --outDir storybook-static",
-    "story:dev": "histoire dev",
-    "story:build": "histoire build",
-    "story:preview": "histoire preview",
     "check-types": "vue-tsc -b",
     "test": "vitest run"
   },
@@ -28,7 +25,6 @@
     "vue-component-type-helpers": "catalog:"
   },
   "devDependencies": {
-    "@histoire/plugin-vue": "catalog:",
     "@iconify-json/lucide": "catalog:",
     "@iconify/vue": "catalog:",
     "@storybook/addon-docs": "catalog:",
@@ -41,15 +37,12 @@
     "@vitejs/plugin-vue": "catalog:",
     "@vitest/browser-webdriverio": "catalog:",
     "@vue/tsconfig": "catalog:",
-    "histoire": "catalog:",
     "storybook": "catalog:",
     "storybook-addon-vis": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "vitest-browser-vue": "catalog:",
     "vue-tsc": "catalog:",
-    "vue3-snapshot-serializer": "catalog:",
     "wrangler": "catalog:"
   },
   "peerDependencies": {

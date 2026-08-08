@@ -116,10 +116,6 @@ catalog:
   "workbox-precaching": 7.4.1
   "workbox-window": 7.4.1
 
-  # Histoire
-  "histoire": 1.0.0-beta.1
-  "@histoire/plugin-vue": 1.0.0-beta.1
-
   # Storybook
   "storybook": 10.5.0
   "@storybook/vue3-vite": 10.5.0
@@ -139,7 +135,6 @@ catalog:
   "@vitest/browser-webdriverio": 4.1.10
   "vitest": 4.1.10
   "vitest-browser-vue": 2.1.0
-  "vue3-snapshot-serializer": 2.13.3
 
   # WebdriverIO
   "@wdio/cli": 9.30.1
