@@ -22,6 +22,7 @@ export default defineConfig({
     },
   },
   test: {
+    bail: isCI ? 1 : 0,
     reporters: isCI ? ["verbose", "github-actions"] : ["verbose"],
     projects: [
       {
@@ -64,15 +65,7 @@ export default defineConfig({
             headless: true,
             provider: webdriverio({
               capabilities: {
-                "ms:edgeOptions": {
-                  args: [
-                    "--force-device-scale-factor=1",
-                    // Ubuntu 24.04 (GitHub Actions' ubuntu-latest) restricts unprivileged user namespaces via AppArmor.
-                    // This breaks Chromium's sandbox for any Chromium-based browser and makes Edge fail to launch at all.
-                    // Disable sandbox in CI to work around this.
-                    ...(isCI ? ["--no-sandbox"] : []),
-                  ],
-                },
+                "ms:edgeOptions": { args: ["--force-device-scale-factor=1"] },
                 "moz:firefoxOptions": { prefs: { "layout.css.devPixelsPerPx": "1.0" } },
               },
             }),
