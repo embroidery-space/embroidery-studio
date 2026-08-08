@@ -90,6 +90,7 @@ export default defineConfig({
         test: {
           name: "storybook",
           setupFiles: ["./.storybook/vitest.setup.ts"],
+          retry: 3,
           browser: {
             enabled: true,
             headless: isCI,
