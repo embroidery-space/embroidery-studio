@@ -16,8 +16,8 @@ import { compression } from "vite-plugin-compression2";
 import { VitePWA } from "vite-plugin-pwa";
 import vueDevTools from "vite-plugin-vue-devtools";
 
-import pkg from "./package.json";
-import * as commands from "./tests/components/vitest.commands";
+import pkg from "./package.json" with { type: "json" };
+import * as commands from "./tests/components/vitest.commands.js";
 
 const git = (() => {
   try {
