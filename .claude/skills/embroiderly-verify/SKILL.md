@@ -82,22 +82,13 @@ cargo check --locked [-p <crate>]
 
 ## Step 2. Linting and Formatting
 
-**Frontend:**
+Stage all your changes, then run `lint-staged`.
+It lints and formats staged files across both frontend and backend, fixing trivial issues, re-staging the result, and reporting non-fixable issues inline.
 
 ```bash
-pnpm lint:fix
-pnpm fmt:fix
+git add -A
+pnpm lint-staged
 ```
-
-**Backend:**
-
-```bash
-cargo clippy --locked --fix --allow-dirty -- -D warnings
-cargo +nightly fmt
-```
-
-Run both if you changed both sides.
-This fixes trivial issues and reports non-fixable issues inline.
 
 ## Step 3. Testing
 
