@@ -13,8 +13,9 @@ export const TreeTheme = tv({
       flex cursor-pointer items-center gap-1.5 rounded-md text-default
       hover:bg-elevated
       focus-visible:outline-2 focus-visible:outline-inverted
-      aria-disabled:cursor-not-allowed aria-disabled:opacity-75
       data-ancestor-selected:bg-elevated
+      data-disabled:cursor-not-allowed data-disabled:opacity-75
+      data-disabled:hover:bg-transparent
       data-selected:bg-elevated
     `,
     itemLeadingIcon: "shrink-0 text-muted",

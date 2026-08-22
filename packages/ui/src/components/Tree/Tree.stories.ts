@@ -131,6 +131,31 @@ export const Selected: Story = {
   },
 };
 
+export const DisabledItem: Story = {
+  args: {
+    items: [
+      {
+        label: "My Layers",
+        value: "my-layer",
+        defaultExpanded: true,
+        children: [
+          { label: "Full Stitches", value: "full", disabled: true },
+          { label: "Petite Stitches", value: "petite" },
+        ],
+      },
+    ],
+    "onUpdate:modelValue": fn(),
+  },
+  tags: ["!autodocs", "!snapshot"],
+  async play({ canvas, userEvent, args }) {
+    await userEvent.click(canvas.getByRole("treeitem", { name: "Full Stitches" }));
+    await expect(args["onUpdate:modelValue"]).not.toHaveBeenCalled();
+
+    await userEvent.click(canvas.getByRole("treeitem", { name: "Petite Stitches" }));
+    await expect(args["onUpdate:modelValue"]).toHaveBeenCalled();
+  },
+};
+
 export const Toggled: Story = {
   args: { items: nestedItems, "onUpdate:expanded": fn() },
   tags: ["!autodocs", "!snapshot"],

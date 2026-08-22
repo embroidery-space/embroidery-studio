@@ -164,6 +164,23 @@ describe("CanvasLayers", () => {
     });
   });
 
+  test("stitch layer items are disabled when the parent layer is hidden", async () => {
+    const screen = await renderComponent(CanvasLayersWrapper, {
+      props: { modelValue: 0, layers: [new Layer(0, { name: "Layer A", visible: true })] },
+    });
+
+    const parent = screen.getByRole("treeitem", { name: "Layer A" });
+    const fullStitches = screen.getByRole("treeitem", { name: "Full Stitches", exact: true });
+
+    await expect.element(parent).not.toHaveAttribute("aria-disabled");
+    await expect.element(fullStitches).not.toHaveAttribute("aria-disabled");
+
+    await screen.rerender({ layers: [new Layer(0, { name: "Layer A", visible: false })] });
+
+    await expect.element(parent).not.toHaveAttribute("aria-disabled");
+    await expect.element(fullStitches).toHaveAttribute("aria-disabled", "true");
+  });
+
   test("double-clicking a layer name and submitting emits renameLayer event", async () => {
     const onRenameLayer = vi.fn();
 
