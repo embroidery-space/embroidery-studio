@@ -187,9 +187,9 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
     >
       <div
         data-slot="item"
-        :data-selected="isSelected || undefined"
+        :aria-selected="isSelected || undefined"
+        :aria-disabled="isDisabled || undefined"
         :data-ancestor-selected="selectedAncestors.has(item.value ?? item.label) || undefined"
-        :data-disabled="isDisabled || undefined"
         :class="ui.item({ class: props.ui?.item })"
       >
         <slot
