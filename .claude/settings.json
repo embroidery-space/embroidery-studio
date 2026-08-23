@@ -9,6 +9,7 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
+      "Bash(pnpm lint-staged:*)",
       "Bash(pnpm check-types:*)",
       "Bash(pnpm fmt:*)",
       "Bash(pnpm lint:*)",

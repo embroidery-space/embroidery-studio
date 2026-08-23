@@ -1,14 +1,22 @@
 <script lang="ts" setup>
 import { ContextMenu, useToast } from "@embroiderly/ui";
-import type { ContextMenuItem } from "@embroiderly/ui";
+import type { ContextMenuItem, ToolSelectItem } from "@embroiderly/ui";
 
 import { computed, useTemplateRef, watch } from "vue";
 
-import { IconImage, IconImageOff } from "~/assets/icons/";
+import {
+  IconImage,
+  IconImageOff,
+  IconStitchBack,
+  IconStitchFrenchKnot,
+  IconStitchHalf,
+  IconStitchPetite,
+  IconStitchQuarter,
+} from "~/assets/icons/";
 import { PatternCanvas } from "~/components/canvas/";
 import type { PatternCanvasProps } from "~/components/canvas/";
-import { useEditor, useFilePicker, useI18n } from "~/composables/";
-import type { PatternEditorToolContext } from "~/lib/tools/";
+import { useEditor, useFilePicker, useI18n, useToolItems } from "~/composables/";
+import type { PatternEditorTool, PatternEditorToolContext } from "~/lib/tools/";
 import type { ToolEventDetail, TransformEventDetail } from "~/lib/types/";
 import { LoggerService } from "~/services/";
 import { PaletteMode, useEditorStateStore, usePatternStore, usePatternFileStore } from "~/stores/";
@@ -28,28 +36,82 @@ const patternStore = usePatternStore();
 const patternFileStore = usePatternFileStore();
 
 const patternCanvas = useTemplateRef<InstanceType<typeof PatternCanvas>>("patternCanvas");
-const canvasContextMenuOptions = computed<ContextMenuItem[][]>(() => [
-  [
-    {
-      icon: IconImage,
-      label: fluent.$t("canvas-ctx-menu-set-image"),
-      async onSelect() {
-        const handle = await filePicker.open({
-          types: filePicker.filters.image,
-          id: filePicker.ids.image,
-        });
-        if (handle) await patternStore.setReferenceImage(await handle.getFile());
+
+const canvasContextMenuOptions = computed<ContextMenuItem[][]>(() => {
+  const { fullstitches, petitestitches, halfstitches, quarterstitches, linestitches, nodestitches, eraser, cursor } =
+    useToolItems();
+
+  function toContextMenuItem(item: ToolSelectItem): ContextMenuItem {
+    return {
+      icon: item.icon,
+      label: item.label,
+      shortcut: item.shortcut,
+      onSelect: () => (editorStateStore.selectedTool = item.value as PatternEditorTool),
+    };
+  }
+
+  return [
+    [
+      {
+        label: fluent.$t("canvas-ctx-menu-tools"),
+        children: [
+          toContextMenuItem(fullstitches.value[0]!),
+          {
+            icon: IconStitchPetite,
+            label: fluent.$t("stitch-petite"),
+            children: petitestitches.value.map(toContextMenuItem),
+          },
+          {
+            icon: IconStitchHalf,
+            label: fluent.$t("stitch-half"),
+            children: halfstitches.value.map(toContextMenuItem),
+          },
+          {
+            icon: IconStitchQuarter,
+            label: fluent.$t("stitch-quarter"),
+            children: quarterstitches.value.map(toContextMenuItem),
+          },
+          {
+            icon: IconStitchBack,
+            label: fluent.$t("stitch-line"),
+            children: linestitches.value.map(toContextMenuItem),
+          },
+          {
+            icon: IconStitchFrenchKnot,
+            label: fluent.$t("stitch-node"),
+            children: nodestitches.value.map(toContextMenuItem),
+          },
+          { type: "separator" },
+          toContextMenuItem(eraser.value[0]!),
+          toContextMenuItem(cursor.value[0]!),
+        ],
       },
-    },
-    {
-      icon: IconImageOff,
-      label: fluent.$t("canvas-ctx-menu-remove-image"),
-      color: "error",
-      disabled: !patternStore.pattern.referenceImage,
-      onSelect: () => patternStore.removeReferenceImage(),
-    },
-  ],
-]);
+      {
+        label: fluent.$t("canvas-ctx-menu-image"),
+        children: [
+          {
+            icon: IconImage,
+            label: fluent.$t("canvas-ctx-menu-image-set"),
+            async onSelect() {
+              const handle = await filePicker.open({
+                types: filePicker.filters.image,
+                id: filePicker.ids.image,
+              });
+              if (handle) await patternStore.setReferenceImage(await handle.getFile());
+            },
+          },
+          {
+            icon: IconImageOff,
+            label: fluent.$t("canvas-ctx-menu-image-remove"),
+            color: "error",
+            disabled: !patternStore.pattern.referenceImage,
+            onSelect: () => patternStore.removeReferenceImage(),
+          },
+        ],
+      },
+    ],
+  ];
+});
 
 events.on("pattern-info:update", (patternInfo) => {
   patternFileStore.updateOpenedPattern(patternStore.pattern.id, patternInfo.title);
