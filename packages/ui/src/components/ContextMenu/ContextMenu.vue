@@ -114,7 +114,9 @@ const normalizedItems = computed<T[][]>(() => {
   if (Array.isArray(props.items[0])) return props.items as T[][];
   return [props.items as T[]];
 });
-useShortcuts(extractShortcuts(normalizedItems));
+
+// Allow conflicts, since context menu usually duplicates options which may already be declared somewhere else in the application.
+useShortcuts(extractShortcuts(normalizedItems), { conflictBehavior: "allow" });
 
 const ui = computed(() => ContextMenuTheme({ size: props.size }));
 </script>
