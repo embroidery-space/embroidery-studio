@@ -86,7 +86,7 @@ export const useFilePicker = createSharedComposable(() => ({
       const handles = await showOpenFilePicker(options);
       return (options?.multiple ? handles : (handles[0] ?? null)) as OpenReturn<T>;
     } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") return null;
+      if (e instanceof DOMException) return null;
       throw e;
     }
   },
@@ -99,7 +99,7 @@ export const useFilePicker = createSharedComposable(() => ({
     try {
       return await showSaveFilePicker(options);
     } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") return null;
+      if (e instanceof DOMException) return null;
       throw e;
     }
   },

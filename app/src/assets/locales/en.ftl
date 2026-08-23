@@ -337,8 +337,11 @@ canvas-layers-remove-confirm =
 
 ## Canvas context menu.
 
-canvas-ctx-menu-set-image = Set Reference Image
-canvas-ctx-menu-remove-image = Remove Reference Image
+canvas-ctx-menu-tools = Tools
+
+canvas-ctx-menu-image = Reference Image
+canvas-ctx-menu-image-set = Set Reference Image
+canvas-ctx-menu-image-remove = Remove Reference Image
 
 ## Canvas notifications.
 
@@ -522,9 +525,11 @@ stitch-quarter-tr = Top Right Quarter
 stitch-quarter-br = Bottom Right Quarter
 stitch-quarter-bl = Bottom Left Quarter
 
+stitch-line = Line Stitches
 stitch-back = Back Stitch
 stitch-straight = Straight Stitch
 
+stitch-node = Node Stitches
 stitch-french-knot = French Knot
 stitch-bead = Bead
 
