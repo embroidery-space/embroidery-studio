@@ -76,6 +76,12 @@ export interface SelectProps<T extends SelectItem = SelectItem> {
   disabled?: boolean;
 
   /**
+   * The open state of the select when it is initially rendered.
+   * @default false
+   */
+  defaultOpen?: boolean;
+
+  /**
    * Render the dropdown in a portal.
    * @default true
    */
@@ -108,7 +114,7 @@ const searchInputProps = toRef(
   () => defu(props.searchInput, { placeholder: locale.value.messages.select.search }) as InputProps,
 );
 
-const open = ref(false);
+const open = ref(props.defaultOpen ?? false);
 const searchValue = ref("");
 
 const normalizedGroups = computed<SelectItemObject[][]>(() => {

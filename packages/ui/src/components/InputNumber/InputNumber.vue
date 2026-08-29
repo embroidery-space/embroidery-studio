@@ -75,7 +75,6 @@ const modelValue = defineModel<number | null>();
 const props = withDefaults(defineProps<InputNumberProps>(), {
   color: "primary",
   variant: "subtle",
-  size: "md",
 
   increment: true,
   decrement: true,
@@ -86,7 +85,7 @@ const locale = useLocale();
 
 const { fieldGroup, fieldGroupSize } = useFormFieldGroup();
 const { id, size: formFieldSize, ariaAttrs } = useFormField(props);
-const size = computed(() => props.size ?? fieldGroupSize.value ?? formFieldSize.value);
+const size = computed(() => props.size ?? (fieldGroup.value ? fieldGroupSize.value : formFieldSize.value));
 
 const hasButtons = computed(() => props.increment || props.decrement);
 

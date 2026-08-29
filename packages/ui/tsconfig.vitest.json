@@ -1,6 +1,6 @@
 {
   "extends": ["@vue/tsconfig/tsconfig.dom.json", "@tsconfig/strictest/tsconfig.json"],
-  "include": ["src/**/*.spec.ts"],
+  "include": ["src/composables/**/*.spec.ts", "src/utils/**/*.test.ts"],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
 
@@ -9,6 +9,6 @@
     "strictPropertyInitialization": false,
     "noUncheckedIndexedAccess": false,
 
-    "types": ["node", "vitest-browser-vue"]
+    "types": ["node"]
   }
 }

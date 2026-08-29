@@ -87,7 +87,7 @@ export interface ListboxEmits<T extends ListboxItem = ListboxItem> {
 }
 
 export interface ListboxSlots {
-  option(props: { item: ListboxItemObject; selected: boolean; index: number }): any;
+  option?(props: { item: ListboxItemObject; selected: boolean; index: number }): any;
 }
 
 defineOptions({ inheritAttrs: false });

@@ -7,6 +7,6 @@ export interface ExportInput {
   options: Uint8Array;
   /** Whether the document is black-and-white (monochrome) or color. */
   variant: PdfVariant;
-  /** Raw bytes of every symbol font referenced by the pattern palette. Text fonts are bundled in the Wasm module. */
-  fonts: Uint8Array[];
+  /** Raw bytes of every symbol font referenced by the pattern palette. */
+  symbolFonts: Uint8Array[];
 }

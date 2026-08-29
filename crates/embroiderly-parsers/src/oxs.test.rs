@@ -100,6 +100,35 @@ fn reads_and_writes_default_pattern_properties() {
 }
 
 #[test]
+fn round_trips_pattern_properties_with_special_characters() {
+  let pattern_info = PatternInfo {
+    title: String::from("Bells & whistles"),
+    author: String::from("Me"),
+    copyright: String::from(""),
+    description: String::from("Line 1\nLine 2\tindented"),
+  };
+
+  let mut writer = create_writer();
+  write_pattern_properties(&mut writer, 20, 10, &pattern_info, (14, 14), 5).unwrap();
+  let xml = String::from_utf8(writer.into_inner().into_inner()).unwrap();
+
+  // The special characters must be escaped in the serialized XML.
+  assert!(xml.contains("charttitle=\"Bells &amp; whistles\""));
+  assert!(xml.contains("instructions=\"Line 1&#10;Line 2&#9;indented\""));
+
+  let mut reader = create_reader(&xml);
+  let attributes = if let Event::Start(e) = reader.read_event().unwrap() {
+    AttributesMap::try_from(e.attributes()).unwrap()
+  } else {
+    unreachable!()
+  };
+  let (_, _, roundtripped_info, _, _) = read_pattern_properties(attributes);
+
+  // The values must survive the round-trip unescaped.
+  assert_eq!(roundtripped_info, pattern_info);
+}
+
+#[test]
 fn reads_and_writes_palette() {
   let xml = r#"<palette>
   <palette_item index="0" name="cloth" color="FFFFFF" kind="Aida"/>

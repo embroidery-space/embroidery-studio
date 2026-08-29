@@ -26,11 +26,10 @@
     "fmt:fix": "oxfmt --write",
     "lint": "oxlint --format stylish --deny-warnings && eslint --concurrency auto --max-warnings 0 && markdownlint-cli2 \"**/*.md\"",
     "lint:fix": "oxlint --fix --format stylish --deny-warnings && eslint --fix --concurrency auto --max-warnings 0 && markdownlint-cli2 --fix \"**/*.md\"",
-    "test": "pnpm -r --workspace-concurrency 1 test"
+    "test": "pnpm -r --workspace-concurrency 1 test",
+    "test:unit": "pnpm -r test:unit"
   },
   "devDependencies": {
-    "@eslint-community/eslint-plugin-eslint-comments": "catalog:",
-    "@eslint/compat": "catalog:",
     "@intlify/eslint-plugin-vue-i18n": "catalog:",
     "@tauri-apps/cli-cef": "catalog:",
     "@vitest/eslint-plugin": "catalog:",
@@ -51,5 +50,5 @@
     "oxlint": "catalog:",
     "tailwindcss": "catalog:"
   },
-  "packageManager": "pnpm@11.11.0"
+  "packageManager": "pnpm@12.0.0"
 }

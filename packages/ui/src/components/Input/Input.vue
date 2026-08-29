@@ -47,13 +47,12 @@ const modelValue = defineModel<string>();
 const props = withDefaults(defineProps<InputProps>(), {
   color: "primary",
   variant: "subtle",
-  size: "md",
 });
 const slots = defineSlots<InputSlots>();
 
 const { fieldGroup, fieldGroupSize } = useFormFieldGroup();
 const { id, size: formFieldSize, ariaAttrs } = useFormField(props);
-const size = computed(() => props.size ?? fieldGroupSize.value ?? formFieldSize.value);
+const size = computed(() => props.size ?? (fieldGroup.value ? fieldGroupSize.value : formFieldSize.value));
 
 const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(
   computed(() => ({ ...props, loading: props.loading })),

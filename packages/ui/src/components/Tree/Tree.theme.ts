@@ -11,11 +11,11 @@ export const TreeTheme = tv({
     `,
     item: `
       flex cursor-pointer items-center gap-1.5 rounded-md text-default
-      hover:bg-elevated
+      not-aria-disabled:hover:bg-elevated
       focus-visible:outline-2 focus-visible:outline-inverted
       aria-disabled:cursor-not-allowed aria-disabled:opacity-75
+      aria-selected:bg-elevated
       data-ancestor-selected:bg-elevated
-      data-selected:bg-elevated
     `,
     itemLeadingIcon: "shrink-0 text-muted",
     itemLabel: "flex-1 truncate text-left",

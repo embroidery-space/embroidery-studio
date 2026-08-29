@@ -51,6 +51,18 @@ export interface ToolSelectProps<T extends ToolSelectItem = ToolSelectItem> exte
   /** Whether the tool select is disabled. */
   disabled?: boolean;
 
+  /**
+   * The open state of the variants dropdown when it is initially rendered.
+   * @default false
+   */
+  defaultOpen?: boolean;
+
+  /**
+   * Render the tool select menu and the tooltip in a portal.
+   * @default true
+   */
+  portal?: boolean | string | HTMLElement;
+
   class?: any;
   ui?: ToolSelectThemeSlots;
 }
@@ -58,6 +70,7 @@ export interface ToolSelectProps<T extends ToolSelectItem = ToolSelectItem> exte
 const model = defineModel<unknown>();
 const props = withDefaults(defineProps<ToolSelectProps<T>>(), {
   size: "md",
+  portal: true,
 });
 
 const { icons } = useComponentIcons();
@@ -107,7 +120,7 @@ const ui = computed(() => {
 const mainButton = useTemplateRef("main-button");
 const dropdownButton = useTemplateRef("dropdown-button") as MaybeRefOrGetter;
 const dropdownButtonElement = computed(() => unrefElement(dropdownButton));
-const dropdownMenuOpen = ref(false);
+const dropdownMenuOpen = ref(props.defaultOpen ?? false);
 
 let timeout: ReturnType<typeof setTimeout> | undefined;
 let hasLongPressed = false;
@@ -166,6 +179,7 @@ function handleKeydown(e: KeyboardEvent) {
       :shortcut="currentOption.shortcut"
       :delay-duration="delayDuration"
       :disabled="props.disabled"
+      :portal="props.portal"
     >
       <button
         ref="main-button"
@@ -196,6 +210,7 @@ function handleKeydown(e: KeyboardEvent) {
       :size="size"
       :content="dropdownOptions"
       :reference="mainButton"
+      :portal="props.portal"
     >
       <button
         v-if="items.length > 1"

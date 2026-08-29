@@ -74,6 +74,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchFull,
           visible: visibility.fullstitchesVisible,
           toggledVisibility: { ...visibility, fullstitchesVisible: !visibility.fullstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -82,6 +83,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchPetite,
           visible: visibility.petitestitchesVisible,
           toggledVisibility: { ...visibility, petitestitchesVisible: !visibility.petitestitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -90,6 +92,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchHalf,
           visible: visibility.halfstitchesVisible,
           toggledVisibility: { ...visibility, halfstitchesVisible: !visibility.halfstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -98,6 +101,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchQuarter,
           visible: visibility.quarterstitchesVisible,
           toggledVisibility: { ...visibility, quarterstitchesVisible: !visibility.quarterstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -106,6 +110,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchSpecial,
           visible: visibility.specialstitchesVisible,
           toggledVisibility: { ...visibility, specialstitchesVisible: !visibility.specialstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -114,6 +119,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchBack,
           visible: visibility.backstitchesVisible,
           toggledVisibility: { ...visibility, backstitchesVisible: !visibility.backstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -122,6 +128,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchStraight,
           visible: visibility.straightstitchesVisible,
           toggledVisibility: { ...visibility, straightstitchesVisible: !visibility.straightstitchesVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -130,6 +137,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchFrenchKnot,
           visible: visibility.frenchknotsVisible,
           toggledVisibility: { ...visibility, frenchknotsVisible: !visibility.frenchknotsVisible },
+          disabled: !visibility.visible,
         },
         {
           index: layer.index,
@@ -138,6 +146,7 @@ const layerItems = computed<LayerTreeItem[]>(() =>
           icon: IconStitchBead,
           visible: visibility.beadsVisible,
           toggledVisibility: { ...visibility, beadsVisible: !visibility.beadsVisible },
+          disabled: !visibility.visible,
         },
       ],
     };
@@ -233,13 +242,14 @@ watchEffect(() => {
           <span v-else class="truncate">{{ item.label }}</span>
         </template>
 
-        <template #item-trailing="{ item }">
+        <template #item-trailing="{ item, disabled: itemDisabled }">
           <Button
             square
             color="neutral"
             variant="ghost"
             size="sm"
             :icon="item.visible ? IconVisibility : IconVisibilityOff"
+            :disabled="itemDisabled"
             @click.stop="emits('toggleLayerVisibility', item.index, item.toggledVisibility)"
           />
         </template>

@@ -22,6 +22,9 @@ export interface TreeItem {
   /** Leading icon. */
   icon?: IconValue;
 
+  /** Whether the item is disabled. */
+  disabled?: boolean;
+
   /** Nested items. */
   children?: TreeItem[];
 
@@ -41,6 +44,7 @@ export interface TreeItemSlotProps<T extends TreeItem> {
   level: number;
   expanded: boolean;
   selected: boolean;
+  disabled: boolean;
   handleSelect: () => void;
   handleToggle: () => void;
 }
@@ -72,11 +76,11 @@ export interface TreeProps<T extends TreeItem = TreeItem> extends Pick<
 }
 
 export interface TreeSlots<T extends TreeItem = TreeItem> {
-  "item"(props: TreeItemSlotProps<T>): any;
-  "item-leading"(props: TreeItemSlotProps<T>): any;
-  "item-label"(props: TreeItemSlotProps<T>): any;
-  "item-trailing"(props: TreeItemSlotProps<T>): any;
-  [key: string]: (props: TreeItemSlotProps<T>) => any;
+  item?(props: TreeItemSlotProps<T>): any;
+  "item-leading"?(props: TreeItemSlotProps<T>): any;
+  "item-label"?(props: TreeItemSlotProps<T>): any;
+  "item-trailing"?(props: TreeItemSlotProps<T>): any;
+  [key: string]: ((props: TreeItemSlotProps<T>) => any) | undefined;
 }
 
 defineOptions({ inheritAttrs: false });
@@ -174,15 +178,17 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
 <template>
   <DefineItemTemplate v-slot="{ item, index, level }">
     <Tree.Item
-      v-slot="{ isExpanded, isSelected, handleSelect, handleToggle }"
+      v-slot="{ isExpanded, isSelected, isDisabled, handleSelect, handleToggle }"
       :level="level"
       :value="item"
+      :disabled="item.disabled"
       @select="(e) => handleItemSelect(e as TreeItemSelectEvent<T>, item)"
       @toggle="(e) => handleItemToggle(e as TreeItemToggleEvent<T>)"
     >
       <div
         data-slot="item"
-        :data-selected="isSelected || undefined"
+        :aria-selected="isSelected || undefined"
+        :aria-disabled="isDisabled || undefined"
         :data-ancestor-selected="selectedAncestors.has(item.value ?? item.label) || undefined"
         :class="ui.item({ class: props.ui?.item })"
       >
@@ -193,6 +199,7 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
           :level="level"
           :expanded="isExpanded"
           :selected="isSelected"
+          :disabled="isDisabled"
           :handle-select="handleSelect"
           :handle-toggle="handleToggle"
         >
@@ -203,6 +210,7 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
             :level="level"
             :expanded="isExpanded"
             :selected="isSelected"
+            :disabled="isDisabled"
             :handle-select="handleSelect"
             :handle-toggle="handleToggle"
           >
@@ -222,6 +230,7 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
               :level="level"
               :expanded="isExpanded"
               :selected="isSelected"
+              :disabled="isDisabled"
               :handle-select="handleSelect"
               :handle-toggle="handleToggle"
             >
@@ -236,6 +245,7 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
             variant="ghost"
             size="sm"
             :icon="icons.chevronDown"
+            :disabled="isDisabled"
             tabindex="-1"
             data-slot="itemChevron"
             :class="ui.itemChevron({ class: [props.ui?.itemChevron, isExpanded && 'rotate-180'] })"
@@ -249,6 +259,7 @@ function handleItemToggle(e: TreeItemToggleEvent<T>) {
             :level="level"
             :expanded="isExpanded"
             :selected="isSelected"
+            :disabled="isDisabled"
             :handle-select="handleSelect"
             :handle-toggle="handleToggle"
           />

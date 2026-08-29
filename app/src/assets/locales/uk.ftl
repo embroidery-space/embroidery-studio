@@ -4,7 +4,7 @@
 
 ## Application credits.
 
-app-credits = Розроблено з любовʼю в Україні
+app-credits = Розроблено з любовʼю в Україні { $tryzub }
 
 ## Application menu.
 
@@ -337,8 +337,11 @@ canvas-layers-remove-confirm =
 
 ## Canvas context menu.
 
-canvas-ctx-menu-set-image = Встановити зразкове зображення
-canvas-ctx-menu-remove-image = Вилучити зразкове зображення
+canvas-ctx-menu-tools = Інструменти
+
+canvas-ctx-menu-image =  Зразкове зображення
+canvas-ctx-menu-image-set = Встановити зразкове зображення
+canvas-ctx-menu-image-remove = Вилучити зразкове зображення
 
 ## Canvas notifications.
 
@@ -530,9 +533,11 @@ stitch-quarter-tr = Чвертьхрест зверху праворуч
 stitch-quarter-br = Чвертьхрест знизу праворуч
 stitch-quarter-bl = Чвертьхрест знизу ліворуч
 
+stitch-line = Лінійні стібки
 stitch-back = Зворотний стібок
 stitch-straight = Прямий стібок
 
+stitch-node = Вузлові стібки
 stitch-french-knot = Фр. вузелок
 stitch-bead = Бісер
 
