@@ -59,10 +59,10 @@ fn parse_pattern_inner<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Pattern
     {
       Event::Start(ref e) => {
         let name = e.name();
-        tracing::debug!("Parsing {}", String::from_utf8_lossy(name.as_ref()));
+        tracing::debug!("Parsing {}", name.as_ref());
 
         match name.as_ref() {
-          b"properties" => {
+          "properties" => {
             let attributes = AttributesMap::try_from(e.attributes())?;
 
             let oxs_version = attributes.get("oxsversion").unwrap_or("1.0");
@@ -77,7 +77,7 @@ fn parse_pattern_inner<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Pattern
             pattern.fabric.spi = spi;
             palette_size = palsize;
           }
-          b"palette" => {
+          "palette" => {
             let (fabric, palette) = read_palette(reader, palette_size)?;
             pattern.fabric = Fabric {
               name: fabric.name,
@@ -87,22 +87,22 @@ fn parse_pattern_inner<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Pattern
             };
             pattern.palette = palette.into();
           }
-          b"fullstitches" => pattern.layers[0].fullstitches.extend(
+          "fullstitches" => pattern.layers[0].fullstitches.extend(
             read_full_stitches(reader)?
               .into_iter()
               .filter(|stitch| stitch.palindex < pattern.palette.len() as u32),
           ),
-          b"partstitches" => pattern.layers[0].partstitches.extend(
+          "partstitches" => pattern.layers[0].partstitches.extend(
             read_part_stitches(reader)?
               .into_iter()
               .filter(|stitch| stitch.palindex < pattern.palette.len() as u32),
           ),
-          b"backstitches" => pattern.layers[0].linestitches.extend(
+          "backstitches" => pattern.layers[0].linestitches.extend(
             read_line_stitches(reader)?
               .into_iter()
               .filter(|stitch| stitch.palindex < pattern.palette.len() as u32),
           ),
-          b"ornaments_inc_knots_and_beads" => {
+          "ornaments_inc_knots_and_beads" => {
             let (fullstitches, partstitches, nodestitches, specialstitches) = read_ornaments(reader)?;
             pattern.layers[0].fullstitches.extend(
               fullstitches
@@ -125,13 +125,13 @@ fn parse_pattern_inner<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Pattern
                 .filter(|stitch| stitch.palindex < pattern.palette.len() as u32),
             );
           }
-          b"special_stitch_models" => pattern
+          "special_stitch_models" => pattern
             .special_stitch_models
             .extend(read_special_stitch_models(reader)?),
           _ => {}
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"chart" => break,
+      Event::End(ref e) if e.name().as_ref() == "chart" => break,
       Event::Eof => anyhow::bail!("Unexpected EOF. The end of the `chart` tag is not found."),
       _ => {}
     }
@@ -329,7 +329,7 @@ fn read_palette<R: io::BufRead>(
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"palette_item" => {
+      Event::Start(ref e) if e.name().as_ref() == "palette_item" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
         let index = attributes.get_parsed("index").unwrap_or(counter);
 
@@ -351,12 +351,12 @@ fn read_palette<R: io::BufRead>(
           loop {
             buf.clear();
             match reader.read_event_into(&mut buf)? {
-              Event::Start(ref e) if e.name().as_ref() == b"blend" => {
+              Event::Start(ref e) if e.name().as_ref() == "blend" => {
                 let attributes = AttributesMap::try_from(e.attributes())?;
                 let (brand, number) = parse_palette_item_number(attributes.get("number"));
                 blends.push(Blend { brand, number });
               }
-              Event::End(ref e) if e.name().as_ref() == b"palette_item" => break,
+              Event::End(ref e) if e.name().as_ref() == "palette_item" => break,
               _ => {}
             }
           }
@@ -394,7 +394,7 @@ fn read_palette<R: io::BufRead>(
           });
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"palette" => break,
+      Event::End(ref e) if e.name().as_ref() == "palette" => break,
       _ => {}
     }
     buf.clear();
@@ -470,7 +470,7 @@ fn read_full_stitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Vec<Full
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"stitch" => {
+      Event::Start(ref e) if e.name().as_ref() == "stitch" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
 
         fullstitches.push(FullStitch {
@@ -480,7 +480,7 @@ fn read_full_stitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Vec<Full
           kind: FullStitchKind::Full,
         });
       }
-      Event::End(ref e) if e.name().as_ref() == b"fullstitches" => break,
+      Event::End(ref e) if e.name().as_ref() == "fullstitches" => break,
       _ => {}
     }
     buf.clear();
@@ -516,7 +516,7 @@ fn read_part_stitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Vec<Part
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"partstitch" => {
+      Event::Start(ref e) if e.name().as_ref() == "partstitch" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
 
         let x = unwrap_or_continue!(attributes.get_coord("x"));
@@ -611,7 +611,7 @@ fn read_part_stitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Vec<Part
           }
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"partstitches" => break,
+      Event::End(ref e) if e.name().as_ref() == "partstitches" => break,
       _ => {}
     }
     buf.clear();
@@ -626,13 +626,13 @@ fn read_line_stitches<R: io::BufRead>(reader: &mut Reader<R>) -> Result<Vec<Line
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"backstitch" => {
+      Event::Start(ref e) if e.name().as_ref() == "backstitch" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
         if let Some(OxsLineStitch::LineStitch(stitch)) = read_line_stitch(attributes)? {
           linestitches.push(stitch);
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"backstitches" => break,
+      Event::End(ref e) if e.name().as_ref() == "backstitches" => break,
       _ => {}
     }
     buf.clear();
@@ -762,7 +762,7 @@ fn read_ornaments<R: io::BufRead>(
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"object" => {
+      Event::Start(ref e) if e.name().as_ref() == "object" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
         match read_ornament(attributes)? {
           Some(OxsOrnament::Full(stitch)) => fullstitches.push(stitch),
@@ -772,7 +772,7 @@ fn read_ornaments<R: io::BufRead>(
           None => {}
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"ornaments_inc_knots_and_beads" => break,
+      Event::End(ref e) if e.name().as_ref() == "ornaments_inc_knots_and_beads" => break,
       _ => {}
     }
     buf.clear();
@@ -979,7 +979,7 @@ fn read_special_stitch_models<R: io::BufRead>(reader: &mut Reader<R>) -> Result<
   let mut buf = Vec::new();
   loop {
     match reader.read_event_into(&mut buf)? {
-      Event::Start(ref e) if e.name().as_ref() == b"model" => {
+      Event::Start(ref e) if e.name().as_ref() == "model" => {
         let attributes = AttributesMap::try_from(e.attributes())?;
 
         let mut linestitches = Vec::new();
@@ -987,7 +987,7 @@ fn read_special_stitch_models<R: io::BufRead>(reader: &mut Reader<R>) -> Result<
         let mut curvedstitches = Vec::new();
         loop {
           match reader.read_event_into(&mut buf)? {
-            Event::Start(ref e) if e.name().as_ref() == b"backstitch" => {
+            Event::Start(ref e) if e.name().as_ref() == "backstitch" => {
               let attributes = AttributesMap::try_from(e.attributes())?;
               match read_line_stitch(attributes)? {
                 Some(OxsLineStitch::LineStitch(stitch)) => linestitches.push(stitch),
@@ -995,13 +995,13 @@ fn read_special_stitch_models<R: io::BufRead>(reader: &mut Reader<R>) -> Result<
                 None => {}
               }
             }
-            Event::Start(ref e) if e.name().as_ref() == b"object" => {
+            Event::Start(ref e) if e.name().as_ref() == "object" => {
               let attributes = AttributesMap::try_from(e.attributes())?;
               if let Some(OxsOrnament::Node(stitch)) = read_ornament(attributes)? {
                 nodestitches.push(stitch);
               }
             }
-            Event::End(ref e) if e.name().as_ref() == b"model" => {
+            Event::End(ref e) if e.name().as_ref() == "model" => {
               special_stitch_models.push(SpecialStitchModel {
                 unique_name: attributes.get("unique_name").unwrap_or_default().to_string(),
                 name: attributes.get("name").unwrap_or_default().to_string(),
@@ -1017,7 +1017,7 @@ fn read_special_stitch_models<R: io::BufRead>(reader: &mut Reader<R>) -> Result<
           }
         }
       }
-      Event::End(ref e) if e.name().as_ref() == b"special_stitch_models" => break,
+      Event::End(ref e) if e.name().as_ref() == "special_stitch_models" => break,
       _ => {}
     }
   }

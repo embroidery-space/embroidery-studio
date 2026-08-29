@@ -76,8 +76,14 @@ impl TryFrom<quick_xml::events::attributes::Attributes<'_>> for AttributesMap {
     let mut map = std::collections::HashMap::new();
     for attr in attributes {
       let attr = attr?;
-      let key = String::from_utf8(attr.key.as_ref().to_vec())?;
-      let value = String::from_utf8(attr.value.to_vec())?;
+      let key = attr.key.as_ref().to_owned();
+      let value = attr
+        .normalized_value(quick_xml::XmlVersion::Implicit1_0)
+        .unwrap_or_else(|e| {
+          tracing::warn!("Failed to unescape value of attribute {key}: {e}. Using the raw value.");
+          attr.value.clone()
+        })
+        .into_owned();
       map.insert(key, value);
     }
     Ok(Self { inner: map })
