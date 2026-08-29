@@ -14,7 +14,7 @@ import { splitShortcutKey } from "../utils/shortcut.ts";
  */
 export function useShortcuts(
   shortcuts: MaybeRefOrGetter<Record<string, () => void>>,
-  commonOptions: MaybeRefOrGetter<Pick<UseHotkeyOptions, "conflictBehavior">>,
+  commonOptions?: MaybeRefOrGetter<Pick<UseHotkeyOptions, "conflictBehavior">>,
 ) {
   const combinations: UseHotkeyDefinition[] = [];
   const sequences: UseHotkeySequenceDefinition[] = [];
