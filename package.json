@@ -50,5 +50,5 @@
     "oxlint": "catalog:",
     "tailwindcss": "catalog:"
   },
-  "packageManager": "pnpm@11.22.0"
+  "packageManager": "pnpm@12.0.0"
 }
