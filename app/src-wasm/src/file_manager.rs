@@ -36,6 +36,7 @@ pub struct GroupedFilesList {
 #[allow(clippy::struct_field_names)]
 #[wasm_bindgen]
 pub struct FileManager {
+  root_dir: opfs::DirectoryHandle,
   palettes_dir: opfs::DirectoryHandle,
   fonts_dir: opfs::DirectoryHandle,
   pattern_templates_dir: opfs::DirectoryHandle,
@@ -54,6 +55,12 @@ impl FileManager {
   #[wasm_bindgen(js_name = "loadFabricColors")]
   pub async fn load_fabric_colors(&self) -> Result<Vec<u8>, Error> {
     self.load_fabric_colors_impl().await
+  }
+
+  /// Saves the given Borsh-encoded list of fabric colors to the OPFS root.
+  #[wasm_bindgen(js_name = "saveFabricColors")]
+  pub async fn save_fabric_colors(&self, data: Vec<u8>) -> Result<(), Error> {
+    self.save_fabric_colors_impl(data).await
   }
 
   /// Returns a complete list of the available palettes.
@@ -146,13 +153,34 @@ impl FileManager {
       palettes_dir: root.get_directory_handle("palettes", options).await?,
       fonts_dir: root.get_directory_handle("fonts", options).await?,
       pattern_templates_dir: root.get_directory_handle("pattern_templates", options).await?,
+      root_dir: root,
     })
   }
 
   #[tracing::instrument(name = "FileManager::load_fabric_colors", level = "debug", skip(self), err)]
   async fn load_fabric_colors_impl(&self) -> Result<Vec<u8>, Error> {
-    let fabric_colors: Vec<FabricColor> = serde_json::from_slice(&net::fetch("/fabric-colors.json").await?)?;
+    let buffer = match self
+      .root_dir
+      .try_get_file_handle("fabric-colors.json", Default::default())
+      .await?
+    {
+      Some(file_handle) => file_handle.read().await?,
+      None => net::fetch("/fabric-colors.json").await?,
+    };
+    let fabric_colors: Vec<FabricColor> = serde_json::from_slice(&buffer)?;
     Ok(borsh::to_vec(&fabric_colors)?)
+  }
+
+  #[tracing::instrument(name = "FileManager::save_fabric_colors", level = "debug", skip(self, data), err)]
+  async fn save_fabric_colors_impl(&self, data: Vec<u8>) -> Result<(), Error> {
+    let fabric_colors: Vec<FabricColor> = borsh::from_slice(&data)?;
+    let data = serde_json::to_vec(&fabric_colors)?;
+    let file_handle = self
+      .root_dir
+      .get_file_handle("fabric-colors.json", opfs::GetFileHandleOptions { create: true })
+      .await?;
+    file_handle.write(&data).await?;
+    Ok(())
   }
 
   #[tracing::instrument(name = "FileManager::get_palettes_list", level = "debug", skip(self), ret, err)]
