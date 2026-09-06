@@ -24,6 +24,8 @@ app-menu-file-quit = Вийти з { -app-name }
 
 app-menu-pattern = Схема
 
+app-menu-tools = Інструменти
+
 app-menu-help = Допомога
 app-menu-help-about = Про застосунок
 app-menu-help-guide = Посібник
@@ -390,6 +392,24 @@ fabric-kind-linen = Льон
 
 fabric-color = Колір
 fabric-selected-color = Вибраний колір: { $color }
+
+fabric-colors = Кольори тканини
+fabric-colors-add = Додати колір
+fabric-colors-delete = Видалити колір
+fabric-colors-new-color = Новий колір
+fabric-colors-name = Назва
+fabric-colors-color = Колір
+fabric-colors-restore-default = Відновити стандартний набір
+fabric-colors-invalid-names = Кожен колір повинен мати унікальну, непорожню назву.
+fabric-colors-save-success = Кольори тканини збережено.
+
+fabric-colors-restore-confirm =
+  .title = Відновити стандартні кольори тканини
+  .description = Ви впевнені, що хочете відновити стандартний набір кольорів тканини? Ваші власні кольори будуть втрачені.
+
+fabric-colors-discard-confirm =
+  .title = Відхилити зміни
+  .description = У вас є незбережені зміни до кольорів тканини. Чи хочете ви скасувати їх?
 
 ## Grid properties.
 
