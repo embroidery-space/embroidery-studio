@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import defu from "defu";
 import { Dialog } from "reka-ui/namespaced";
-import { computed, toRef } from "vue";
+import { computed, toRef, useTemplateRef } from "vue";
 
 import { useComponentIcons } from "../../composables/useComponentIcons.ts";
 import { useLocale } from "../../composables/useLocale.ts";
@@ -80,6 +80,9 @@ function close(value?: unknown) {
   emit("close", value);
   open.value = false;
 }
+
+const contentRef = useTemplateRef("content");
+defineExpose({ contentRef });
 </script>
 
 <template>
@@ -92,6 +95,7 @@ function close(value?: unknown) {
       <Dialog.Overlay data-slot="overlay" :class="ui.overlay({ class: props.ui?.overlay })" />
 
       <Dialog.Content
+        ref="content"
         :aria-describedby="description ? undefined : ''"
         data-slot="content"
         :class="ui.content({ class: [props.ui?.content, props.class] })"

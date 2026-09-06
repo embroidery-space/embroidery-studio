@@ -10,6 +10,7 @@ const PdfExportOptionsModal = defineAsyncComponent(() => import("~/components/pd
 
 const PatternInfoModal = defineAsyncComponent(() => import("~/components/pattern-info/PatternInfoModal.vue"));
 const FabricModal = defineAsyncComponent(() => import("~/fabric/components/FabricModal.vue"));
+const FabricColorsModal = defineAsyncComponent(() => import("~/fabric/components/FabricColorsModal.vue"));
 const GridModal = defineAsyncComponent(() => import("~/components/grid/GridModal.vue"));
 
 export const useEditorModals = createSharedComposable(() => {
@@ -22,6 +23,7 @@ export const useEditorModals = createSharedComposable(() => {
 
     patternInfoModal: overlay.create(PatternInfoModal),
     fabricModal: overlay.create(FabricModal),
+    fabricColorsModal: overlay.create(FabricColorsModal),
     gridModal: overlay.create(GridModal),
   };
 });

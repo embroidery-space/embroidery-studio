@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { InputDimensions, FormField, FormFieldSet, RadioGroup, Select } from "@embroiderly/ui";
+import { Button, InputDimensions, FormField, FormFieldSet, RadioGroup, Select } from "@embroiderly/ui";
 
 import { Color } from "pixi.js";
 import { computed, onMounted, ref } from "vue";
 import type { Ref } from "vue";
 
 import { PaletteList } from "~/components/palette/";
-import { useEditor, useI18n } from "~/composables/";
+import { useEditor, useEditorModals, useI18n } from "~/composables/";
 import { Fabric, PaletteSettings, FabricColor, deserializeFabricColors } from "~/lib/pattern/";
 
 import { FabricSize, MeasurementUnit } from "../size.ts";
@@ -15,6 +15,7 @@ const fabric = defineModel<Fabric>({ required: true });
 
 const { files } = useEditor();
 const { fluent } = useI18n();
+const modals = useEditorModals();
 
 const fabricColorOptions: Ref<FabricColor[]> = ref([]);
 const fabricCountOptions = ref([14, 16, 18, 20]);
@@ -44,6 +45,11 @@ function setDimension(dimension: "width" | "height", value: number) {
   const next = FabricSize.from({ ...sizeInUnit.value, [dimension]: value }, selectedUnit.value, fabric.value.spi);
   fabric.value.width = next.width;
   fabric.value.height = next.height;
+}
+
+async function openFabricColorsModal() {
+  await modals.fabricColorsModal.open({ colors: fabricColorOptions.value }).result;
+  fabricColorOptions.value = deserializeFabricColors(await files.loadFabricColors());
 }
 
 onMounted(async () => {
@@ -130,7 +136,16 @@ onMounted(async () => {
           }
         "
       />
-      <p class="mt-2 text-sm">{{ $t("fabric-selected-color", { color: fabric.name }) }}</p>
+      <div class="mt-2 flex items-center justify-between">
+        <p class="text-sm">{{ $t("fabric-selected-color", { color: fabric.name }) }}</p>
+        <Button
+          variant="link"
+          color="neutral"
+          :label="$t('fabric-colors')"
+          class="p-0"
+          @click="openFabricColorsModal"
+        />
+      </div>
     </FormFieldSet>
   </div>
 </template>

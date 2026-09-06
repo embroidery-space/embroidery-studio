@@ -61,3 +61,7 @@ export function deserializeFabricColors(data: Uint8Array) {
     .deserialize(data)
     .map((color, index) => new FabricColor(index, color));
 }
+
+export function serializeFabricColors(colors: { name: string; color: string }[]) {
+  return b.vec(FabricColor.schema).serialize(colors.map(({ name, color }) => ({ name, color })));
+}

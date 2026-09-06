@@ -18,9 +18,9 @@ import {
   IconSettings,
   IconUndo,
 } from "~/assets/icons/";
-import { useEditorModals, useI18n } from "~/composables/";
+import { useEditor, useEditorModals, useI18n } from "~/composables/";
 import { useTour } from "~/composables/core/";
-import { Fabric } from "~/lib/pattern/";
+import { Fabric, deserializeFabricColors } from "~/lib/pattern/";
 import { useSettingsStore } from "~/settings/";
 import { usePatternFileStore, usePatternStore } from "~/stores/";
 import { getSystemInfo } from "~/utils/system.ts";
@@ -32,6 +32,7 @@ const tour = useTour();
 const { fluent } = useI18n();
 
 const modals = useEditorModals();
+const { files } = useEditor();
 
 const patternStore = usePatternStore();
 const patternFileStore = usePatternFileStore();
@@ -232,6 +233,19 @@ const appMenu = computed(() => {
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const toolsItems: any[][] = [
+    [
+      {
+        label: fluent.$t("fabric-colors"),
+        onSelect: async () => {
+          const colors = deserializeFabricColors(await files.loadFabricColors());
+          modals.fabricColorsModal.open({ colors });
+        },
+      },
+    ],
+  ];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const helpItems: any[][] = [
     [{ label: fluent.$t("app-menu-help-about"), onSelect: showSystemInfo }],
     [
@@ -272,6 +286,7 @@ const appMenu = computed(() => {
   const desktopMenubarMenus: MenubarMenu[] = [
     { label: fluent.$t("app-menu-file"), items: fileItems },
     { label: fluent.$t("app-menu-pattern"), hidden: patternStore.pattern.isNil, items: patternItems },
+    { label: fluent.$t("app-menu-tools"), items: toolsItems },
     { label: fluent.$t("app-menu-help"), items: helpItems },
   ];
 
@@ -281,6 +296,7 @@ const appMenu = computed(() => {
       ...(patternStore.pattern.isNil
         ? []
         : [{ label: fluent.$t("app-menu-pattern"), children: patternItems as DropdownMenuItem[][] }]),
+      { label: fluent.$t("app-menu-tools"), children: toolsItems as DropdownMenuItem[][] },
       { label: fluent.$t("app-menu-help"), children: helpItems as DropdownMenuItem[][] },
     ],
   ];

@@ -24,6 +24,8 @@ app-menu-file-quit = Quit { -app-name }
 
 app-menu-pattern = Pattern
 
+app-menu-tools = Tools
+
 app-menu-help = Help
 app-menu-help-about = About
 app-menu-help-guide = Guide
@@ -390,6 +392,24 @@ fabric-kind-linen = Linen
 
 fabric-color = Color
 fabric-selected-color = Selected color: { $color }
+
+fabric-colors = Fabric Colors
+fabric-colors-add = Add color
+fabric-colors-delete = Delete color
+fabric-colors-new-color = New Color
+fabric-colors-name = Name
+fabric-colors-color = Color
+fabric-colors-restore-default = Restore default set
+fabric-colors-invalid-names = Every color must have a unique, non-empty name.
+fabric-colors-save-success = Fabric colors saved.
+
+fabric-colors-restore-confirm =
+  .title = Restore Default Fabric Colors
+  .description = Are you sure you want to restore the default fabric color set? Your custom colors will be lost.
+
+fabric-colors-discard-confirm =
+  .title = Discard Changes
+  .description = You have unsaved changes to the fabric colors. Do you want to discard them?
 
 ## Grid properties.
 
