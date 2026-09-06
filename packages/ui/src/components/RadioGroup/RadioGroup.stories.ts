@@ -61,6 +61,14 @@ export const Sizes: Story = {
   }),
 };
 
+export const Horizontal: Story = {
+  render: () => ({
+    components: { RadioGroup },
+    setup: () => ({ items }),
+    template: `<RadioGroup orientation="horizontal" :items="items" />`,
+  }),
+};
+
 export const States: Story = {
   render: () => ({
     components: { RadioGroup },

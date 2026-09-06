@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import defu from "defu";
 import { Dialog } from "reka-ui/namespaced";
-import { computed, toRef } from "vue";
+import { computed, toRef, useTemplateRef } from "vue";
 
 import { useComponentIcons } from "../../composables/useComponentIcons.ts";
 import { useLocale } from "../../composables/useLocale.ts";
@@ -52,6 +52,7 @@ export interface DialogSlots {
   default(props: { open: boolean }): any;
   body(props: { close: (value?: unknown) => void }): any;
   footer(props: { close: (value?: unknown) => void }): any;
+  close?(props: { close: (value?: unknown) => void }): any;
 }
 
 const open = defineModel<boolean>("open", { default: false });
@@ -79,6 +80,9 @@ function close(value?: unknown) {
   emit("close", value);
   open.value = false;
 }
+
+const contentRef = useTemplateRef("content");
+defineExpose({ contentRef });
 </script>
 
 <template>
@@ -91,6 +95,7 @@ function close(value?: unknown) {
       <Dialog.Overlay data-slot="overlay" :class="ui.overlay({ class: props.ui?.overlay })" />
 
       <Dialog.Content
+        ref="content"
         :aria-describedby="description ? undefined : ''"
         data-slot="content"
         :class="ui.content({ class: [props.ui?.content, props.class] })"
@@ -116,16 +121,18 @@ function close(value?: unknown) {
           </div>
 
           <Dialog.Close as-child>
-            <Button
-              :icon="icons.close"
-              color="neutral"
-              variant="ghost"
-              size="md"
-              square
-              :aria-label="locale.messages.dialog.close"
-              data-slot="close"
-              :class="ui.close({ class: props.ui?.close })"
-            />
+            <slot name="close" :close="close">
+              <Button
+                :icon="icons.close"
+                color="neutral"
+                variant="ghost"
+                size="md"
+                square
+                :aria-label="locale.messages.dialog.close"
+                data-slot="close"
+                :class="ui.close({ class: props.ui?.close })"
+              />
+            </slot>
           </Dialog.Close>
         </header>
 

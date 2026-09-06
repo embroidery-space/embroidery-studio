@@ -24,6 +24,8 @@ app-menu-file-quit = Вийти з { -app-name }
 
 app-menu-pattern = Схема
 
+app-menu-tools = Інструменти
+
 app-menu-help = Допомога
 app-menu-help-about = Про застосунок
 app-menu-help-guide = Посібник
@@ -370,7 +372,11 @@ fabric-width = Ширина
 fabric-height = Висота
 
 # Use non-breaking space (\u00A0) to prevent text from jumping when changing fabric size.
-fabric-total-size = Розмір{"\u00A0"}(ШxВ): { $width }x{ $height }{"\u00A0"}стібків, { $widthInches }x{ $heightInches }{"\u00A0"}дюймів ({ $widthMm }x{ $heightMm }{"\u00A0"}мм)
+# Example: "Розмір (ШxВ): 100x100 стібків, 4.00x4.00 дюймів (100x100 мм)".
+fabric-total-size =
+  Розмір{"\u00A0"}(ШxВ): { $width }x{ $height }{"\u00A0"}стібків,
+  { NUMBER($widthInches, maximumFractionDigits: 2) }x{ NUMBER($heightInches, maximumFractionDigits: 2) }{"\u00A0"}дюймів
+  ({ NUMBER($widthMm, maximumFractionDigits: 0) }x{ NUMBER($heightMm, maximumFractionDigits: 0) }{"\u00A0"}мм)
 
 unit-stitches = стібків
 unit-inches = дюймів
@@ -386,6 +392,24 @@ fabric-kind-linen = Льон
 
 fabric-color = Колір
 fabric-selected-color = Вибраний колір: { $color }
+
+fabric-colors = Кольори тканини
+fabric-colors-add = Додати колір
+fabric-colors-delete = Видалити колір
+fabric-colors-new-color = Новий колір
+fabric-colors-name = Назва
+fabric-colors-color = Колір
+fabric-colors-restore-default = Відновити стандартний набір
+fabric-colors-invalid-names = Кожен колір повинен мати унікальну, непорожню назву.
+fabric-colors-save-success = Кольори тканини збережено.
+
+fabric-colors-restore-confirm =
+  .title = Відновити стандартні кольори тканини
+  .description = Ви впевнені, що хочете відновити стандартний набір кольорів тканини? Ваші власні кольори будуть втрачені.
+
+fabric-colors-discard-confirm =
+  .title = Відхилити зміни
+  .description = У вас є незбережені зміни до кольорів тканини. Чи хочете ви скасувати їх?
 
 ## Grid properties.
 

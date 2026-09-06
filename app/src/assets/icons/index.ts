@@ -15,6 +15,7 @@ export { default as IconLayers } from "~icons/material-symbols/stacks-rounded";
 export { default as IconVisibility } from "~icons/material-symbols/visibility-rounded";
 export { default as IconVisibilityOff } from "~icons/material-symbols/visibility-off-rounded";
 export { default as IconTrash } from "~icons/material-symbols/delete-rounded";
+export { default as IconDragHandle } from "~icons/material-symbols/drag-indicator-rounded";
 export { default as IconLink } from "~icons/material-symbols/link-rounded";
 export { default as IconUnlink } from "~icons/material-symbols/link-off-rounded";
 export { default as IconLoaderCircle } from "~icons/material-symbols/progress-activity";

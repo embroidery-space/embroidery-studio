@@ -1,5 +1,5 @@
 import { useHotkeys, useHotkeySequences } from "@tanstack/vue-hotkeys";
-import type { UseHotkeyOptions, UseHotkeyDefinition, UseHotkeySequenceDefinition } from "@tanstack/vue-hotkeys";
+import type { HotkeyOptions, UseHotkeyDefinition, UseHotkeySequenceDefinition } from "@tanstack/vue-hotkeys";
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 
@@ -14,7 +14,20 @@ import { splitShortcutKey } from "../utils/shortcut.ts";
  */
 export function useShortcuts(
   shortcuts: MaybeRefOrGetter<Record<string, () => void>>,
-  commonOptions?: MaybeRefOrGetter<Pick<UseHotkeyOptions, "conflictBehavior">>,
+  commonOptions?: MaybeRefOrGetter<
+    Pick<HotkeyOptions, "conflictBehavior"> & {
+      /**
+       * Whether the sequence is active.
+       * @default true
+       */
+      enabled?: MaybeRefOrGetter<boolean>;
+      /**
+       * The DOM element to attach the event listener to.
+       * @default document
+       */
+      target?: MaybeRefOrGetter<HTMLElement | Document | Window | null>;
+    }
+  >,
 ) {
   const combinations: UseHotkeyDefinition[] = [];
   const sequences: UseHotkeySequenceDefinition[] = [];

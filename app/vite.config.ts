@@ -133,14 +133,22 @@ export default defineConfig({
         test: {
           name: "unit",
           include: ["./src/**/*.spec.ts"],
-          exclude: ["./src/components/**/*.spec.ts", "./src/settings/components/**/*.spec.ts"],
+          exclude: [
+            "./src/components/**/*.spec.ts",
+            "./src/settings/components/**/*.spec.ts",
+            "./src/fabric/components/**/*.spec.ts",
+          ],
         },
       },
       {
         extends: true,
         test: {
           name: "components",
-          include: ["./src/components/**/*.spec.ts", "./src/settings/components/**/*.spec.ts"],
+          include: [
+            "./src/components/**/*.spec.ts",
+            "./src/settings/components/**/*.spec.ts",
+            "./src/fabric/components/**/*.spec.ts",
+          ],
           setupFiles: ["vitest-browser-vue", "./tests/components/vitest.setup.ts"],
           browser: {
             enabled: true,

@@ -24,6 +24,8 @@ app-menu-file-quit = Quit { -app-name }
 
 app-menu-pattern = Pattern
 
+app-menu-tools = Tools
+
 app-menu-help = Help
 app-menu-help-about = About
 app-menu-help-guide = Guide
@@ -370,7 +372,11 @@ fabric-width = Width
 fabric-height = Height
 
 # Use non-breaking space (\u00A0) to prevent text from jumping when changing fabric size.
-fabric-total-size = Size{"\u00A0"}(WxH): { $width }x{ $height }{"\u00A0"}stitches, { $widthInches }x{ $heightInches }{"\u00A0"}inches ({ $widthMm }x{ $heightMm }{"\u00A0"}mm)
+# Example: "Size (WxH): 100x100 stitches, 4.00x4.00 inches (100x100 mm)".
+fabric-total-size =
+  Size{"\u00A0"}(WxH): { $width }x{ $height }{"\u00A0"}stitches,
+  { NUMBER($widthInches, maximumFractionDigits: 2) }x{ NUMBER($heightInches, maximumFractionDigits: 2) }{"\u00A0"}inches
+  ({ NUMBER($widthMm, maximumFractionDigits: 0) }x{ NUMBER($heightMm, maximumFractionDigits: 0) }{"\u00A0"}mm)
 
 unit-stitches = stitches
 unit-inches = inches
@@ -386,6 +392,24 @@ fabric-kind-linen = Linen
 
 fabric-color = Color
 fabric-selected-color = Selected color: { $color }
+
+fabric-colors = Fabric Colors
+fabric-colors-add = Add color
+fabric-colors-delete = Delete color
+fabric-colors-new-color = New Color
+fabric-colors-name = Name
+fabric-colors-color = Color
+fabric-colors-restore-default = Restore default set
+fabric-colors-invalid-names = Every color must have a unique, non-empty name.
+fabric-colors-save-success = Fabric colors saved.
+
+fabric-colors-restore-confirm =
+  .title = Restore Default Fabric Colors
+  .description = Are you sure you want to restore the default fabric color set? Your custom colors will be lost.
+
+fabric-colors-discard-confirm =
+  .title = Discard Changes
+  .description = You have unsaved changes to the fabric colors. Do you want to discard them?
 
 ## Grid properties.
 

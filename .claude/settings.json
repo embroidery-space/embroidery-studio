@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/block-dangerous-git.sh"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-dangerous-git.sh"
           }
         ]
       },
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/block-locale-reads.sh"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-locale-reads.sh"
           }
         ]
       },
@@ -67,7 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/block-package-artifact-reads.sh"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-package-artifact-reads.sh"
           }
         ]
       }
